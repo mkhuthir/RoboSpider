@@ -25,7 +25,7 @@ What I like about CM-700 is its compact design, the low-power 8-bit AVR RISC-bas
 * **Working Voltage:**
    * Allowed Range : 7V ~ 35V
 * **Current:**
-   - Consumed Current When IDLE  : 40mA
+   - Consumed Current When idle  : 40mA
    - Exterior I/O Maximum Current : 0.9A
    - Overall Maximum Current : 10A (Fuse)
 * **Internal I/O Device**
