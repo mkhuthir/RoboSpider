@@ -20,6 +20,30 @@
 
 ![CM-700-2](https://s3-eu-west-1.amazonaws.com/muthspider/img/CM700-2.png)
 
+
+MCU : ATMEL ATMega2561
+
+Working Temperature : -5℃~70℃
+Weight : 37.3g
+
+Working Voltage:
+   Allowed Range : 7V ~ 35V
+
+Current:
+   Consumed Current When IDLE  : 40mA
+   Exterior I/O Maximum Current : 0.9A
+   Overall Maximum Current : 10A (Fuse)
+
+Internal I/O Device
+   Button : 2 sets (Reset 1, Start 1)
+   Temperature Sensor : 1
+   Voltage Sensor : 1
+
+External I/O Device
+   OLLO 5 pin I/O Port : 6
+   3-Pin Connector TTL Communication : 4
+   4-Pin Connector RS-485 Communication : 5
+
 #Robot Motors (AX-18A):
 
  
