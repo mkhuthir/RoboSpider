@@ -48,6 +48,17 @@ What I like about CM-700 is its compact design, the low-power 8-bit AVR RISC-bas
  
 ![AX-S1](https://s3-eu-west-1.amazonaws.com/muthspider/img/AX-S1.png)
 
+#Frame Components:
+
+#Battery:
+
+#Programming Software:
+
+#Programming Hardware:
+
+
+
+
 #Repository Contents
 
 * **/Docs** - Project Related documentations.
