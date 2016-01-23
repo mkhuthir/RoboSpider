@@ -16,8 +16,8 @@
 
 #Robot Controller (CM-700):
 
-![CM-700-1](https://s3-eu-west-1.amazonaws.com/muthspider/img/CM700-1.png)
-![CM-700-2](https://s3-eu-west-1.amazonaws.com/muthspider/img/CM700-2.png)
+![CM-700-1](https://s3-eu-west-1.amazonaws.com/muthspider/img/CM700-full.png)
+![CM-700-2](https://s3-eu-west-1.amazonaws.com/muthspider/img/CM700-parts.png)
 
 
 * **MCU : ATMEL ATMega2561**
