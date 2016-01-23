@@ -16,9 +16,12 @@
 
 #Robot Controller (CM-700):
 
+
+
 ![CM-700-1](https://s3-eu-west-1.amazonaws.com/muthspider/img/CM700-full.png)
 ![CM-700-2](https://s3-eu-west-1.amazonaws.com/muthspider/img/CM700-parts.png)
 
+**Controller Specfications:**
 
 * **MCU : ATMEL ATMega2561**
 * **Working Temperature :** -5℃~70℃*
