@@ -7,36 +7,36 @@
  
  
 ==========
-Repository Contents
+#Repository Contents
 -------------------
 
 * **/Docs** - Project Related documentations.
 * **/RoboPlus Motion** - Motion Files generated using Robotis RoboPlus Motion 1.0.
 * **/RoboPlus Task** - Task Files generated using Robotis RoboPlus Task 1.0.
 
-Robot Controller (CM-700):
+#Robot Controller (CM-700):
 -------------------
 
  ![CM-700](https://s3-eu-west-1.amazonaws.com/muthspider/img/CM700.png)
  
- Robot Motors (AX-18A):
+#Robot Motors (AX-18A):
  -------------------
  
  ![AX-18A](https://s3-eu-west-1.amazonaws.com/muthspider/img/AX-18A.png)
  
- Robot Sensors (AX-S1):
+#Robot Sensors (AX-S1):
  -------------------
  
  ![AX-S1](https://s3-eu-west-1.amazonaws.com/muthspider/img/AX-S1.png)
 
 
 
-Version History
+#Version History
 ---------------
 * Initial version (work in progress).
 
 
-License Information
+#License Information
 -------------------
 The hardware is released under [Creative Commons Share-alike 3.0](http://creativecommons.org/licenses/by-sa/3.0/).  
 All code is open source so please feel free to do anything you want with it under the [Beerware license](http://en.wikipedia.org/wiki/Beerware).
