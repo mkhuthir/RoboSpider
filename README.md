@@ -5,9 +5,9 @@
    
    A hexapod spider robot controlled by [Robotis CM-700 controller](http://support.robotis.com/en/product/auxdevice/controller/cm700_manual.htm), motorized by twenty [Robotis Dynamixel AX-18A servos](http://support.robotis.com/en/product/dynamixel/ax_series/ax-18f.htm), and one [Robotis AX-S1 integrated sensor](http://support.robotis.com/en/product/auxdevice/sensor/dxl_ax_s1.htm) mounted on its head. The robot frame is a slightly modified TrossenRobotics ABS PhantomX kit.
  
- ![CM-700](http://support.robotis.com/en/images/product/auxdevice/controller/cm700_set.jpg)
+ ![CM-700](https://s3-eu-west-1.amazonaws.com/muthspider/img/CM700.png)
  ![AX-18A](https://s3-eu-west-1.amazonaws.com/muthspider/img/AX-18A.png)
- ![AX-S1](https://s3-eu-west-1.amazonaws.com/muthspider/img/CM700.png)
+ ![AX-S1](https://s3-eu-west-1.amazonaws.com/muthspider/img/AX-S1.png)
  
 ==========
 Repository Contents
