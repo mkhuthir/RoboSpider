@@ -52,12 +52,11 @@ What I like about CM-700 is its compact design, the low-power 8-bit AVR RISC-bas
 
 #Battery:
 
+#Programming Hardware (LN-101):
+
+![LN-101](https://s3-eu-west-1.amazonaws.com/muthspider/img/LN-101.png)
+
 #Programming Software:
-
-#Programming Hardware:
-
-
-
 
 #Repository Contents
 
