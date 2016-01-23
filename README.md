@@ -73,5 +73,4 @@ What I like about CM-700 is its compact design, the low-power 8-bit AVR RISC-bas
 
 #License Information
 
-The hardware is released under [Creative Commons Share-alike 3.0](http://creativecommons.org/licenses/by-sa/3.0/).  
-All code is open source so please feel free to do anything you want with it under the [Beerware license](http://en.wikipedia.org/wiki/Beerware).
+All code in this repo is open source so please feel free to do anything you want with it.
