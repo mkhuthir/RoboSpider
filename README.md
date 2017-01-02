@@ -2,7 +2,7 @@
 
 ![MuthSpider](https://s3-eu-west-1.amazonaws.com/muthspider/img/MuthSpider.png)<br>
 
-[![MuthSpider video](http://img.youtube.com/vi/tW0A7SIOCcE/maxresdefault.jpg)](http://www.youtube.com/watch?v=tW0A7SIOCcE)
+[![MuthSpider video](http://img.youtube.com/vi/tW0A7SIOCcE/default.jpg)](http://www.youtube.com/watch?v=tW0A7SIOCcE)
 ==========
    
    A hexapod spider robot controlled by [Robotis CM-700 controller](http://support.robotis.com/en/product/auxdevice/controller/cm700_manual.htm), motorized by twenty [Robotis Dynamixel AX-18A servos](http://support.robotis.com/en/product/dynamixel/ax_series/ax-18f.htm), and one [Robotis AX-S1 integrated sensor](http://support.robotis.com/en/product/auxdevice/sensor/dxl_ax_s1.htm) mounted on its head. The robot frame is a slightly modified TrossenRobotics ABS PhantomX kit.
