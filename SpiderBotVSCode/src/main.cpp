@@ -47,12 +47,7 @@ void setup() {
 
     // Initialize AX-S1 Sensor
     sensor = new AXS1Sensor(dxl.getWorkbench(), AX_S1_SENSOR_ID);   // Create AX-S1 sensor instance with Dynamixel controller
-    if (sensor->ping()) {
-        Serial.println("AX-S1 detected!");
-    } else {
-        Serial.println("AX-S1 not detected!");
-    }
-
+    
     // Initialize Gait Controller
     gaitController = new GaitController(hexapod);                   // Create GaitController instance with Hexapod
     Serial.println("Gait Controller initialized.");
@@ -71,7 +66,7 @@ void loop() {
     
     } else if (RCRx & RC100_BTN_U) {
         Serial.println("U");
-        
+                
     } else if (RCRx & RC100_BTN_D) {
         Serial.println("D");
 

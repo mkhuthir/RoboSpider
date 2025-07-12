@@ -28,7 +28,7 @@ public:
     float getTemperature();
 
 private:
-    DynamixelWorkbench* dxl;
+    DynamixelWorkbench* dxl_wb;         // Pointer to DynamixelWorkbench instance
     uint8_t id;
 
     bool readItem(const char* item_name, int32_t* data);

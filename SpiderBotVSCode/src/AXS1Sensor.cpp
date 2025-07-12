@@ -1,11 +1,11 @@
 #include "AXS1Sensor.h"
 
 AXS1Sensor::AXS1Sensor(DynamixelWorkbench* workbench, uint8_t sensor_id)
-    : dxl(workbench), id(sensor_id) {}
+    : dxl_wb(workbench), id(sensor_id) {}
 
 bool AXS1Sensor::ping() {
-    uint16_t model_number = 0;
-    return dxl->ping(id, &model_number);
+    return dxl_wb->ping(id);
+    Serial.println("AX-S1 Sensor pinged successfully.");
 }
 
 bool AXS1Sensor::ledOn() {
@@ -93,9 +93,9 @@ float AXS1Sensor::getTemperature() {
 }
 
 bool AXS1Sensor::readItem(const char* item_name, int32_t* data) {
-    return dxl->itemRead(id, item_name, data);
+    return dxl_wb->itemRead(id, item_name, data);
 }
 
 bool AXS1Sensor::writeItem(const char* item_name, int32_t data) {
-    return dxl->itemWrite(id, item_name, data);
+    return dxl_wb->itemWrite(id, item_name, data);
 }

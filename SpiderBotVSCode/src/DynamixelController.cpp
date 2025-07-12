@@ -2,46 +2,75 @@
 #include <vector>
 
 DynamixelController::DynamixelController() {}
-
+// Constructor initializes the DynamixelController
 bool DynamixelController::begin(const char* device_name, uint32_t baudrate) {
     result = dxl_wb.init(device_name, baudrate, &log);
     if (result == false)
     {
         Serial.println(log);
-        Serial.println("Failed to initilize DynamixelWorkbench");
+        Serial.println("Failed to initilize DynamixelWorkbench!");
     }
     else
     {
-        Serial.print("Succeeded to initilize DynamixelWorkbench at Baudrate: ");
+        Serial.print("Initilized DynamixelWorkbench at baudrate: ");
         Serial.print(baudrate);
         Serial.println(" bps.");
     }
 }
 
-bool DynamixelController::initializeServo(uint8_t id) {
-    bool result = dxl_wb.itemWrite(id, "Operating_Mode", 3); // 3 = Position
-    return result && torqueOn(id);
+bool DynamixelController::ping(uint8_t dxl_id) {
+    result = dxl_wb.ping(dxl_id, &model_number, &log);
+    if (!result)
+    {
+        Serial.println(log);
+        Serial.println("Failed to ping!");
+    }
+    else
+    {
+        Serial.println("Succeeded to ping!");
+        Serial.print("dxl_id : ");
+        Serial.print(dxl_id);
+        Serial.print(" model_number : ");
+        Serial.println(model_number);
+    }
+    return result;
 }
 
-bool DynamixelController::torqueOn(uint8_t id) {
-    return dxl_wb.torqueOn(id);
+bool DynamixelController::jointmode(uint8_t dxl_id) {
+    result = dxl_wb.jointMode(dxl_id, 0, 0, &log);
+    if (!result)    // If joint mode setting fails
+    {
+        Serial.println(log);
+        Serial.println("Failed to set joint mode!");
+    }
+    return result;
 }
 
-bool DynamixelController::torqueOff(uint8_t id) {
-    return dxl_wb.torqueOff(id);
+bool DynamixelController::initializeServo(uint8_t dxl_id) {
+    result = result && jointmode(dxl_id);   // Set servo to joint mode
+    result = result && torqueOn(dxl_id);    // Turn on torque for the servo
+    return result;
 }
 
-bool DynamixelController::setGoalPosition(uint8_t id, uint32_t position) {
-    return dxl_wb.itemWrite(id, "Goal_Position", position);
+bool DynamixelController::torqueOn(uint8_t dxl_id) {
+    return dxl_wb.torqueOn(dxl_id);
 }
 
-bool DynamixelController::setGoalVelocity(uint8_t id, uint32_t velocity) {
-    return dxl_wb.itemWrite(id, "Profile_Velocity", velocity);
+bool DynamixelController::torqueOff(uint8_t dxl_id) {
+    return dxl_wb.torqueOff(dxl_id);
 }
 
-bool DynamixelController::readPresentPosition(uint8_t id, uint32_t &position) {
+bool DynamixelController::setGoalPosition(uint8_t dxl_id, uint32_t position) {
+    return dxl_wb.itemWrite(dxl_id, "Goal_Position", position);
+}
+
+bool DynamixelController::setGoalVelocity(uint8_t dxl_id, uint32_t velocity) {
+    return dxl_wb.itemWrite(dxl_id, "Profile_Velocity", velocity);
+}
+
+bool DynamixelController::readPresentPosition(uint8_t dxl_id, uint32_t &position) {
     int32_t pos = 0;
-    bool result = dxl_wb.itemRead(id, "Present_Position", &pos);
+    bool result = dxl_wb.itemRead(dxl_id, "Present_Position", &pos);
     position = static_cast<uint32_t>(pos);
     return result;
 }
