@@ -31,15 +31,14 @@ void setup() {
 
     // Initialize Dynamixel Controller
     dxl.begin(DXL_SERIAL, DXL_BAUD_RATE); 
-    Serial.println("Dynamixel Controller initialized.");
-
+    
     // Create Hexapod instance
     hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller
     hexapod->initialize();                                          // Initialize all legs
     hexapod->setGaitType(0);                                        // Set default gait
     hexapod->setGaitSpeed(0.5);                                     // Set default speed
     hexapod->setServoSpeed(0.5);                                    // Set default servo speed
-    Serial.println("Dynamixel Controller initialized.");
+    Serial.println("Hexapod initialized.");
     
     // Initialize Sensor Turret
     turret = new Turret(TURRET_PAN_ID, TURRET_TILT_ID, &dxl);       // Create Turret instance with Dynamixel controller
@@ -66,83 +65,42 @@ void loop() {
   if (rcCtrl.available())
   {
     int RCRx = rcCtrl.readData();
-    Serial.print("RCRx = ");
-    Serial.print(RCRx);  
-
-    if (RCRx & RC100_BTN_U) {
+ 
+    if (RCRx == 0){
+        Serial.println("No button is pressed.");
+    
+    } else if (RCRx & RC100_BTN_U) {
         Serial.println("U");
-        turret->rotateTurretUp();    // Rotate turret up for testing
         
     } else if (RCRx & RC100_BTN_D) {
         Serial.println("D");
-        turret->rotateTurretDown();  // Rotate turret down for testing
+
 
     } else if (RCRx & RC100_BTN_L) {
         Serial.println("L");
-        turret->rotateTurretLeft();  // Rotate turret to the left for testing
 
     } else if (RCRx & RC100_BTN_R) {
         Serial.println("R");
-        turret->rotateTurretRight(); // Rotate turret to the right for testing
         
     } else if (RCRx & RC100_BTN_1) {
         Serial.println("1");
-        gaitController->setGait(GAIT_IDLE);
 
     } else if (RCRx & RC100_BTN_2) {
         Serial.println("2");
-        gaitController->setGait(GAIT_WAVE);
 
     } else if (RCRx & RC100_BTN_3) {
         Serial.println("3");
-        gaitController->setGait(GAIT_RIPPLE);
 
     } else if (RCRx & RC100_BTN_4) {
         Serial.println("4");
-        gaitController->setGait(GAIT_TRIPOD);
 
     } else if (RCRx & RC100_BTN_5) {
         Serial.println("5");
-        turret->rotateTurretHome();  // Rotate turret back to home position for testing
 
     } else if (RCRx & RC100_BTN_6) {
         Serial.println("6");
-
-        hexapod->printLegsStatus();  // Print initial status of all legs
-        turret->printTurretStatus(); // Print initial status of turret
-
-        Serial.print("Temp: "); Serial.println(sensor->getTemperature());
-        Serial.print("Voltage: "); Serial.println(sensor->getVoltage());
-        
-        Serial.print("Sound: "); Serial.println(sensor->getSoundLevel());
-        Serial.print("Sound Count: "); Serial.println(sensor->getSoundCount());
-        
-        Serial.print("Light Right: "); Serial.println(sensor->getLightRight());
-        Serial.print("Light Center: "); Serial.println(sensor->getLightCenter());
-        Serial.print("Light Left: "); Serial.println(sensor->getLightLeft());   
-        
-        Serial.print("IR Right: "); Serial.println(sensor->getIRRight());   
-        Serial.print("IR Center: "); Serial.println(sensor->getIRCenter());
-        Serial.print("IR Left: "); Serial.println(sensor->getIRLeft());
-        
-
-        Serial.println("Sensor data read successfully.");
-
-        // Bulk read
-        Serial.println("Bulck reading postions");
-        std::vector<uint32_t> positions;
-        dxl.bulkReadPositions({1,2,3,4,5,6}, positions);
-        for (auto p : positions) {
-            Serial.println(p);
-        }    
-        
+       
     }
   }
 
-    gaitController->update();
-
-    // Move all legs to neutral
-    //std::vector<uint8_t> ids = {1,2,3,4,5,6};
-    //std::vector<uint32_t> poses = {512,512,512,512,512,512};
-    //dxl.syncWritePosition(ids, poses);
 }

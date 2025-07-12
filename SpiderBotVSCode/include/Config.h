@@ -9,7 +9,12 @@
 
 #define DEBUG_SERIAL Serial
 #define RC100_SERIAL Serial1
-#define DXL_SERIAL   "1"
+
+#if defined(__OPENCM904__)
+  #define DXL_SERIAL "3"       // When using OpenCM 485EXP Dynamixel is on Serial3(USART3)
+#elif defined(__OPENCR__)
+  #define DXL_SERIAL ""        // When using OpenCR Dynamixel is on Serial1(USART1)
+#endif
 
 
 // ------------------------

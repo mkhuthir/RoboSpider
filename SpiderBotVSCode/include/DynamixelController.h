@@ -25,7 +25,9 @@ public:
     DynamixelWorkbench* getWorkbench();                                                                 // if you need to expose the workbench pointer
 
 private:
-    DynamixelWorkbench dxl;                                                                             // DynamixelWorkbench instance to handle communication with servos
+    DynamixelWorkbench  dxl_wb;             // DynamixelWorkbench instance for managing servos
+    const char          *log;               // Log string for debugging 
+    bool                result = false;     // Result of operations
 };
 
 #endif // DYNAMIXELCONTROLLER_H
