@@ -31,7 +31,7 @@ void setup() {
 
     // Initialize Dynamixel Controller
     dxl.begin(DXL_SERIAL, DXL_BAUD_RATE); 
-    
+
     // Create Hexapod instance
     hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller
     hexapod->initialize();                                          // Initialize all legs
