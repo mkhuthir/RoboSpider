@@ -10,7 +10,7 @@ public:
     DynamixelController();
     bool begin(const char* device_name, uint32_t baudrate);                                             // initialize the controller with device name and baudrate
     bool ping(uint8_t dxl_id);                                                                          // ping a servo to check if it is connected
-    bool jointmode(uint8_t dxl_id);                                                                     // set a servo to joint mode
+    bool jointMode(uint8_t dxl_id);                                                                     // set a servo to joint mode
     bool initializeServo(uint8_t dxl_id);                                                               // initialize a servo with default settings
 
     bool torqueOn(uint8_t dxl_id);                                                                      // turn on torque for a servo  

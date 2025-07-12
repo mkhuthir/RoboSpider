@@ -31,26 +31,31 @@ void setup() {
 
     // Initialize Dynamixel Controller
     dxl.begin(DXL_SERIAL, DXL_BAUD_RATE); 
+        
+
+    dxl.ping(1);                   // Ping Dynamixel with ID 1
+    dxl.jointMode(1);                // Set Dynamixel to joint mode
+    dxl.jointMode(21);                // Set Dynamixel to joint mode
 
     // Create Hexapod instance
-    hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller
-    hexapod->initialize();                                          // Initialize all legs
-    hexapod->setGaitType(0);                                        // Set default gait
-    hexapod->setGaitSpeed(0.5);                                     // Set default speed
-    hexapod->setServoSpeed(0.5);                                    // Set default servo speed
-    Serial.println("Hexapod initialized.");
+    //hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller
+    //hexapod->initialize();                                          // Initialize all legs
+    //hexapod->setGaitType(0);                                        // Set default gait
+    //hexapod->setGaitSpeed(0.5);                                     // Set default speed
+    //hexapod->setServoSpeed(0.5);                                    // Set default servo speed
+    //Serial.println("Hexapod initialized.");
     
     // Initialize Sensor Turret
-    turret = new Turret(TURRET_PAN_ID, TURRET_TILT_ID, &dxl);       // Create Turret instance with Dynamixel controller
-    turret->initialize();                                           // Initialize turret servos
-    Serial.println("Sensor Turret initialized.");
+    //turret = new Turret(TURRET_PAN_ID, TURRET_TILT_ID, &dxl);       // Create Turret instance with Dynamixel controller
+    //turret->initialize();                                           // Initialize turret servos
+    //Serial.println("Sensor Turret initialized.");
 
     // Initialize AX-S1 Sensor
-    sensor = new AXS1Sensor(dxl.getWorkbench(), AX_S1_SENSOR_ID);   // Create AX-S1 sensor instance with Dynamixel controller
+    //sensor = new AXS1Sensor(dxl.getWorkbench(), AX_S1_SENSOR_ID);   // Create AX-S1 sensor instance with Dynamixel controller
     
     // Initialize Gait Controller
-    gaitController = new GaitController(hexapod);                   // Create GaitController instance with Hexapod
-    Serial.println("Gait Controller initialized.");
+    //gaitController = new GaitController(hexapod);                   // Create GaitController instance with Hexapod
+    //Serial.println("Gait Controller initialized.");
 
 }
 
