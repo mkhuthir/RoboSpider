@@ -39,7 +39,7 @@ void setup() {
     dxl.goalPosition(1, 512);      // Set goal position for Dynamixel with ID 1
 
     Serial.print("Battery Voltage: ");
-    Serial.println(dxl.getBatteryVoltage()); // Get and print battery voltage
+    Serial.println(dxl.ucBatteryVoltage()); // Get and print battery voltage
 
     dxl.servoLEDOn(1);            // Turn on LED for Dynamixel with ID 1
     delay(1000);                // Wait for 1 second

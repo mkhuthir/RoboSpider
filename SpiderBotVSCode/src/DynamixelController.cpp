@@ -58,7 +58,8 @@ bool DynamixelController::jointMode(uint8_t dxl_id) {
 
 // Initialize a servo with default settings
 bool DynamixelController::initServo(uint8_t dxl_id) {
-    result = jointMode(dxl_id);   // Set servo to joint mode
+    result = servoLEDOn(dxl_id);  // Turn on LED for the servo
+    result = result && jointMode(dxl_id);   // Set servo to joint mode
     if (!result) {
         Serial.print("Failed to initialize servo with ID: ");
         Serial.println(dxl_id);
@@ -70,6 +71,7 @@ bool DynamixelController::initServo(uint8_t dxl_id) {
     return result;
 }
 
+// Set the goal position of a servo
 bool DynamixelController::goalPosition(uint8_t dxl_id, int32_t position) {
     result = dxl_wb.goalPosition(dxl_id, position, &log);
     if (!result)  // If setting goal position fails
@@ -81,6 +83,7 @@ bool DynamixelController::goalPosition(uint8_t dxl_id, int32_t position) {
     return result;
 }
 
+// Turn on the LED of a servo
 bool DynamixelController::servoLEDOn(uint8_t dxl_id) {
     result = dxl_wb.ledOn(dxl_id, &log);
     if (!result)  // If turning on LED fails
@@ -92,6 +95,7 @@ bool DynamixelController::servoLEDOn(uint8_t dxl_id) {
     return result;
 }   
 
+// Turn off the LED of a servo
 bool DynamixelController::servoLEDOff(uint8_t dxl_id) {
     result = dxl_wb.ledOff(dxl_id, &log);
     if (!result)  // If turning off LED fails
@@ -103,6 +107,7 @@ bool DynamixelController::servoLEDOff(uint8_t dxl_id) {
     return result;
 }
 
+// Turn on a LED on OpenCR1.0 board
 bool DynamixelController::ucLEDOn(uint8_t LED_id) {
     // OpenCR1.0 LED IDs are as follows:
     // LED_BUILTIN             13
@@ -121,6 +126,7 @@ bool DynamixelController::ucLEDOn(uint8_t LED_id) {
     return true;                // Return true as the operation is successful
 }
 
+// Turn off a LED on OpenCR1.0 board
 bool DynamixelController::ucLEDOff(uint8_t LED_id) {
     // OpenCR1.0 LED IDs are as follows:
     // LED_BUILTIN             13
@@ -139,19 +145,19 @@ bool DynamixelController::ucLEDOff(uint8_t LED_id) {
     return true;                        // Return true as the operation is successful
 }
 
-float DynamixelController::getBatteryVoltage() {
+// Get the battery voltage from the ADC pin on OpenCR1.0 board
+float DynamixelController::ucBatteryVoltage() {
     int adc_value = analogRead(BDPIN_BAT_PWR_ADC);          // Read the ADC value from the battery power pin
     return (map(adc_value, 0, 1023, 0, 330*57/10)/100.0);   // Convert ADC value to voltage (assuming 3300mV reference and 57:10 voltage divider)
 }
 
-// Play a melody using OpenCR Buzzer
-bool DynamixelController::playMelody() {
+// Play a melody using OpenCR1.0 Buzzer
+bool DynamixelController::ucPlayMelody() {
     
     int melody[] = {NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4};  // melody notes
     int noteDurations[] = {4, 8, 8, 4, 4, 4, 4, 4};                                     // note durations: 4 = quarter note, 8 = eighth note, etc.:
 
-    // Check if the buzzer pin is defined
-    if (BDPIN_BUZZER < 0) {
+    if (BDPIN_BUZZER < 0) {                                     // Check if the buzzer pin is defined
         Serial.println("Buzzer pin not defined!");
         return false;
     } else {
