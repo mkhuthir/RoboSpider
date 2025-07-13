@@ -3,7 +3,6 @@
 
 #include <DynamixelWorkbench.h> // Include DynamixelWorkbench for managing servos
 #include <vector>               // Include vector for handling lists of servos
-#include "pitches.h"            // Include pitches for melody notes
 
 
 class DynamixelController {

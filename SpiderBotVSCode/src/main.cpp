@@ -1,6 +1,7 @@
 
 
 #include <Arduino.h>                    // Include Arduino core library
+#include "pitches.h"            // Include pitches for melody notes
 
 #include "Config.h"                     // Include configuration header for serial ports and other settings
 #include "RC100.h"                      // Include Robotis RC100 remote controller library  
