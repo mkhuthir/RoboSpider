@@ -2,20 +2,20 @@
 
 
 Leg::Leg(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, DynamixelController* controller)
-  : coxa(coxaID), femur(femurID), tibia(tibiaID), dxl(controller) {}
+  : coxa(coxaID), femur(femurID), tibia(tibiaID), dxl_wb(controller) {}
 
 // Initialize the leg servos
 void Leg::initialize() {
-  dxl->initializeServo(coxa);       // Initialize coxa servo with limits
-  dxl->initializeServo(femur);    // Initialize femur servo with limits
-  dxl->initializeServo(tibia);    // Initialize tibia servo with limits
+  dxl_wb->initServo(coxa);     // Initialize coxa servo with limits
+  dxl_wb->initServo(femur);    // Initialize femur servo with limits
+  dxl_wb->initServo(tibia);    // Initialize tibia servo with limits
 }
 
 // Set angles for the leg joints
 void Leg::setJointAngles(float coxaAngle, float femurAngle, float tibiaAngle) {
-  dxl->setGoalPosition(coxa, coxaAngle);      // Set coxa angle
-  dxl->setGoalPosition(femur, femurAngle);    // Set femur angle
-  dxl->setGoalPosition(tibia, tibiaAngle);    // Set tibia angle
+  dxl_wb->goalPosition(coxa, coxaAngle);      // Set coxa angle
+  dxl_wb->goalPosition(femur, femurAngle);    // Set femur angle
+  dxl_wb->goalPosition(tibia, tibiaAngle);    // Set tibia angle
 }
 
 float Leg::getCoxaAngle() {

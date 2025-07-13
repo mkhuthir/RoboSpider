@@ -20,7 +20,7 @@ class Turret {
             
   private:
     uint8_t pan, tilt;                                                      // Servo IDs for pan, tilt and sensor
-    DynamixelController* dxl;                                           // Pointer to the Dynamixel controller instance
+    DynamixelController* dxl_wb;                                           // Pointer to the Dynamixel controller instance
 };
 
 #endif // TURRET_H

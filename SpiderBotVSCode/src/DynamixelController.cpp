@@ -5,7 +5,7 @@ DynamixelController::DynamixelController() {}
 // Constructor initializes the DynamixelController
 bool DynamixelController::begin(const char* device_name, uint32_t baudrate) {
     result = dxl_wb.init(device_name, baudrate, &log);
-    if (result == false)
+    if (!result)  // If initialization fails
     {
         Serial.println(log);
         Serial.println("Failed to initilize DynamixelWorkbench!");
@@ -18,9 +18,10 @@ bool DynamixelController::begin(const char* device_name, uint32_t baudrate) {
     }
 }
 
+// Ping a servo to check if it is connected
 bool DynamixelController::ping(uint8_t dxl_id) {
     result = dxl_wb.ping(dxl_id, &model_number, &log);
-    if (!result)
+    if (!result)  // If ping fails
     {
         Serial.println(log);
         Serial.println("Failed to ping!");
@@ -36,6 +37,7 @@ bool DynamixelController::ping(uint8_t dxl_id) {
     return result;
 }
 
+// Set a servo to joint mode
 bool DynamixelController::jointMode(uint8_t dxl_id) {
     result = dxl_wb.jointMode(dxl_id, 0, 0, &log);
     if (!result)    // If joint mode setting fails
@@ -51,13 +53,21 @@ bool DynamixelController::jointMode(uint8_t dxl_id) {
     return result;
 }
 
-bool DynamixelController::initializeServo(uint8_t dxl_id) {
-    result = result && jointMode(dxl_id);   // Set servo to joint mode
-    result = result && torqueOn(dxl_id);    // Turn on torque for the servo
+// Initialize a servo with default settings
+bool DynamixelController::initServo(uint8_t dxl_id) {
+    result = jointMode(dxl_id);   // Set servo to joint mode
+    if (!result) {
+        Serial.print("Failed to initialize servo with ID: ");
+        Serial.println(dxl_id);
+    } else {
+        Serial.print("Servo with ID: ");
+        Serial.print(dxl_id);
+        Serial.println(" initialized successfully.");
+    }
     return result;
 }
 
-
+// Return the DynamixelWorkbench instance
 DynamixelWorkbench* DynamixelController::getWorkbench() {
     return &dxl_wb;
 }

@@ -11,18 +11,8 @@ public:
     bool begin(const char* device_name, uint32_t baudrate);                                             // initialize the controller with device name and baudrate
     bool ping(uint8_t dxl_id);                                                                          // ping a servo to check if it is connected
     bool jointMode(uint8_t dxl_id);                                                                     // set a servo to joint mode
-    bool initializeServo(uint8_t dxl_id);                                                               // initialize a servo with default settings
-
-    bool torqueOn(uint8_t dxl_id);                                                                      // turn on torque for a servo  
-    bool torqueOff(uint8_t dxl_id);                                                                     // turn off torque for a servo
-
-    bool setGoalPosition(uint8_t dxl_id, uint32_t position);                                            // set goal position of a servo 
-    bool setGoalVelocity(uint8_t dxl_id, uint32_t velocity);                                            // set goal velocity of a servo
-
-    bool readPresentPosition(uint8_t dxl_id, uint32_t &position);                                       // read current position of a servo
-
-    bool syncWritePosition(const std::vector<uint8_t>& ids, const std::vector<uint32_t>& positions);    // write positions to multiple servos
-    bool bulkReadPositions(const std::vector<uint8_t>& ids, std::vector<uint32_t>& positions);          // read positions of multiple servos
+    bool initServo(uint8_t dxl_id);                                                                     // initialize a servo with default settings
+    bool goalPosition(uint8_t dxl_id, int32_t position);                                                // set the goal position of a servo
     
     DynamixelWorkbench* getWorkbench();                                                                 // if you need to expose the workbench pointer
 
