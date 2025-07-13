@@ -83,6 +83,17 @@ bool DynamixelController::goalPosition(uint8_t dxl_id, int32_t position) {
     return result;
 }
 
+// Set the goal velocity of a servo
+bool DynamixelController::goalVelocity(uint8_t dxl_id, int32_t velocity) {
+    result = dxl_wb.goalVelocity(dxl_id, velocity, &log);
+    if (!result)  // If setting goal velocity fails 
+    {
+        Serial.println(log);
+        Serial.print("Failed to set goal velocity for id: ");
+        Serial.println(dxl_id);
+    }
+    return result;
+}
 // Turn on the LED of a servo
 bool DynamixelController::servoLEDOn(uint8_t dxl_id) {
     result = dxl_wb.ledOn(dxl_id, &log);

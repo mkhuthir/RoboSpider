@@ -34,9 +34,10 @@ void setup() {
     // Initialize Dynamixel Controller
     dxl.begin(DXL_SERIAL, DXL_BAUD_RATE); 
 
-    dxl.ping(1);                    // Ping Dynamixel with ID 1
-    dxl.jointMode(1);               // Set Dynamixel to joint mode
-    dxl.goalPosition(1, 512);      // Set goal position for Dynamixel with ID 1
+    dxl.ping(1);                // Ping Dynamixel with ID 1
+    dxl.jointMode(1);           // Set Dynamixel to joint mode
+    dxl.goalVelocity(1, -100);  // Set goal velocity to 0 for Dynamixel with ID 1
+    dxl.goalPosition(1, 512);   // Set goal position for Dynamixel with ID 1
 
     Serial.print("Battery Voltage: ");
     Serial.println(dxl.ucBatteryVoltage()); // Get and print battery voltage
