@@ -1,5 +1,6 @@
 #include "DynamixelController.h"
 #include <vector>
+#include "pitches.h"            // Include pitches for melody notes
 
 
 DynamixelController::DynamixelController() {}
@@ -75,7 +76,11 @@ DynamixelWorkbench* DynamixelController::getWorkbench() {
 }
 
 // Play a melody using OpenCR Buzzer
-bool playMelody() {
+bool DynamixelController::playMelody() {
+    
+    int melody[] = {NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4};  // melody notes
+    int noteDurations[] = {4, 8, 8, 4, 4, 4, 4, 4};                                     // note durations: 4 = quarter note, 8 = eighth note, etc.:
+
     // Check if the buzzer pin is defined
     if (BDPIN_BUZZER < 0) {
         Serial.println("Buzzer pin not defined!");
