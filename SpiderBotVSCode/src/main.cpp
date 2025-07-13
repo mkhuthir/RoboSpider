@@ -34,7 +34,7 @@ void setup() {
     dxl.begin(DXL_SERIAL, DXL_BAUD_RATE); 
         
 
-    //dxl.ping(1);                   // Ping Dynamixel with ID 1
+    dxl.ping(1);                   // Ping Dynamixel with ID 1
     dxl.jointMode(1);                // Set Dynamixel to joint mode
     
 
