@@ -16,6 +16,7 @@ bool DynamixelController::begin(const char* device_name, uint32_t baudrate) {
         Serial.print(baudrate);
         Serial.println(" bps.");
     }
+    return result;
 }
 
 // Ping a servo to check if it is connected
