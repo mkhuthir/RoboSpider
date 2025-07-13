@@ -1,11 +1,10 @@
 #ifndef DYNAMIXELCONTROLLER_H
 #define DYNAMIXELCONTROLLER_H
 
-#include "pitches.h"
+#include <DynamixelWorkbench.h> // Include DynamixelWorkbench for managing servos
+#include <vector>               // Include vector for handling lists of servos
+#include "pitches.h"            // Include pitches for melody notes
 
-
-#include <DynamixelWorkbench.h>
-#include <vector>
 
 class DynamixelController {
 public:
@@ -24,9 +23,8 @@ private:
     const char          *log;               // Log string for debugging 
     bool                result = false;     // Result of operations
     uint16_t            model_number = 0;   // Model number of the servo being operated on
-        
-    int melody[] = {NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4};  // melody notes
-    int noteDurations[] = {4, 8, 8, 4, 4, 4, 4, 4};                                     // note durations: 4 = quarter note, 8 = eighth note, etc.:
+    int                 melody[] = {NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4};  // melody notes
+    int                 noteDurations[] = {4, 8, 8, 4, 4, 4, 4, 4};                                     // note durations: 4 = quarter note, 8 = eighth note, etc.:
 
 };
 

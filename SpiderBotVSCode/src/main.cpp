@@ -1,9 +1,10 @@
 
 
 #include <Arduino.h>                    // Include Arduino core library
-#include "Config.h"                     // Include configuration header for serial ports and other settings     
+
+#include "Config.h"                     // Include configuration header for serial ports and other settings
 #include "RC100.h"                      // Include Robotis RC100 remote controller library  
-#include "DynamixelController.h"        // Include Dynamixel controller class for managing servos
+
 #include "Hexapod.h"                    // Include Hexapod class for managing the hexapod robot
 #include "Turret.h"                     // Include Turret class for managing the sensor turret
 #include "AXS1Sensor.h"                 // Include AXS1Sensor class for managing the AX-S1 sensor
@@ -32,10 +33,10 @@ void setup() {
 
     // Initialize Dynamixel Controller
     dxl.begin(DXL_SERIAL, DXL_BAUD_RATE); 
-        
+    dxl.playMelody();               // Play a melody using the servos   
 
-    dxl.ping(1);                   // Ping Dynamixel with ID 1
-    dxl.jointMode(1);                // Set Dynamixel to joint mode
+    dxl.ping(1);                    // Ping Dynamixel with ID 1
+    dxl.jointMode(1);               // Set Dynamixel to joint mode
     
 
     // Create Hexapod instance
