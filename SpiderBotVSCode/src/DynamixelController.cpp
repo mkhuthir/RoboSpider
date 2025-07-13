@@ -81,6 +81,64 @@ bool DynamixelController::goalPosition(uint8_t dxl_id, int32_t position) {
     return result;
 }
 
+bool DynamixelController::servoLEDOn(uint8_t dxl_id) {
+    result = dxl_wb.ledOn(dxl_id, &log);
+    if (!result)  // If turning on LED fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to turn on LED for id: ");
+        Serial.println(dxl_id);
+    }
+    return result;
+}   
+
+bool DynamixelController::servoLEDOff(uint8_t dxl_id) {
+    result = dxl_wb.ledOff(dxl_id, &log);
+    if (!result)  // If turning off LED fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to turn off LED for id: ");
+        Serial.println(dxl_id);
+    }
+    return result;
+}
+
+bool DynamixelController::ucLEDOn(uint8_t LED_id) {
+    // OpenCR1.0 LED IDs are as follows:
+    // LED_BUILTIN             13
+    // BDPIN_LED_USER_1        22
+    // BDPIN_LED_USER_2        23
+    // BDPIN_LED_USER_3        24
+    // BDPIN_LED_USER_4        25
+    // BDPIN_LED_STATUS        36
+
+    if (LED_id < LED_BUILTIN || LED_id > BDPIN_LED_STATUS) {    // Check if the LED ID is valid
+        Serial.println("Invalid LED ID!");
+        return false;                                           // Return false if LED ID is invalid
+    }
+    pinMode(LED_id, OUTPUT);    // Set the LED pin as output
+    digitalWrite(LED_id, LOW);  // Turn on the user control LED
+    return true;                // Return true as the operation is successful
+}
+
+bool DynamixelController::ucLEDOff(uint8_t LED_id) {
+    // OpenCR1.0 LED IDs are as follows:
+    // LED_BUILTIN             13
+    // BDPIN_LED_USER_1        22
+    // BDPIN_LED_USER_2        23
+    // BDPIN_LED_USER_3        24
+    // BDPIN_LED_USER_4        25
+    // BDPIN_LED_STATUS        36
+
+    if (LED_id < LED_BUILTIN || LED_id > BDPIN_LED_STATUS) {    // Check if the LED ID is valid
+        Serial.println("Invalid LED ID!");                      
+        return false;                                           // Return false if LED ID is invalid
+    }
+    pinMode(LED_id, OUTPUT);            // Set the LED pin as output
+    digitalWrite(LED_id, HIGH);         // Turn off the user control LED
+    return true;                        // Return true as the operation is successful
+}
+
 float DynamixelController::getBatteryVoltage() {
     int adc_value = analogRead(BDPIN_BAT_PWR_ADC);          // Read the ADC value from the battery power pin
     return (map(adc_value, 0, 1023, 0, 330*57/10)/100.0);   // Convert ADC value to voltage (assuming 3300mV reference and 57:10 voltage divider)

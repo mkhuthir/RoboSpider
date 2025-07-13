@@ -13,6 +13,12 @@
         
             bool goalPosition(uint8_t dxl_id, int32_t position);    // set the goal position of a servo
         
+            bool servoLEDOn(uint8_t dxl_id);                        // turn on the LED of a servo
+            bool servoLEDOff(uint8_t dxl_id);                       // turn off the LED of a servo
+
+            bool ucLEDOn(uint8_t LED_id);                           // turn on the user control LED
+            bool ucLEDOff(uint8_t LED_id);                          // turn off the user control LED
+
             bool playMelody();                                      // play a melody using the servos
             float getBatteryVoltage();                              // get the battery voltage
             
