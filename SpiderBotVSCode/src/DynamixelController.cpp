@@ -70,9 +70,15 @@ bool DynamixelController::initServo(uint8_t dxl_id) {
     return result;
 }
 
-// Return the DynamixelWorkbench instance
-DynamixelWorkbench* DynamixelController::getWorkbench() {
-    return &dxl_wb;
+bool DynamixelController::goalPosition(uint8_t dxl_id, int32_t position) {
+    result = dxl_wb.goalPosition(dxl_id, position, &log);
+    if (!result)  // If setting goal position fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to set goal position for id: ");
+        Serial.println(dxl_id);
+    }
+    return result;
 }
 
 // Play a melody using OpenCR Buzzer
@@ -86,8 +92,6 @@ bool DynamixelController::playMelody() {
         Serial.println("Buzzer pin not defined!");
         return false;
     } else {
-        Serial.println("Playing melody...");
-            
         for (int thisNote = 0; thisNote < sizeof(melody) / sizeof(melody[0]); thisNote++) {
             int noteDuration = 1000 / noteDurations[thisNote];  // Calculate the note duration
             tone(BDPIN_BUZZER, melody[thisNote], noteDuration); // Play the note on the buzzer
@@ -96,7 +100,10 @@ bool DynamixelController::playMelody() {
             noTone(BDPIN_BUZZER);                               // Stop the tone playing
         }
     }
-    
-    Serial.println("Melody finished.");
     return true;
+}
+
+// Return the DynamixelWorkbench instance
+DynamixelWorkbench* DynamixelController::getWorkbench() {
+    return &dxl_wb;
 }

@@ -37,7 +37,7 @@ void setup() {
 
     dxl.ping(1);                    // Ping Dynamixel with ID 1
     dxl.jointMode(1);               // Set Dynamixel to joint mode
-    
+    dxl.goalPosition(1, 512);      // Set goal position for Dynamixel with ID 1
 
     // Create Hexapod instance
     //hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller
