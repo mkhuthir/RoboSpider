@@ -33,11 +33,13 @@ void setup() {
 
     // Initialize Dynamixel Controller
     dxl.begin(DXL_SERIAL, DXL_BAUD_RATE); 
-    dxl.playMelody();               // Play a melody using the servos   
 
     dxl.ping(1);                    // Ping Dynamixel with ID 1
     dxl.jointMode(1);               // Set Dynamixel to joint mode
     dxl.goalPosition(1, 512);      // Set goal position for Dynamixel with ID 1
+
+    Serial.print("Battery Voltage: ");
+    Serial.println(dxl.getBatteryVoltage()); // Get and print battery voltage
 
     // Create Hexapod instance
     //hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller

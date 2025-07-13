@@ -16,6 +16,7 @@ public:
     bool goalPosition(uint8_t dxl_id, int32_t position);                                                // set the goal position of a servo
    
     bool playMelody();                                                                                  // play a melody using the servos
+    float getBatteryVoltage();                                                                          // get the battery voltage
     
     DynamixelWorkbench* getWorkbench();                                                                 // if you need to expose the workbench pointer
 

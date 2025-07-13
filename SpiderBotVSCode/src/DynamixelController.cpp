@@ -81,6 +81,14 @@ bool DynamixelController::goalPosition(uint8_t dxl_id, int32_t position) {
     return result;
 }
 
+float DynamixelController::getBatteryVoltage() {
+    int adc_value;
+    float vol_value;
+    adc_value = analogRead(BDPIN_BAT_PWR_ADC);              // Read the ADC value from the battery power pin
+    vol_value = map(adc_value, 0, 1023, 0, 330*57/10)/100;  // Convert ADC value to voltage (assuming 3300mV reference and 57:10 voltage divider)
+    return vol_value;                                       // Return the battery voltage
+}
+
 // Play a melody using OpenCR Buzzer
 bool DynamixelController::playMelody() {
     
