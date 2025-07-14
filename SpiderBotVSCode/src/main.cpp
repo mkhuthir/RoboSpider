@@ -2,7 +2,9 @@
 
 #include <Arduino.h>                    // Include Arduino core library
 
-#include "Config.h"                     // Include configuration header for serial ports and other settings
+#include "Config.h"                     // Include configuration header
+#include "Microcontroller.h"            // Include Microcontroller class for managing OpenCR1.0 board
+#include "Servo.h"                      // Include Servo class for managing Dynamixel servos
 #include "RC100.h"                      // Include Robotis RC100 remote controller library  
 
 #include "Hexapod.h"                    // Include Hexapod class for managing the hexapod robot
@@ -12,7 +14,9 @@
 
 
 // Global variables and instances
-DynamixelController dxl;                // Initialize DynamixelWorkbench with the specified serial port and baud rate
+
+Microcontroller     uCtrl;              // Initialize Microcontroller instance for OpenCR1.0 board
+Servo               dxl;                // Initialize Servo instance for Dynamixel servos
 RC100               rcCtrl;             // RC100 remote controller instance
 Hexapod*            hexapod;            // Pointer to Hexapod instance
 Turret*             turret;             // Pointer to Turret instance
@@ -26,6 +30,8 @@ void setup() {
     Serial.begin(DEBUG_BAUD_RATE);
     while (!Serial); // Wait for Serial to be ready
     
+    uCtrl.init();                     // Initialize the microcontroller
+
     rcCtrl.begin(RC100_SERIAL);             // Initialize RC100 remote controller with specified serial port
     dxl.init(DXL_SERIAL, DXL_BAUD_RATE);   // Initialize Dynamixel controller with specified serial port and baud rate
 

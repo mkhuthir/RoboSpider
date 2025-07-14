@@ -1,11 +1,11 @@
-#ifndef DYNAMIXELCONTROLLER_H
-#define DYNAMIXELCONTROLLER_H
+#ifndef SERVO_H
+#define SERVO_H
 
     #include <DynamixelWorkbench.h> // Include DynamixelWorkbench for managing servos
 
-    class DynamixelController {
+    class Servo {
         public:
-            DynamixelController();
+            Servo();
             bool    init(const char* device_name, uint32_t baudrate);  // initialize the controller with device name and baudrate
             bool    ping(uint8_t dxl_id);                               // ping a servo to check if it is connected
             bool    jointMode(uint8_t dxl_id);                          // set a servo to joint mode
@@ -28,4 +28,4 @@
 
     };
 
-#endif // DYNAMIXELCONTROLLER_H
+#endif // SERVO_H

@@ -1,7 +1,9 @@
 #ifndef MICROCONTROLLER_H
 #define MICROCONTROLLER_H   
 
-Class Microcontroller {
+#include <Arduino.h>          // Include Arduino library for basic functions
+
+class Microcontroller {
     public:
         Microcontroller();
         bool    init();                                             // initialize the microcontroller

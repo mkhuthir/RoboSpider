@@ -1,9 +1,11 @@
-#include "DynamixelController.h"
+#include "Servo.h"
 
 
-DynamixelController::DynamixelController() {}
-// Constructor initializes the DynamixelController
-bool DynamixelController::init(const char* device_name, uint32_t baudrate) {
+// Constructor for Servo
+Servo::Servo() {}
+
+//initialize the DynamixelWorkbench instance
+bool Servo::init(const char* device_name, uint32_t baudrate) {
     result = dxl_wb.init(device_name, baudrate, &log);
     if (!result)  // If initialization fails
     {
@@ -22,7 +24,7 @@ bool DynamixelController::init(const char* device_name, uint32_t baudrate) {
 }
 
 // Ping a servo to check if it is connected
-bool DynamixelController::ping(uint8_t dxl_id) {
+bool Servo::ping(uint8_t dxl_id) {
     result = dxl_wb.ping(dxl_id, &model_number, &log);
     if (!result)  // If ping fails
     {
@@ -43,7 +45,7 @@ bool DynamixelController::ping(uint8_t dxl_id) {
 }
 
 // Set a servo to joint mode
-bool DynamixelController::jointMode(uint8_t dxl_id) {
+bool Servo::jointMode(uint8_t dxl_id) {
     result = dxl_wb.jointMode(dxl_id, 0, 0, &log);
     if (!result)    // If joint mode setting fails
     {
@@ -61,7 +63,7 @@ bool DynamixelController::jointMode(uint8_t dxl_id) {
 }
 
 // Initialize a servo with default settings
-bool DynamixelController::initServo(uint8_t dxl_id) {
+bool Servo::initServo(uint8_t dxl_id) {
     
     result = ping(dxl_id);                          // Ping the servo to
     result = result && jointMode(dxl_id);           // Set servo to joint mode
@@ -83,7 +85,7 @@ bool DynamixelController::initServo(uint8_t dxl_id) {
 }
 
 // Set the goal position of a servo
-bool DynamixelController::goalPosition(uint8_t dxl_id, int32_t position) {
+bool Servo::goalPosition(uint8_t dxl_id, int32_t position) {
     result = dxl_wb.goalPosition(dxl_id, position, &log);
     if (!result)  // If setting goal position fails
     {
@@ -95,7 +97,7 @@ bool DynamixelController::goalPosition(uint8_t dxl_id, int32_t position) {
 }
 
 // Set the goal velocity of a servo
-bool DynamixelController::goalVelocity(uint8_t dxl_id, int32_t velocity) {
+bool Servo::goalVelocity(uint8_t dxl_id, int32_t velocity) {
     result = dxl_wb.goalVelocity(dxl_id, velocity, &log);
     if (!result)  // If setting goal velocity fails 
     {
@@ -106,7 +108,7 @@ bool DynamixelController::goalVelocity(uint8_t dxl_id, int32_t velocity) {
     return result;
 }
 // Turn on the LED of a servo
-bool DynamixelController::LEDOn(uint8_t dxl_id) {
+bool Servo::LEDOn(uint8_t dxl_id) {
     result = dxl_wb.ledOn(dxl_id, &log);
     if (!result)  // If turning on LED fails
     {
@@ -118,7 +120,7 @@ bool DynamixelController::LEDOn(uint8_t dxl_id) {
 }   
 
 // Turn off the LED of a servo
-bool DynamixelController::LEDOff(uint8_t dxl_id) {
+bool Servo::LEDOff(uint8_t dxl_id) {
     result = dxl_wb.ledOff(dxl_id, &log);
     if (!result)  // If turning off LED fails
     {
@@ -132,6 +134,6 @@ bool DynamixelController::LEDOff(uint8_t dxl_id) {
 
 
 // Return the DynamixelWorkbench instance
-DynamixelWorkbench* DynamixelController::getWorkbench() {
+DynamixelWorkbench* Servo::getWorkbench() {
     return &dxl_wb;
 }

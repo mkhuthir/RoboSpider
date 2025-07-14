@@ -1,38 +1,38 @@
 #ifndef AXS1_SENSOR_H
 #define AXS1_SENSOR_H
 
-#include <DynamixelWorkbench.h>
+    #include <DynamixelWorkbench.h>
 
-class AXS1Sensor {
-public:
-    AXS1Sensor(DynamixelWorkbench* workbench, uint8_t sensor_id);
+    class AXS1Sensor {
+    public:
+        AXS1Sensor(DynamixelWorkbench* workbench, uint8_t sensor_id);
 
-    bool ping();
+        bool ping();
 
-    bool ledOn();
-    bool ledOff();
-    bool setBuzzer(uint8_t note, uint8_t duration);
+        bool ledOn();
+        bool ledOff();
+        bool setBuzzer(uint8_t note, uint8_t duration);
 
-    int getIRLeft();
-    int getIRCenter();
-    int getIRRight();
+        int getIRLeft();
+        int getIRCenter();
+        int getIRRight();
 
-    int getLightLeft();
-    int getLightCenter();
-    int getLightRight();
+        int getLightLeft();
+        int getLightCenter();
+        int getLightRight();
 
-    int getSoundLevel();
-    int getSoundCount();
+        int getSoundLevel();
+        int getSoundCount();
 
-    float getVoltage();
-    float getTemperature();
+        float getVoltage();
+        float getTemperature();
 
-private:
-    DynamixelWorkbench* dxl_wb;         // Pointer to DynamixelWorkbench instance
-    uint8_t id;
+    private:
+        DynamixelWorkbench* dxl_wb;         // Pointer to DynamixelWorkbench instance
+        uint8_t id;
 
-    bool readItem(const char* item_name, int32_t* data);
-    bool writeItem(const char* item_name, int32_t data);
-};
+        bool readItem(const char* item_name, int32_t* data);
+        bool writeItem(const char* item_name, int32_t data);
+    };
 
 #endif // AXS1_SENSOR_H

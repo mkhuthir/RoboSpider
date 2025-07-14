@@ -1,1 +1,0 @@
-../SpiderBotVSCode/include/DynamixelController.h
