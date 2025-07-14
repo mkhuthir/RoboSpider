@@ -1,7 +1,7 @@
 #include "Leg.h"
 
 
-Leg::Leg(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, DynamixelController* controller)
+Leg::Leg(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* controller)
   : coxa(coxaID), femur(femurID), tibia(tibiaID), dxl_wb(controller) {}
 
 // Initialize the leg servos

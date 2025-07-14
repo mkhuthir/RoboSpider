@@ -6,6 +6,7 @@
 #include "Config.h"                     // Include configuration header
 #include "Microcontroller.h"            // Include Microcontroller class for managing OpenCR1.0 board
 #include "Servo.h"                      // Include Servo class for managing Dynamixel servos
+#include "Remotecontroller.h"            // Include RemoteController class for managing remote controller input
 #include "RC100.h"                      // Include Robotis RC100 remote controller library  
 
 #include "Hexapod.h"                    // Include Hexapod class for managing the hexapod robot
@@ -16,13 +17,13 @@
 
 // Global variables and instances
 
-Microcontroller     mc;                 // Initialize Microcontroller instance for OpenCR1.0 board
-Servo               dxl;                // Initialize Servo instance for Dynamixel servos
-RC100               rc;                 // RC100 remote controller instance
-Hexapod*            hexapod;            // Pointer to Hexapod instance
-Turret*             turret;             // Pointer to Turret instance
-AXS1Sensor*         sensor;             // Pointer to AXS1Sensor instance
-GaitController*     gaitController;     // Pointer to GaitController instance
+Microcontroller     mc;         // Initialize Microcontroller instance for OpenCR1.0 board
+Servo               servo;      // Initialize Servo instance for Dynamixel servos
+Remotecontroller    rc;         // Initialize RemoteController instance for handling remote controller input
+Hexapod*            hexapod;    // Pointer to Hexapod instance
+Turret*             turret;     // Pointer to Turret instance
+AXS1Sensor*         axs1;       // Pointer to AXS1Sensor instance
+GaitController*     gc;         // Pointer to GaitController instance
 
 // Setup function to initialize the robot components
 void setup() {
@@ -35,8 +36,8 @@ void setup() {
     #endif // DEBUG
 
     mc.init();                              // Initialize the microcontroller (OpenCR1.0 board)
+    servo.init(DXL_SERIAL, DXL_BAUD_RATE);    // Initialize Dynamixel controller with specified serial port and baud rate
     rc.begin(RC100_SERIAL);                 // Initialize RC100 remote controller with specified serial port
-    dxl.init(DXL_SERIAL, DXL_BAUD_RATE);    // Initialize Dynamixel controller with specified serial port and baud rate
 
     // Create Hexapod instance
     //hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller
@@ -62,46 +63,5 @@ void setup() {
 
 // Loop function to handle remote controller input and control the robot
 void loop() {
-
-  if (rc.available())
-  {
-    int RCRx = rc.readData();
- 
-    if (RCRx == 0){
-        Serial.println("No button is pressed.");
-    
-    } else if (RCRx & RC100_BTN_U) {
-        Serial.println("U");
-                
-    } else if (RCRx & RC100_BTN_D) {
-        Serial.println("D");
-
-
-    } else if (RCRx & RC100_BTN_L) {
-        Serial.println("L");
-
-    } else if (RCRx & RC100_BTN_R) {
-        Serial.println("R");
-        
-    } else if (RCRx & RC100_BTN_1) {
-        Serial.println("1");
-
-    } else if (RCRx & RC100_BTN_2) {
-        Serial.println("2");
-
-    } else if (RCRx & RC100_BTN_3) {
-        Serial.println("3");
-
-    } else if (RCRx & RC100_BTN_4) {
-        Serial.println("4");
-
-    } else if (RCRx & RC100_BTN_5) {
-        Serial.println("5");
-
-    } else if (RCRx & RC100_BTN_6) {
-        Serial.println("6");
-       
-    }
-  }
 
 }

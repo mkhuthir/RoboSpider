@@ -1,12 +1,12 @@
 #ifndef LEG_H
 #define LEG_H
 
-#include "DynamixelController.h"
+#include "Servo.h"
 #include "Config.h"
 
 class Leg {
   public:
-    Leg(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, DynamixelController* controller); // Constructor
+    Leg(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* controller); // Constructor
     void initialize();                                                                      // Initialize the leg servos
     void setJointAngles(float coxaAngle, float femurAngle, float tibiaAngle);               // Set angles for the leg joints
     void legUp();                                                                           // Move the leg up to a default position
@@ -18,7 +18,7 @@ class Leg {
 
   private:
     uint8_t coxa, femur, tibia;                                                             // Servo IDs for the leg joints
-    DynamixelController* dxl_wb;                                                               // Pointer to the Dynamixel controller instance
+    Servo* dxl_wb;                                                               // Pointer to the Dynamixel controller instance
 };
 
 #endif // LEG_H
