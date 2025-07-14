@@ -1,5 +1,6 @@
 
 
+// include necessary libraries and headers
 #include <Arduino.h>                    // Include Arduino core library
 
 #include "Config.h"                     // Include configuration header
@@ -15,9 +16,9 @@
 
 // Global variables and instances
 
-Microcontroller     uCtrl;              // Initialize Microcontroller instance for OpenCR1.0 board
+Microcontroller     mc;                 // Initialize Microcontroller instance for OpenCR1.0 board
 Servo               dxl;                // Initialize Servo instance for Dynamixel servos
-RC100               rcCtrl;             // RC100 remote controller instance
+RC100               rc;                 // RC100 remote controller instance
 Hexapod*            hexapod;            // Pointer to Hexapod instance
 Turret*             turret;             // Pointer to Turret instance
 AXS1Sensor*         sensor;             // Pointer to AXS1Sensor instance
@@ -28,12 +29,14 @@ void setup() {
 
     // Initialize Serial for debugging
     Serial.begin(DEBUG_BAUD_RATE);
-    while (!Serial); // Wait for Serial to be ready
     
-    uCtrl.init();                     // Initialize the microcontroller
+    #ifdef DEBUG
+        while (!Serial); // Wait for Debug Serial to be ready
+    #endif // DEBUG
 
-    rcCtrl.begin(RC100_SERIAL);             // Initialize RC100 remote controller with specified serial port
-    dxl.init(DXL_SERIAL, DXL_BAUD_RATE);   // Initialize Dynamixel controller with specified serial port and baud rate
+    mc.init();                              // Initialize the microcontroller (OpenCR1.0 board)
+    rc.begin(RC100_SERIAL);                 // Initialize RC100 remote controller with specified serial port
+    dxl.init(DXL_SERIAL, DXL_BAUD_RATE);    // Initialize Dynamixel controller with specified serial port and baud rate
 
     // Create Hexapod instance
     //hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller
@@ -60,9 +63,9 @@ void setup() {
 // Loop function to handle remote controller input and control the robot
 void loop() {
 
-  if (rcCtrl.available())
+  if (rc.available())
   {
-    int RCRx = rcCtrl.readData();
+    int RCRx = rc.readData();
  
     if (RCRx == 0){
         Serial.println("No button is pressed.");
