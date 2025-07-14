@@ -25,24 +25,9 @@ void setup() {
     // Initialize Serial for debugging
     Serial.begin(DEBUG_BAUD_RATE);
     while (!Serial); // Wait for Serial to be ready
-    Serial.println("SpiderBot Starting Setup...");
-
-    // Initialize Robotis RC100 Remote Controller
-    rcCtrl.begin(RC100_SERIAL);     
-    Serial.println("Robotis RC100 Remote Controller initialized.");
-
-    // Initialize Dynamixel Controller
-    dxl.begin(DXL_SERIAL, DXL_BAUD_RATE); 
-
-    dxl.initServo(1);            // Initialize servo with ID 1
-    dxl.initServo(4);            // Initialize servo with ID 2
-    dxl.initServo(7);            // Initialize servo with ID 3
-    dxl.initServo(10);           // Initialize servo with ID 4
-    dxl.initServo(13);           // Initialize servo with ID 5  
-    dxl.initServo(16);           // Initialize servo with ID 6
-
-
- 
+    
+    rcCtrl.begin(RC100_SERIAL);             // Initialize RC100 remote controller with specified serial port
+    dxl.init(DXL_SERIAL, DXL_BAUD_RATE);   // Initialize Dynamixel controller with specified serial port and baud rate
 
     // Create Hexapod instance
     //hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller

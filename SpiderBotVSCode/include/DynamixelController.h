@@ -6,7 +6,7 @@
     class DynamixelController {
         public:
             DynamixelController();
-            bool    begin(const char* device_name, uint32_t baudrate);  // initialize the controller with device name and baudrate
+            bool    init(const char* device_name, uint32_t baudrate);  // initialize the controller with device name and baudrate
             bool    ping(uint8_t dxl_id);                               // ping a servo to check if it is connected
             bool    jointMode(uint8_t dxl_id);                          // set a servo to joint mode
             bool    initServo(uint8_t dxl_id);                          // initialize a servo with default settings
