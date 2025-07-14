@@ -34,34 +34,15 @@ void setup() {
     // Initialize Dynamixel Controller
     dxl.begin(DXL_SERIAL, DXL_BAUD_RATE); 
 
-    dxl.ping(1);                // Ping Dynamixel with ID 1
-    dxl.jointMode(1);           // Set Dynamixel to joint mode
-    dxl.goalVelocity(1, -100);  // Set goal velocity to 0 for Dynamixel with ID 1
-    dxl.goalPosition(1, 512);   // Set goal position for Dynamixel with ID 1
+    dxl.initServo(1);            // Initialize servo with ID 1
+    dxl.initServo(4);            // Initialize servo with ID 2
+    dxl.initServo(7);            // Initialize servo with ID 3
+    dxl.initServo(10);           // Initialize servo with ID 4
+    dxl.initServo(13);           // Initialize servo with ID 5  
+    dxl.initServo(16);           // Initialize servo with ID 6
 
-    Serial.print("Battery Voltage: ");
-    Serial.println(dxl.ucBatteryVoltage()); // Get and print battery voltage
 
-    dxl.servoLEDOn(1);            // Turn on LED for Dynamixel with ID 1
-    delay(1000);                // Wait for 1 second
-    dxl.servoLEDOff(1);           // Turn off LED for Dynamixel with ID 1   
-    delay(1000);                // Wait for 1 second
-
-    dxl.ucLEDOn(LED_BUILTIN);           // Turn on user control LED for ID 1
-    dxl.ucLEDOn(BDPIN_LED_USER_1);      // Turn on user control LED for ID 1
-    dxl.ucLEDOn(BDPIN_LED_USER_2);      // Turn on user control LED for ID 2
-    dxl.ucLEDOn(BDPIN_LED_USER_3);      // Turn on user control LED for ID 3
-    dxl.ucLEDOn(BDPIN_LED_USER_4);      // Turn on user control LED for ID 4
-    dxl.ucLEDOn(BDPIN_LED_STATUS);       // Turn on status LED
-    delay(1000);                        // Wait for 1 second
-
-    dxl.ucLEDOff(LED_BUILTIN);          // Turn off user control LED for ID 1
-    dxl.ucLEDOff(BDPIN_LED_USER_1);     // Turn off user control LED for ID 1
-    dxl.ucLEDOff(BDPIN_LED_USER_2);     // Turn off user control LED for ID 2
-    dxl.ucLEDOff(BDPIN_LED_USER_3);     // Turn off user control LED for ID 3
-    dxl.ucLEDOff(BDPIN_LED_USER_4);     // Turn off user control LED for ID 4
-    dxl.ucLEDOff(BDPIN_LED_STATUS);       // Turn off status LED
-    delay(1000);                        // Wait for 1 second    
+ 
 
     // Create Hexapod instance
     //hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller

@@ -6,6 +6,25 @@
 DynamixelController::DynamixelController() {}
 // Constructor initializes the DynamixelController
 bool DynamixelController::begin(const char* device_name, uint32_t baudrate) {
+    
+    Serial.print("Microcontroller Battery Voltage: ");
+    Serial.println(ucBatteryVoltage()); 
+    
+    ucLEDOn(BDPIN_LED_USER_1);      // Turn on user control LED 1
+    ucLEDOn(BDPIN_LED_USER_2);      // Turn on user control LED 2
+    ucLEDOn(BDPIN_LED_USER_3);      // Turn on user control LED 3
+    ucLEDOn(BDPIN_LED_USER_4);      // Turn on user control LED 4
+    ucLEDOn(BDPIN_LED_STATUS);      // Turn on status LED
+    
+    ucPlayMelody();                 // Play a melody using the buzzer
+    Serial.println("DynamixelController initialized successfully.");
+    
+    ucLEDOff(BDPIN_LED_USER_1);     // Turn off user control LED 1
+    ucLEDOff(BDPIN_LED_USER_2);     // Turn off user control LED 2
+    ucLEDOff(BDPIN_LED_USER_3);     // Turn off user control LED 3
+    ucLEDOff(BDPIN_LED_USER_4);     // Turn off user control LED 4
+    ucLEDOff(BDPIN_LED_STATUS);     // Turn off status LED
+
     result = dxl_wb.init(device_name, baudrate, &log);
     if (!result)  // If initialization fails
     {
@@ -58,8 +77,13 @@ bool DynamixelController::jointMode(uint8_t dxl_id) {
 
 // Initialize a servo with default settings
 bool DynamixelController::initServo(uint8_t dxl_id) {
-    result = servoLEDOn(dxl_id);  // Turn on LED for the servo
+    
+    result = ping(dxl_id);               // Ping the servo to
+    result = result && servoLEDOn(dxl_id);  // Turn on LED for the servo
+    result = result && goalPosition(dxl_id, 512);  // Set goal position to 512
+    result = result && goalVelocity(dxl_id,-100);  // Set goal velocity to 0
     result = result && jointMode(dxl_id);   // Set servo to joint mode
+    
     if (!result) {
         Serial.print("Failed to initialize servo with ID: ");
         Serial.println(dxl_id);
