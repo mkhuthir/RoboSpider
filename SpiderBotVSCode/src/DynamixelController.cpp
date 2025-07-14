@@ -6,16 +6,18 @@
 DynamixelController::DynamixelController() {}
 // Constructor initializes the DynamixelController
 bool DynamixelController::init(const char* device_name, uint32_t baudrate) {
-    
-    Serial.print("Microcontroller Battery Voltage: ");
-    Serial.println(ucBatteryVoltage()); 
-    
+   
     int leds[] = {LED_BUILTIN, BDPIN_LED_USER_1, BDPIN_LED_USER_2, BDPIN_LED_USER_3, BDPIN_LED_USER_4, BDPIN_LED_STATUS}; // User control LEDs
     for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
         ucLEDOn(leds[i]);  // Turn on all user control LEDs
     }
+    
     ucPlayMelody();                 // Play a melody using the buzzer
-    Serial.println("DynamixelController initialized successfully.");
+    
+    Serial.println("Dynamixel Controller initialized successfully.");
+    Serial.print("Battery Voltage: ");
+    Serial.println(ucBatteryVoltage()); 
+    
     for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
         ucLEDOff(leds[i]); // Turn off all user control LEDs
     }    
