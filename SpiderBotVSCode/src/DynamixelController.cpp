@@ -10,20 +10,15 @@ bool DynamixelController::init(const char* device_name, uint32_t baudrate) {
     Serial.print("Microcontroller Battery Voltage: ");
     Serial.println(ucBatteryVoltage()); 
     
-    ucLEDOn(BDPIN_LED_USER_1);      // Turn on user control LED 1
-    ucLEDOn(BDPIN_LED_USER_2);      // Turn on user control LED 2
-    ucLEDOn(BDPIN_LED_USER_3);      // Turn on user control LED 3
-    ucLEDOn(BDPIN_LED_USER_4);      // Turn on user control LED 4
-    ucLEDOn(BDPIN_LED_STATUS);      // Turn on status LED
-    
+    int leds[] = {LED_BUILTIN, BDPIN_LED_USER_1, BDPIN_LED_USER_2, BDPIN_LED_USER_3, BDPIN_LED_USER_4, BDPIN_LED_STATUS}; // User control LEDs
+    for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
+        ucLEDOn(leds[i]);  // Turn on all user control LEDs
+    }
     ucPlayMelody();                 // Play a melody using the buzzer
     Serial.println("DynamixelController initialized successfully.");
-    
-    ucLEDOff(BDPIN_LED_USER_1);     // Turn off user control LED 1
-    ucLEDOff(BDPIN_LED_USER_2);     // Turn off user control LED 2
-    ucLEDOff(BDPIN_LED_USER_3);     // Turn off user control LED 3
-    ucLEDOff(BDPIN_LED_USER_4);     // Turn off user control LED 4
-    ucLEDOff(BDPIN_LED_STATUS);     // Turn off status LED
+    for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
+        ucLEDOff(leds[i]); // Turn off all user control LEDs
+    }    
 
     result = dxl_wb.init(device_name, baudrate, &log);
     if (!result)  // If initialization fails
@@ -50,11 +45,13 @@ bool DynamixelController::ping(uint8_t dxl_id) {
     }
     else
     {
-        Serial.println("Succeeded to ping!");
-        Serial.print("dxl_id : ");
-        Serial.print(dxl_id);
-        Serial.print(" model_number : ");
-        Serial.println(model_number);
+        #ifdef DEBUG
+            Serial.println("Succeeded to ping!");
+            Serial.print("dxl_id : ");
+            Serial.print(dxl_id);
+            Serial.print(" model_number : ");
+            Serial.println(model_number);
+        #endif // DEBUG
     }
     return result;
 }
@@ -69,8 +66,10 @@ bool DynamixelController::jointMode(uint8_t dxl_id) {
         Serial.println(dxl_id);
     } else
     {
-        Serial.print("Set joint mode for id: ");
-        Serial.println(dxl_id);
+        #ifdef DEBUG
+            Serial.print("Set joint mode for id: ");
+            Serial.println(dxl_id);
+        #endif // DEBUG
     }
     return result;
 }
@@ -88,9 +87,11 @@ bool DynamixelController::initServo(uint8_t dxl_id) {
         Serial.print("Failed to initialize servo with ID: ");
         Serial.println(dxl_id);
     } else {
-        Serial.print("Servo with ID: ");
-        Serial.print(dxl_id);
-        Serial.println(" initialized successfully.");
+        #ifdef DEBUG
+            Serial.print("Servo with ID: ");
+            Serial.print(dxl_id);
+            Serial.println(" initialized successfully.");
+        #endif // DEBUG
     }
     return result;
 }
@@ -190,7 +191,7 @@ float DynamixelController::ucBatteryVoltage() {
 bool DynamixelController::ucPlayMelody() {
     
     int melody[] = {NOTE_C4, NOTE_G3, NOTE_C4};             // melody notes
-    int noteDurations[] = {4, 8, 4};                        // note durations: 4 = quarter note, 8 = eighth note, etc.:
+    int noteDurations[] = {4, 2, 4};                        // note durations: 4 = quarter note, 8 = eighth note, etc.:
 
     if (BDPIN_BUZZER < 0) {                                 // Check if the buzzer pin is defined
         Serial.println("Buzzer pin not defined!");

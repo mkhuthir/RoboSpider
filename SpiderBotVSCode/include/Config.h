@@ -3,6 +3,8 @@
 
 // Config.h - Configuration file for SpiderBot project
 
+// #define DEBUG // Uncomment to enable debug output
+
 // ------------------------
 // SERIAL PORTS
 // ------------------------

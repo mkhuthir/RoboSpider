@@ -29,6 +29,16 @@ void setup() {
     rcCtrl.begin(RC100_SERIAL);             // Initialize RC100 remote controller with specified serial port
     dxl.init(DXL_SERIAL, DXL_BAUD_RATE);   // Initialize Dynamixel controller with specified serial port and baud rate
 
+    dxl.initServo(19);                // Initialize the AX servo with default settings
+    dxl.initServo(20);                // Initialize the AX servo with default settings
+    dxl.initServo(1);                // Initialize the AX servo with default settings    
+    dxl.initServo(4);                // Initialize the AX servo with default settings
+    dxl.initServo(7);                // Initialize the AX servo with default settings   
+    dxl.initServo(10);               // Initialize the AX servo with default settings
+    dxl.initServo(13);               // Initialize the AX servo with default settings       
+    dxl.initServo(16);               // Initialize the AX servo with default settings
+    
+
     // Create Hexapod instance
     //hexapod = new Hexapod(&dxl);                                    // Create Hexapod instance with Dynamixel controller
     //hexapod->initialize();                                          // Initialize all legs
