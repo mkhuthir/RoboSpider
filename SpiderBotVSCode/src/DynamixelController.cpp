@@ -15,7 +15,7 @@ bool DynamixelController::init(const char* device_name, uint32_t baudrate) {
     ucPlayMelody();                 // Play a melody using the buzzer
     
     Serial.println("Dynamixel Controller initialized successfully.");
-    Serial.print("Battery Voltage: ");
+    Serial.print("Dynamixel Controller Battery Voltage: ");
     Serial.println(ucBatteryVoltage()); 
     
     for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
@@ -192,8 +192,8 @@ float DynamixelController::ucBatteryVoltage() {
 // Play a melody using OpenCR1.0 Buzzer
 bool DynamixelController::ucPlayMelody() {
     
-    int melody[] = {NOTE_C4, NOTE_G3, NOTE_C4};             // melody notes
-    int noteDurations[] = {4, 2, 4};                        // note durations: 4 = quarter note, 8 = eighth note, etc.:
+    int melody[] = {NOTE_C7, NOTE_G3, NOTE_C6};             // melody notes
+    int noteDurations[] = {8, 4, 8};                        // note durations: 4 = quarter note, 8 = eighth note, etc.:
 
     if (BDPIN_BUZZER < 0) {                                 // Check if the buzzer pin is defined
         Serial.println("Buzzer pin not defined!");
