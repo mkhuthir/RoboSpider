@@ -1,12 +1,11 @@
 
-#include "Remotecontroller.h" c/ Include RemoteController class for managing remote control input
-
+#include "Remotecontroller.h" 
 
 // Constructor for Remotecontroller
 Remotecontroller::Remotecontroller() {}
 
 void Remotecontroller::begin(int serial_port) {
-    rc.begin(serial_port); // Initialize the remote controller with the specified serial port and baud race
+    rc.begin(serial_port); // Initialize the remote controller with the specified serial port
 }
 
 void Remotecontroller::update() {
