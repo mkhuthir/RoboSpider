@@ -1,17 +1,18 @@
 #include "AXS1Sensor.h"
 
-AXS1Sensor::AXS1Sensor(DynamixelWorkbench* workbench, uint8_t sensor_id)
-    : dxl_wb(workbench), id(sensor_id) {
-
+AXS1Sensor::AXS1Sensor(){
     #ifdef DEBUG
-        Serial.print("AX-S1 Sensor instance created with ID: ");
-        Serial.println(id);
+        Serial.println("AX-S1 Sensor instance initiated");
     #endif // DEBUG
-    
     }
 
+bool AXS1Sensor::init(DynamixelWorkbench* workbench, uint8_t sensor_id){
+    dxl=workbench;
+    id=sensor_id;
+}
+
 bool AXS1Sensor::ping() {
-    return dxl_wb->ping(id);
+    return dxl->ping(id);
     Serial.println("AX-S1 Sensor pinged successfully.");
 }
 
@@ -100,9 +101,9 @@ float AXS1Sensor::getTemperature() {
 }
 
 bool AXS1Sensor::readItem(const char* item_name, int32_t* data) {
-    return dxl_wb->itemRead(id, item_name, data);
+    return dxl->itemRead(id, item_name, data);
 }
 
 bool AXS1Sensor::writeItem(const char* item_name, int32_t data) {
-    return dxl_wb->itemWrite(id, item_name, data);
+    return dxl->itemWrite(id, item_name, data);
 }

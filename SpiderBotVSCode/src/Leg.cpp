@@ -1,4 +1,5 @@
 #include "Leg.h"
+#include "Servo.h"
 
 
 Leg::Leg(){

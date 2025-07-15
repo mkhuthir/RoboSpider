@@ -1,4 +1,5 @@
 #include "Hexapod.h"
+#include "Servo.h"
 
 Hexapod::Hexapod(){
   #ifdef DEBUG
@@ -8,7 +9,6 @@ Hexapod::Hexapod(){
 
 // Initialize the hexapod
 void Hexapod::init(Servo* dxlCtrl) {
-
   dxl=dxlCtrl;
   legs[0] = new Leg(1,  2,  3,  dxl);
   legs[1] = new Leg(4,  5,  6,  dxl);

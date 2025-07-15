@@ -1,4 +1,5 @@
 #include "GaitController.h"
+#include "Hexapod.h"
 
 GaitController::GaitController() {
     #ifdef DEBUG

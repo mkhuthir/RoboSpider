@@ -5,8 +5,9 @@
 
     class AXS1Sensor {
     public:
-        AXS1Sensor(DynamixelWorkbench* workbench, uint8_t sensor_id);
+        AXS1Sensor();
 
+        bool init(DynamixelWorkbench* workbench, uint8_t sensor_id);
         bool ping();
 
         bool ledOn();
@@ -28,7 +29,7 @@
         float getTemperature();
 
     private:
-        DynamixelWorkbench* dxl_wb;         // Pointer to DynamixelWorkbench instance
+        DynamixelWorkbench* dxl;         // Pointer to DynamixelWorkbench instance
         uint8_t id;
 
         bool readItem(const char* item_name, int32_t* data);
