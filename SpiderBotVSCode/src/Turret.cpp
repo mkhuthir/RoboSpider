@@ -1,19 +1,19 @@
 #include "Turret.h"
 
-Turret::Turret(uint8_t panID, uint8_t tiltID, Servo* dxl)
-  : pan(panID), tilt(tiltID), dxl_wb(dxl) {}
+Turret::Turret(uint8_t panID, uint8_t tiltID, Servo* dxl): 
+  panID(panID), tiltID(tiltID), dxl(dxl) {}
 
 // Initialize the turret servos
 void Turret::initialize() {
-  dxl_wb->initServo(pan);      // Initialize pan servo with limits
-  dxl_wb->initServo(tilt);     // Initialize tilt servo with limits
+  dxl->initServo(panID);      // Initialize pan servo with limits
+  dxl->initServo(tiltID);     // Initialize tilt servo with limits
   rotateTurretHome();             // Rotate turret to home position
 }
 
 // Rotate the turret to specified angles
 void Turret::rotateTurret(float panAngle, float tiltAngle) {
-  dxl_wb->goalPosition(pan, panAngle);                              // Set pan angle
-  dxl_wb->goalPosition(tilt, tiltAngle);                            // Set tilt angle 
+  dxl->goalPosition(panID, panAngle);                              // Set pan angle
+  dxl->goalPosition(tiltID, tiltAngle);                            // Set tilt angle 
 }
 
 // Rotate the turret to home position
@@ -45,8 +45,8 @@ void Turret::rotateTurretDown() {
 void Turret::printTurretStatus() {
   Serial.println("\nTurret Status:");
   Serial.print("Pan: ");
-  //Serial.print(dxl_wb->getGoalPosition(pan));
+  //Serial.print(dxl->getGoalPosition(panID));
   Serial.print(" | Tilt: ");
-  //Serial.println(dxl_wb->getGoalPosition(tilt));
+  //Serial.println(dxl->getGoalPosition(tiltID));
   Serial.println("---");
 }
