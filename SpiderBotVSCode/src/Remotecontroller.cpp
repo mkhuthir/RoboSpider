@@ -14,35 +14,81 @@ void Remotecontroller::update() {
   {
     int RCRx = rc.readData();
     switch (RCRx) {
+        case 00:
+            #ifdef DEBUG
+                Serial.println("RC Button depressed");
+            #endif
+
+            break;
+
         case RC100_BTN_U:
-            Serial.println("Button U pressed");
+            #ifdef DEBUG
+                Serial.println("RC Button U pressed");
+            #endif
+
             break;
+
         case RC100_BTN_D:
-            Serial.println("Button D pressed");
+            #ifdef DEBUG
+                Serial.println("RC Button D pressed");
+            #endif
+
             break;
+
         case RC100_BTN_L:
-            Serial.println("Button L pressed");
+            #ifdef DEBUG
+                Serial.println("RC Button L pressed");
+            #endif
+
             break;
+
         case RC100_BTN_R:
-            Serial.println("Button R pressed");
+            #ifdef DEBUG
+                Serial.println("RC Button R pressed");
+            #endif
+
             break;
+
         case RC100_BTN_1:
-            Serial.println("Button 1 pressed");
+            #ifdef DEBUG
+                Serial.println("RC Button 1 pressed");
+            #endif
+
             break;
+
         case RC100_BTN_2:
-            Serial.println("Button 2 pressed");
+            #ifdef DEBUG
+                Serial.println("RC Button 2 pressed");
+            #endif
+
             break;
+
         case RC100_BTN_3:
-            Serial.println("Button 3 pressed");
+            #ifdef DEBUG
+                Serial.println("RC Button 3 pressed");
+            #endif
+
             break;
+
         case RC100_BTN_4:
-            Serial.println("Button 4 pressed");
+            #ifdef DEBUG
+                Serial.println("RC Button 4 pressed");
+            #endif
+
             break;
+
         case RC100_BTN_5:
-            Serial.println("Button 5 pressed");
+            #ifdef DEBUG
+                Serial.println("RC Button 5 pressed");
+            #endif
+
             break;
+
         case RC100_BTN_6:
-            Serial.println("Button 6 pressed");
+            #ifdef DEBUG
+                Serial.println("RC Button 6 pressed");
+            #endif
+
             break;
     }
   }

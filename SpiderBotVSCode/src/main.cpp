@@ -61,5 +61,5 @@ void setup() {
 
 // Loop function to handle remote controller input and control the robot
 void loop() {
-
+    rc.update(); // Update remote controller state
 }
