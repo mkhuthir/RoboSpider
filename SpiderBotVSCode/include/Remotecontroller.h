@@ -8,7 +8,7 @@
     class Remotecontroller {
         public:
             Remotecontroller();
-            void begin(int serial_port); // Initialize the remote controller with a stream
+            void init(int serial_port); // Initialize the remote controller with a stream
             void update(); // Update the remote controller state
 
         private:
