@@ -5,9 +5,9 @@
     #include <RC100.h> // Include RC100 remote controller library
     #include "Config.h" // Include configuration header
 
-    class RemoteController {
+    class Remotecontroller {
         public:
-            RemoteController();
+            Remotecontroller();
             void begin(int serial_port); // Initialize the remote controller with a stream
             void update(); // Update the remote controller state
 

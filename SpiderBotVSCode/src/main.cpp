@@ -6,9 +6,7 @@
 #include "Config.h"                     // Include configuration header
 #include "Microcontroller.h"            // Include Microcontroller class for managing OpenCR1.0 board
 #include "Servo.h"                      // Include Servo class for managing Dynamixel servos
-#include "Remotecontroller.h"            // Include RemoteController class for managing remote controller input
-#include "RC100.h"                      // Include Robotis RC100 remote controller library  
-
+#include "Remotecontroller.h"           // Include RemoteController class for managing remote controller input
 #include "Hexapod.h"                    // Include Hexapod class for managing the hexapod robot
 #include "Turret.h"                     // Include Turret class for managing the sensor turret
 #include "AXS1Sensor.h"                 // Include AXS1Sensor class for managing the AX-S1 sensor
@@ -17,13 +15,13 @@
 
 // Global variables and instances
 
-Microcontroller     mc;         // Initialize Microcontroller instance for OpenCR1.0 board
-Servo               servo;      // Initialize Servo instance for Dynamixel servos
-Remotecontroller    rc;         // Initialize RemoteController instance for handling remote controller input
-Hexapod*            hexapod;    // Pointer to Hexapod instance
-Turret*             turret;     // Pointer to Turret instance
-AXS1Sensor*         axs1;       // Pointer to AXS1Sensor instance
-GaitController*     gc;         // Pointer to GaitController instance
+Microcontroller     mc;                 // Initialize Microcontroller instance for OpenCR1.0 board
+Servo               servo;              // Initialize Servo instance for Dynamixel servos
+Remotecontroller    rc;                 // Initialize RemoteController instance for handling remote controller input
+Hexapod*            hexapod;            // Pointer to Hexapod instance
+Turret*             turret;             // Pointer to Turret instance
+AXS1Sensor*         axs1;               // Pointer to AXS1Sensor instance
+GaitController*     gc;                 // Pointer to GaitController instance
 
 // Setup function to initialize the robot components
 void setup() {
