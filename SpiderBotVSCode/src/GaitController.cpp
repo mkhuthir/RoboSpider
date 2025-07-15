@@ -1,15 +1,17 @@
 #include "GaitController.h"
 
-GaitController::GaitController(Hexapod* hexapod) {
+GaitController::GaitController() {
+    #ifdef DEBUG
+        Serial.println("GaitController instance created.");
+    #endif // DEBUG
+}
+
+GaitController::init(Hexapod* hexapod){
     robot = hexapod;
     gait = GAIT_IDLE;
     lastUpdate = millis();
     currentPhase = 0;
     stepInterval = 500;  // Default 500ms between steps
-
-    #ifdef DEBUG
-        Serial.println("GaitController instance created.");
-    #endif // DEBUG
 }
 
 void GaitController::setGait(GaitType newGait) {

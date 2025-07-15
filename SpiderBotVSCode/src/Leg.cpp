@@ -1,20 +1,19 @@
 #include "Leg.h"
 
 
-Leg::Leg(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxl)
-  : coxa(coxaID), femur(femurID), tibia(tibiaID), dxl(dxl) {
+Leg::Leg(){
   #ifdef DEBUG
-    Serial.print("Leg instance created with Coxa ID: ");
-    Serial.print(coxaID);
-    Serial.print(", Femur ID: ");
-    Serial.print(femurID);
-    Serial.print(", Tibia ID: ");
-    Serial.println(tibiaID);
-  #endif // DEBUG
+    Serial.println("Leg instance initilized")
+  #endif // DEBUG  
   }
 
 // Initialize the leg servos
-void Leg::init() {
+void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxlCtrl) {
+  coxa=coxaID;
+  femur=femurID;
+  tibia=tibiaID;
+  dxl=dxlCtrl
+
   dxl->init(coxa);     // Initialize coxa servo with limits
   dxl->init(femur);    // Initialize femur servo with limits
   dxl->init(tibia);    // Initialize tibia servo with limits

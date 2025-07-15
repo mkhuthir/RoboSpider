@@ -12,23 +12,22 @@
     };
 
     class GaitController {
-    private:
-        Hexapod* robot;
-        GaitType gait;
-        unsigned long lastUpdate;
-        int currentPhase;
-        unsigned long stepInterval;
+        public:
+            GaitController();
+            void init (Hexapod* hexapod);
+            void setGait(GaitType newGait);
+            void setStepInterval(unsigned long interval); // set gait speed
+            void update();
+        private:
+            Hexapod* robot;
+            GaitType gait;
+            unsigned long lastUpdate;
+            int currentPhase;
+            unsigned long stepInterval;
 
-        void doWaveGait();
-        void doRippleGait();
-        void doTripodGait();
-
-    public:
-        GaitController(Hexapod* hexapod);
-
-        void setGait(GaitType newGait);
-        void setStepInterval(unsigned long interval); // set gait speed
-        void update();
+            void doWaveGait();
+            void doRippleGait();
+            void doTripodGait();
     };
 
 #endif // GaitController_h
