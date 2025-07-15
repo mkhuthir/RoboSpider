@@ -1,7 +1,7 @@
 #ifndef SERVO_H
 #define SERVO_H
 
-#define PROTOCOL_VERSION 1.0 // Protocol version for Dynamixel servos
+    #define PROTOCOL_VERSION 1.0 // Protocol version for Dynamixel servos
 
     #include <DynamixelWorkbench.h> // Include DynamixelWorkbench for managing servos
 

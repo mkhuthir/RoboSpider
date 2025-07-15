@@ -1,8 +1,8 @@
 #ifndef LEG_H
 #define LEG_H
 
-#include "Servo.h"
 #include "Config.h"
+#include "Servo.h"
 
 class Leg {
   public:

@@ -1,9 +1,8 @@
 #ifndef TURRET_H
 #define TURRET_H
 
-#include "Servo.h"
 #include "Config.h"
-
+#include "Servo.h"
 
 class Turret {
   public:
