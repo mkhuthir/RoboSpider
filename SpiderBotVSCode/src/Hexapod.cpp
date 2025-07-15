@@ -1,6 +1,15 @@
 #include "Hexapod.h"
 
-Hexapod::Hexapod(Servo* dxl){
+Hexapod::Hexapod(){
+  #ifdef DEBUG
+    Serial.println("Hexapod instance created with 6 legs.");
+  #endif // DEBUG
+}
+
+// Initialize the hexapod
+void Hexapod::init(Servo* dxlCtrl) {
+
+  dxl=dxlCtrl;
   legs[0] = new Leg(1,  2,  3,  dxl);
   legs[1] = new Leg(4,  5,  6,  dxl);
   legs[2] = new Leg(7,  8,  9,  dxl);
@@ -8,15 +17,8 @@ Hexapod::Hexapod(Servo* dxl){
   legs[4] = new Leg(13, 14, 15, dxl);
   legs[5] = new Leg(16, 17, 18, dxl);
 
-  #ifdef DEBUG
-    Serial.println("Hexapod instance created with 6 legs.");
-  #endif // DEBUG
-}
-
-// Initialize the hexapod
-void Hexapod::initialize() {
   for(int i=0; i<6; i++)
-    legs[i]->initialize();
+    legs[i]->init();
 }
 
 // Set the gait type

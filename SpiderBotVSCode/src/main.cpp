@@ -15,13 +15,13 @@
 
 // Global variables and instances
 
-Microcontroller     mc;                 // Initialize Microcontroller instance for OpenCR1.0 board
-Servo               servo;              // Initialize Servo instance for Dynamixel servos
-Remotecontroller    rc;                 // Initialize RemoteController instance for handling remote controller input
-Hexapod*            hexapod;            // Pointer to Hexapod instance
-Turret*             turret;             // Pointer to Turret instance
-AXS1Sensor*         axs1;               // Pointer to AXS1Sensor instance
-GaitController*     gc;                 // Pointer to GaitController instance
+Microcontroller     mc;
+Servo               servo;  
+Remotecontroller    rc;     
+Hexapod             hexapod;
+Turret              turret; 
+AXS1Sensor          axs1;   
+GaitController      gc;     
 
 // Setup function to initialize the robot components
 void setup() {

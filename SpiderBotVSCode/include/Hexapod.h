@@ -5,8 +5,8 @@
 
   class Hexapod {
     public:
-      Hexapod(Servo* controller); // Constructor
-      void initialize();                        // Initialize the hexapod
+      Hexapod(); // Constructor
+      void init(Servo* dxlCtrl);                    // Initialize the hexapod
       void setGaitType(int gaitType);           // Set the gait type
       void setGaitSpeed(float gaitSpeed);       // Set the gait speed
       void setServoSpeed(float servoSpeed);     // Set the servo speed
@@ -17,7 +17,7 @@
   
     private:
       Leg*                  legs[6];      // Array of legs
-      Servo*  dxlCtrl;      // Dynamixel controller instance
+      Servo*                dxl;          // Dynamixel controller instance
       int                   gaitType;     // Current gait type
       float                 gaitSpeed;    // Current gait speed
       float                 servoSpeed;   // Current servo speed
