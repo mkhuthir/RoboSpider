@@ -1,7 +1,14 @@
 #include "AXS1Sensor.h"
 
 AXS1Sensor::AXS1Sensor(DynamixelWorkbench* workbench, uint8_t sensor_id)
-    : dxl_wb(workbench), id(sensor_id) {}
+    : dxl_wb(workbench), id(sensor_id) {
+
+    #ifdef DEBUG
+        Serial.print("AX-S1 Sensor instance created with ID: ");
+        Serial.println(id);
+    #endif // DEBUG
+    
+    }
 
 bool AXS1Sensor::ping() {
     return dxl_wb->ping(id);

@@ -1,21 +1,30 @@
 #include "Leg.h"
 
 
-Leg::Leg(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* controller)
-  : coxa(coxaID), femur(femurID), tibia(tibiaID), dxl_wb(controller) {}
+Leg::Leg(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxl)
+  : coxa(coxaID), femur(femurID), tibia(tibiaID), dxl(dxl) {
+  #ifdef DEBUG
+    Serial.print("Leg instance created with Coxa ID: ");
+    Serial.print(coxaID);
+    Serial.print(", Femur ID: ");
+    Serial.print(femurID);
+    Serial.print(", Tibia ID: ");
+    Serial.println(tibiaID);
+  #endif // DEBUG
+  }
 
 // Initialize the leg servos
 void Leg::initialize() {
-  dxl_wb->initServo(coxa);     // Initialize coxa servo with limits
-  dxl_wb->initServo(femur);    // Initialize femur servo with limits
-  dxl_wb->initServo(tibia);    // Initialize tibia servo with limits
+  dxl->initServo(coxa);     // Initialize coxa servo with limits
+  dxl->initServo(femur);    // Initialize femur servo with limits
+  dxl->initServo(tibia);    // Initialize tibia servo with limits
 }
 
 // Set angles for the leg joints
 void Leg::setJointAngles(float coxaAngle, float femurAngle, float tibiaAngle) {
-  dxl_wb->goalPosition(coxa, coxaAngle);      // Set coxa angle
-  dxl_wb->goalPosition(femur, femurAngle);    // Set femur angle
-  dxl_wb->goalPosition(tibia, tibiaAngle);    // Set tibia angle
+  dxl->goalPosition(coxa, coxaAngle);      // Set coxa angle
+  dxl->goalPosition(femur, femurAngle);    // Set femur angle
+  dxl->goalPosition(tibia, tibiaAngle);    // Set tibia angle
 }
 
 float Leg::getCoxaAngle() {

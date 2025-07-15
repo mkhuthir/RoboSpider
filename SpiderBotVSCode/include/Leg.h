@@ -6,7 +6,7 @@
 
 class Leg {
   public:
-    Leg(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* controller); // Constructor
+    Leg(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxl); // Constructor
     void initialize();                                                                      // Initialize the leg servos
     void setJointAngles(float coxaAngle, float femurAngle, float tibiaAngle);               // Set angles for the leg joints
     void legUp();                                                                           // Move the leg up to a default position
@@ -18,7 +18,7 @@ class Leg {
 
   private:
     uint8_t coxa, femur, tibia;                                                             // Servo IDs for the leg joints
-    Servo* dxl_wb;                                                               // Pointer to the Dynamixel controller instance
+    Servo* dxl;                                                               // Pointer to the Dynamixel controller instance
 };
 
 #endif // LEG_H

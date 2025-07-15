@@ -22,7 +22,7 @@
             DynamixelWorkbench* getWorkbench();                         // if you need to expose the workbench pointer
 
         private:
-            DynamixelWorkbench  dxl_wb;             // DynamixelWorkbench instance for managing servos
+            DynamixelWorkbench  dxl;                // DynamixelWorkbench instance for managing servos
             const char          *log;               // Log string for debugging 
             bool                result = false;     // Result of operations
             uint16_t            model_number = 0;   // Model number of the servo being operated on

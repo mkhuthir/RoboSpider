@@ -2,11 +2,15 @@
 
 
 // Constructor for Servo
-Servo::Servo() {}
+Servo::Servo(){
+    #ifdef DEBUG
+        Serial.println("Servo instance initilized.");
+    #endif // DEBUG
+}
 
 //initialize the DynamixelWorkbench instance
 bool Servo::init(const char* device_name, uint32_t baudrate) {
-    result = dxl_wb.init(device_name, baudrate, &log);
+    result = dxl.init(device_name, baudrate, &log);
     if (!result)  // If initialization fails
     {
         Serial.println(log);
@@ -25,7 +29,7 @@ bool Servo::init(const char* device_name, uint32_t baudrate) {
 
 // Ping a servo to check if it is connected
 bool Servo::ping(uint8_t dxl_id) {
-    result = dxl_wb.ping(dxl_id, &model_number, &log);
+    result = dxl.ping(dxl_id, &model_number, &log);
     if (!result)  // If ping fails
     {
         Serial.println(log);
@@ -46,7 +50,7 @@ bool Servo::ping(uint8_t dxl_id) {
 
 // Set a servo to joint mode
 bool Servo::jointMode(uint8_t dxl_id) {
-    result = dxl_wb.jointMode(dxl_id, 0, 0, &log);
+    result = dxl.jointMode(dxl_id, 0, 0, &log);
     if (!result)    // If joint mode setting fails
     {
         Serial.println(log);
@@ -86,7 +90,7 @@ bool Servo::initServo(uint8_t dxl_id) {
 
 // Set the goal position of a servo
 bool Servo::goalPosition(uint8_t dxl_id, int32_t position) {
-    result = dxl_wb.goalPosition(dxl_id, position, &log);
+    result = dxl.goalPosition(dxl_id, position, &log);
     if (!result)  // If setting goal position fails
     {
         Serial.println(log);
@@ -98,7 +102,7 @@ bool Servo::goalPosition(uint8_t dxl_id, int32_t position) {
 
 // Set the goal velocity of a servo
 bool Servo::goalVelocity(uint8_t dxl_id, int32_t velocity) {
-    result = dxl_wb.goalVelocity(dxl_id, velocity, &log);
+    result = dxl.goalVelocity(dxl_id, velocity, &log);
     if (!result)  // If setting goal velocity fails 
     {
         Serial.println(log);
@@ -109,7 +113,7 @@ bool Servo::goalVelocity(uint8_t dxl_id, int32_t velocity) {
 }
 // Turn on the LED of a servo
 bool Servo::LEDOn(uint8_t dxl_id) {
-    result = dxl_wb.ledOn(dxl_id, &log);
+    result = dxl.ledOn(dxl_id, &log);
     if (!result)  // If turning on LED fails
     {
         Serial.println(log);
@@ -121,7 +125,7 @@ bool Servo::LEDOn(uint8_t dxl_id) {
 
 // Turn off the LED of a servo
 bool Servo::LEDOff(uint8_t dxl_id) {
-    result = dxl_wb.ledOff(dxl_id, &log);
+    result = dxl.ledOff(dxl_id, &log);
     if (!result)  // If turning off LED fails
     {
         Serial.println(log);
@@ -135,5 +139,5 @@ bool Servo::LEDOff(uint8_t dxl_id) {
 
 // Return the DynamixelWorkbench instance
 DynamixelWorkbench* Servo::getWorkbench() {
-    return &dxl_wb;
+    return &dxl;
 }

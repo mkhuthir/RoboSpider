@@ -26,15 +26,14 @@ GaitController*     gc;                 // Pointer to GaitController instance
 // Setup function to initialize the robot components
 void setup() {
 
-    // Initialize Serial for debugging
-    Serial.begin(DEBUG_BAUD_RATE);
     
-    #ifdef DEBUG
-        while (!Serial); // Wait for Debug Serial to be ready
+    Serial.begin(DEBUG_BAUD_RATE);          // Initialize Serial for debugging
+    #ifdef DEBUG                            // if DEBUG enabled
+        while (!Serial);                    // wait for serial to be ready
     #endif // DEBUG
 
     mc.init();                              // Initialize the microcontroller (OpenCR1.0 board)
-    servo.init(DXL_SERIAL, DXL_BAUD_RATE);    // Initialize Dynamixel controller with specified serial port and baud rate
+    servo.init(DXL_SERIAL, DXL_BAUD_RATE);  // Initialize Dynamixel controller with specified serial port and baud rate
     rc.begin(RC100_SERIAL);                 // Initialize RC100 remote controller with specified serial port
 
     // Create Hexapod instance

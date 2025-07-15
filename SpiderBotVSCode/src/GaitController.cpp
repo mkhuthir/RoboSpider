@@ -6,6 +6,10 @@ GaitController::GaitController(Hexapod* hexapod) {
     lastUpdate = millis();
     currentPhase = 0;
     stepInterval = 500;  // Default 500ms between steps
+
+    #ifdef DEBUG
+        Serial.println("GaitController instance created.");
+    #endif // DEBUG
 }
 
 void GaitController::setGait(GaitType newGait) {

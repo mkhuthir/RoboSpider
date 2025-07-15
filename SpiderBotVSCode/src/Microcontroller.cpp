@@ -2,7 +2,11 @@
 #include "pitches.h"            // Include pitches for melody notes
 
 // Constructor for Microcontroller
-Microcontroller::Microcontroller() {}
+Microcontroller::Microcontroller() {
+    #ifdef DEBUG
+        Serial.println("Microcontroller instance initialized.");
+    #endif // DEBUG
+}
 
 // Initialize the microcontroller
 bool Microcontroller::init() {

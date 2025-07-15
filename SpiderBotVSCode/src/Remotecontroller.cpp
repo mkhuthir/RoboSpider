@@ -2,7 +2,11 @@
 #include "Remotecontroller.h" 
 
 // Constructor for Remotecontroller
-Remotecontroller::Remotecontroller() {}
+Remotecontroller::Remotecontroller() {
+    #ifdef DEBUG
+        Serial.println("Remotecontroller initialized.");
+    #endif // DEBUG
+}
 
 void Remotecontroller::begin(int serial_port) {
     rc.begin(serial_port); // Initialize the remote controller with the specified serial port
@@ -16,77 +20,77 @@ void Remotecontroller::update() {
         case 00:
             #ifdef DEBUG
                 Serial.println("RC Button depressed");
-            #endif
+            #endif // DEBUG
 
             break;
 
         case RC100_BTN_U:
             #ifdef DEBUG
                 Serial.println("RC Button U pressed");
-            #endif
+            #endif // DEBUG
 
             break;
 
         case RC100_BTN_D:
             #ifdef DEBUG
                 Serial.println("RC Button D pressed");
-            #endif
+            #endif // DEBUG
 
             break;
 
         case RC100_BTN_L:
             #ifdef DEBUG
                 Serial.println("RC Button L pressed");
-            #endif
+            #endif // DEBUG
 
             break;
 
         case RC100_BTN_R:
             #ifdef DEBUG
                 Serial.println("RC Button R pressed");
-            #endif
+            #endif // DEBUG
 
             break;
 
         case RC100_BTN_1:
             #ifdef DEBUG
                 Serial.println("RC Button 1 pressed");
-            #endif
+            #endif // DEBUG
 
             break;
 
         case RC100_BTN_2:
             #ifdef DEBUG
                 Serial.println("RC Button 2 pressed");
-            #endif
+            #endif // DEBUG
 
             break;
 
         case RC100_BTN_3:
             #ifdef DEBUG
                 Serial.println("RC Button 3 pressed");
-            #endif
+            #endif // DEBUG
 
             break;
 
         case RC100_BTN_4:
             #ifdef DEBUG
                 Serial.println("RC Button 4 pressed");
-            #endif
+            #endif // DEBUG
 
             break;
 
         case RC100_BTN_5:
             #ifdef DEBUG
                 Serial.println("RC Button 5 pressed");
-            #endif
+            #endif // DEBUG
 
             break;
 
         case RC100_BTN_6:
             #ifdef DEBUG
                 Serial.println("RC Button 6 pressed");
-            #endif
+            #endif // DEBUG
 
             break;
     }

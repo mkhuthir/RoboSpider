@@ -1,7 +1,11 @@
 #include "Turret.h"
 
 Turret::Turret(uint8_t panID, uint8_t tiltID, Servo* dxl): 
-  panID(panID), tiltID(tiltID), dxl(dxl) {}
+  panID(panID), tiltID(tiltID), dxl(dxl) {
+  #ifdef DEBUG
+    Serial.println("Turret initialized with Pan ID: " + String(panID) + " and Tilt ID: " + String(tiltID));
+  #endif // DEBUG
+  }
 
 // Initialize the turret servos
 void Turret::initialize() {
