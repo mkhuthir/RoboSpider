@@ -12,7 +12,7 @@
   // ------------------------
 
   #define DEBUG_SERIAL Serial
-  #define RC100_SERIAL Serial1
+  #define RC100_SERIAL 1      // Serial port for RC100 remote controller
 
   #if defined(__OPENCM904__)
     #define DXL_SERIAL "3"       // When using OpenCM 485EXP Dynamixel is on Serial3(USART3)
@@ -27,13 +27,7 @@
 
   #define DXL_BAUD_RATE         1000000   // Default baud rate for Dynamixel servos
   #define DEBUG_BAUD_RATE       115200    // Baud rate for debugging output
-  #define RC10_BAUD_RATE        115200    // Baud rate for RC controller communication
-
-  // ------------------------
-  // DYNAMIXEL PROTOCOL VERSION
-  // ------------------------
-
-  #define DXL_PROTOCOL_VERSION 1.0        // Default protocol version for Dynamixel servos
+  #define RC100_BAUD_RATE       115200    // Baud rate for RC controller communication
 
   // ------------------------
   // SERVO IDs

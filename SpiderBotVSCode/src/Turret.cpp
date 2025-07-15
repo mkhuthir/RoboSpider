@@ -1,7 +1,7 @@
 #include "Turret.h"
 
-Turret::Turret(uint8_t panID, uint8_t tiltID, DynamixelController* controller)
-  : pan(panID), tilt(tiltID), dxl_wb(controller) {}
+Turret::Turret(uint8_t panID, uint8_t tiltID, Servo* dxl)
+  : pan(panID), tilt(tiltID), dxl_wb(dxl) {}
 
 // Initialize the turret servos
 void Turret::initialize() {
