@@ -12,7 +12,7 @@ void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxlCtrl)
   coxa=coxaID;
   femur=femurID;
   tibia=tibiaID;
-  dxl=dxlCtrl
+  dxl=dxlCtrl;
 
   dxl->init(coxa);     // Initialize coxa servo with limits
   dxl->init(femur);    // Initialize femur servo with limits
