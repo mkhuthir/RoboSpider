@@ -7,7 +7,7 @@ GaitController::GaitController() {
     #endif // DEBUG
 }
 
-GaitController::init(Hexapod* hexapod){
+void GaitController::init(Hexapod* hexapod){
     robot = hexapod;
     gait = GAIT_IDLE;
     lastUpdate = millis();
