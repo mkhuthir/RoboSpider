@@ -27,14 +27,17 @@ GaitController      gc;
 void setup() {
 
     
-    DEBUG_SERIAL.begin(DEBUG_BAUD_RATE);          // Initialize Serial for debugging
+    Serial.begin(DEBUG_BAUD_RATE);          // Initialize Serial for debugging
     #ifdef DEBUG                            // if DEBUG enabled
-       // while (!DEBUG_SERIAL);              // Wait for the debug serial to be ready
+       while (!Serial);                     // Wait for the debug serial to be ready
     #endif // DEBUG
 
     mc.init();                              // Initialize the microcontroller (OpenCR1.0 board)
     servo.init(DXL_SERIAL, DXL_BAUD_RATE);  // Initialize Dynamixel controller with specified serial port and baud rate
     rc.init(RC100_SERIAL);                  // Initialize RC100 remote controller with specified serial port
+
+    servo.initServo(20);              // Initialize the servo with default settings
+    servo.initServo(21);              // Initialize the servo with default settings
 
 }
 
