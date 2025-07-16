@@ -4,8 +4,8 @@
   // Config.h - Configuration file for SpiderBot project
 
   // Define DEBUG to enable debug output
-  #define DEBUG 
-  //#undef DEBUG 
+  //#define DEBUG 
+  #undef DEBUG 
 
   // ------------------------
   // SERIAL PORTS

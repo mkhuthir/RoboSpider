@@ -17,15 +17,15 @@ bool Microcontroller::init() {
     }
     
     PlayMelody();                 // Play a melody using the buzzer
-    
-    Serial.println("Dynamixel Controller initialized successfully.");
-    Serial.print("Dynamixel Controller Battery Voltage: ");
-    Serial.println(BatteryVoltage()); 
+    #ifdef DEBUG
+        Serial.println("Dynamixel Controller initialized successfully.");
+        Serial.print("Dynamixel Controller Battery Voltage: ");
+        Serial.println(BatteryVoltage());
+    #endif // DEBUG
     
     for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
         LEDOff(leds[i]); // Turn off all user control LEDs
     }  
-    Serial.println("Microcontroller initialized.");
     return true;  // Return true to indicate successful initialization
 }   
 
