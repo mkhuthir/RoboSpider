@@ -4,9 +4,9 @@
 
 Leg::Leg(){
   #ifdef DEBUG
-    Serial.println("Leg instance initilized")
+    Serial.println("Leg instance initilized");
   #endif // DEBUG  
-  }
+}
 
 // Initialize the leg servos
 void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxlCtrl) {
@@ -15,9 +15,9 @@ void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxlCtrl)
   tibia=tibiaID;
   dxl=dxlCtrl;
 
-  dxl->init(coxa);     // Initialize coxa servo with limits
-  dxl->init(femur);    // Initialize femur servo with limits
-  dxl->init(tibia);    // Initialize tibia servo with limits
+  dxl->initServo(coxa);     // Initialize coxa servo with limits
+  dxl->initServo(femur);    // Initialize femur servo with limits
+  dxl->initServo(tibia);    // Initialize tibia servo with limits
 }
 
 // Set angles for the leg joints
