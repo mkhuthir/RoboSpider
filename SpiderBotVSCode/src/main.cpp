@@ -36,8 +36,9 @@ void setup() {
     servo.init(DXL_SERIAL, DXL_BAUD_RATE);  // Initialize Dynamixel controller with specified serial port and baud rate
     rc.init(RC100_SERIAL);                  // Initialize RC100 remote controller with specified serial port
 
+    servo.initServo(19);              // Initialize the servo with default settings
     servo.initServo(20);              // Initialize the servo with default settings
-    servo.initServo(21);              // Initialize the servo with default settings
+    
 
 }
 
