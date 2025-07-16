@@ -29,16 +29,16 @@ void setup() {
     
     Serial.begin(DEBUG_BAUD_RATE);          // Initialize Serial for debugging
     #ifdef DEBUG                            // if DEBUG enabled
-        while (!Serial);                    // wait for serial to be ready
+        while (!DEBUG_SERIAL);                    // wait for serial to be ready
     #endif // DEBUG
 
     mc.init();                              // Initialize the microcontroller (OpenCR1.0 board)
-    servo.init(DXL_SERIAL, DXL_BAUD_RATE);  // Initialize Dynamixel controller with specified serial port and baud rate
-    rc.init(RC100_SERIAL);                  // Initialize RC100 remote controller with specified serial port
+    //servo.init(DXL_SERIAL, DXL_BAUD_RATE);  // Initialize Dynamixel controller with specified serial port and baud rate
+    //rc.init(RC100_SERIAL);                  // Initialize RC100 remote controller with specified serial port
 
 }
 
 // Loop function to handle remote controller input and control the robot
 void loop() {
-    rc.update(); // Update remote controller state
+    //rc.update(); // Update remote controller state
 }

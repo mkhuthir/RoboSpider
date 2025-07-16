@@ -12,7 +12,7 @@
   // ------------------------
 
   #define DEBUG_SERIAL Serial
-  #define RC100_SERIAL 1      // Serial port for RC100 remote controller
+  #define RC100_SERIAL Serial1   // Serial port for RC100 remote controller
 
   #if defined(__OPENCM904__)
     #define DXL_SERIAL "3"       // When using OpenCM 485EXP Dynamixel is on Serial3(USART3)
