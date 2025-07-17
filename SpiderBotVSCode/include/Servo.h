@@ -10,9 +10,9 @@
             Servo();
             bool                begin(const char* device_name, uint32_t baudrate);  // initialize the controller with device name and baudrate
             
-            bool                setPortHandler(const char *device_name);
-            bool                setBaudrate(uint32_t baud_rate);
-            bool                setPacketHandler(float protocol_version);
+            bool                setPortHandler(const char *device_name);                    // set the port handler for the controller  
+            bool                setBaudrate(uint32_t baud_rate);                            // set the baudrate for the controller
+            bool                setPacketHandler(float protocol_version);                   // set the packet handler with the protocol version
 
             float               getProtocolVersion(void);                                   // get the protocol version being used
             uint32_t            getBaudrate(void);                                          // get the current baudrate
