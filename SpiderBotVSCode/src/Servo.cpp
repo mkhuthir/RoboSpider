@@ -27,11 +27,11 @@ bool Servo::begin(const char* device_name, uint32_t baudrate) {
 }
 
 // Set the port handler with the device name
-bool Servo::setPortHandler(const char *device_name, const char **log) {
-    result = dxl.setPortHandler(device_name, log);
+bool Servo::setPortHandler(const char *device_name) {
+    result = dxl.setPortHandler(device_name, &log);
     if (!result)  // If setting port handler fails
     {        
-        Serial.println(*log);
+        Serial.println(log);
         Serial.println("Failed to set port handler!");
     }
     else
@@ -45,11 +45,11 @@ bool Servo::setPortHandler(const char *device_name, const char **log) {
 }   
 
 // Set the baudrate for the port handler
-bool Servo::setBaudrate(uint32_t baud_rate, const char **log) {     
-    result = dxl.setBaudrate(baud_rate, log);
+bool Servo::setBaudrate(uint32_t baud_rate) {     
+    result = dxl.setBaudrate(baud_rate, &log);
     if (!result)  // If setting baudrate fails
     {        
-        Serial.println(*log);
+        Serial.println(log);
         Serial.println("Failed to set baudrate!");
     }
     else
@@ -63,11 +63,11 @@ bool Servo::setBaudrate(uint32_t baud_rate, const char **log) {
 }   
 
 // Set the packet handler with the protocol version
-bool Servo::setPacketHandler(float protocol_version, const char **log) {
-    result = dxl.setPacketHandler(protocol_version, log);
+bool Servo::setPacketHandler(float protocol_version) {
+    result = dxl.setPacketHandler(protocol_version, &log);
     if (!result)  // If setting packet handler fails
     {        
-        Serial.println(*log);
+        Serial.println(log);
         Serial.println("Failed to set packet handler!");
     }
     else
