@@ -14,10 +14,14 @@
             bool            setBaudrate(uint32_t baud_rate);
             bool            setPacketHandler(float protocol_version);
 
-            float           getProtocolVersion(void);
-            uint32_t        getBaudrate(void);
-            const char *    getModelName(uint8_t id);
-            uint16_t        getModelNumber(uint8_t id);
+            float               getProtocolVersion(void);
+            uint32_t            getBaudrate(void);
+            const char *        getModelName(uint8_t id);
+            uint16_t            getModelNumber(uint8_t id);
+            const ModelInfo*    getModelInfo(uint8_t id);
+
+            bool                torqueOn(uint8_t id);
+            bool                torqueOff(uint8_t id);
 
             bool            ping(uint8_t dxl_id);                               // ping a servo to check if it is connected
             bool            jointMode(uint8_t dxl_id);                          // set a servo to joint mode
@@ -36,7 +40,8 @@
             const char          *log;               // Log string for debugging 
             bool                result = false;     // Result of operations
             uint16_t            model_number = 0;   // Model number of the servo being operated on
-            const char          *model_name = NULL; // Model name of the servo being operated on
+            const char*         model_name = NULL; // Model name of the servo being operated on
+            const ModelInfo*    model_info = NULL;   // Model info of the servo being operated on
     };
 
 #endif // SERVO_H

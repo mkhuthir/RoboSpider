@@ -148,6 +148,62 @@ uint16_t Servo::getModelNumber(uint8_t id) {
     return model_number;  // Return the model number
 }
 
+// Get the model info of a servo
+const ModelInfo* Servo::getModelInfo(uint8_t id) {
+    model_info = dxl.getModelInfo(id, &log);
+    if (model_info == NULL)  // If getting model info fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to get model info for id: ");
+        Serial.println(id);
+    }
+    #ifdef DEBUG
+        Serial.print("Model Info for id ");
+        Serial.print(id);
+        Serial.print(": ");
+        Serial.println(model_info);
+    #endif // DEBUG
+    return model_info;  // Return the model info
+}
+
+// Turn on the torque for a servo
+bool Servo::torqueOn(uint8_t id) {
+    result = dxl.torqueOn(id, &log);
+    if (!result)  // If turning on torque fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to turn on torque for id: ");
+        Serial.println(id);
+    }
+    else
+    {
+        #ifdef DEBUG
+            Serial.print("Torque turned on for id: ");
+            Serial.println(id);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
+// Turn off the torque for a servo
+bool Servo::torqueOff(uint8_t id) {
+    result = dxl.torqueOff(id, &log);
+    if (!result)  // If turning off torque fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to turn off torque for id: ");
+        Serial.println(id);
+    }
+    else
+    {
+        #ifdef DEBUG
+            Serial.print("Torque turned off for id: ");
+            Serial.println(id);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
 // Ping a servo to check if it is connected
 bool Servo::ping(uint8_t dxl_id) {
     result = dxl.ping(dxl_id, &model_number, &log);
