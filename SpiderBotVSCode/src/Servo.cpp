@@ -8,7 +8,7 @@ Servo::Servo(){
 }
 
 //initialize the DynamixelWorkbench instance
-bool Servo::init(const char* device_name, uint32_t baudrate) {
+bool Servo::begin(const char* device_name, uint32_t baudrate) {
     result = dxl.init(device_name, baudrate, &log);
     if (!result)  // If initialization fails
     {
@@ -66,7 +66,7 @@ bool Servo::jointMode(uint8_t dxl_id) {
 }
 
 // Initialize a servo with default settings
-bool Servo::initServo(uint8_t dxl_id) {
+bool Servo::init(uint8_t dxl_id) {
     
     result = ping(dxl_id);                          // Ping the servo to
     result = result && jointMode(dxl_id);           // Set servo to joint mode

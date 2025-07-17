@@ -8,10 +8,10 @@
     class Servo {
         public:
             Servo();
-            bool    init(const char* device_name, uint32_t baudrate);  // initialize the controller with device name and baudrate
+            bool    begin(const char* device_name, uint32_t baudrate);  // initialize the controller with device name and baudrate
             bool    ping(uint8_t dxl_id);                               // ping a servo to check if it is connected
             bool    jointMode(uint8_t dxl_id);                          // set a servo to joint mode
-            bool    initServo(uint8_t dxl_id);                          // initialize a servo with default settings
+            bool    init(uint8_t dxl_id);                          // initialize a servo with default settings
         
             bool    goalPosition(uint8_t dxl_id, int32_t position);     // set the goal position of a servo
             bool    goalVelocity(uint8_t dxl_id, int32_t velocity);     // set the goal velocity of a servo

@@ -6,7 +6,7 @@
 class Microcontroller {
     public:
         Microcontroller();
-        bool    init();                                             // initialize the microcontroller
+        bool    begin();                                             // initialize the microcontroller
         bool    LEDOn(uint8_t LED_id);                            // turn on the user control LED
         bool    LEDOff(uint8_t LED_id);                           // turn off the user control LED
         bool    PlayMelody();                                     // play a melody using the servos

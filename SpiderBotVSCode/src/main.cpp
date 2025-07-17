@@ -32,12 +32,12 @@ void setup() {
        while (!Serial);                     // Wait for the debug serial to be ready
     #endif // DEBUG
 
-    mc.init();                              // Initialize the microcontroller (OpenCR1.0 board)
-    servo.init(DXL_SERIAL, DXL_BAUD_RATE);  // Initialize Dynamixel controller with specified serial port and baud rate
-    rc.init(RC100_SERIAL);                  // Initialize RC100 remote controller with specified serial port
+    mc.begin();                              // Initialize the microcontroller (OpenCR1.0 board)
+    servo.begin(DXL_SERIAL, DXL_BAUD_RATE);  // Initialize Dynamixel controller with specified serial port and baud rate
+    rc.begin(RC100_SERIAL);                  // Initialize RC100 remote controller with specified serial port
 
-    servo.initServo(19);              // Initialize the servo with default settings
-    servo.initServo(20);              // Initialize the servo with default settings
+    servo.init(19);              // Initialize the servo with default settings
+    servo.init(20);              // Initialize the servo with default settings
     
 
 }

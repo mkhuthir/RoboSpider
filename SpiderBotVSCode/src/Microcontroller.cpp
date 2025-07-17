@@ -5,7 +5,7 @@
 Microcontroller::Microcontroller() {}
 
 // Initialize the microcontroller
-bool Microcontroller::init() {
+bool Microcontroller::begin() {
     // Initialization code for the microcontroller
     int leds[] = {LED_BUILTIN, BDPIN_LED_USER_1, BDPIN_LED_USER_2, BDPIN_LED_USER_3, BDPIN_LED_USER_4, BDPIN_LED_STATUS}; // User control LEDs
     for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {

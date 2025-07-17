@@ -12,8 +12,8 @@ void Turret::init(uint8_t pan, uint8_t tilt, Servo* dxlCtrl) {
   tiltID  = tilt;
   dxl     = dxlCtrl;
 
-  dxl->initServo(panID);      // Initialize pan servo with limits
-  dxl->initServo(tiltID);     // Initialize tilt servo with limits
+  dxl->init(panID);      // Initialize pan servo with limits
+  dxl->init(tiltID);     // Initialize tilt servo with limits
   rotateTurretHome();             // Rotate turret to home position
 }
 

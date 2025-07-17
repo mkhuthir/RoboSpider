@@ -4,7 +4,7 @@
 // Constructor for Remotecontroller
 Remotecontroller::Remotecontroller() {}
 
-void Remotecontroller::init(int serial_port) {
+void Remotecontroller::begin(int serial_port) {
     rc.begin(serial_port); // Initialize the remote controller with the specified serial port
 }
 
