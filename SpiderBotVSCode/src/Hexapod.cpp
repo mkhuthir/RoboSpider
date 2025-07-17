@@ -1,10 +1,13 @@
 #include "Hexapod.h"
 #include "Servo.h"
 
+// Constructor for Hexapod class
 Hexapod::Hexapod(){
-  #ifdef DEBUG
-    Serial.println("Hexapod instance created with 6 legs.");
-  #endif // DEBUG
+  servoSpeed  = 1.0;            // Default servo speed
+  dxl         = nullptr;        // Dynamixel controller not initialized
+  for (int i = 0; i < 6; i++) {
+    legs[i] = Leg();            // Initialize each leg
+  }
 }
 
 // Initialize the hexapod
@@ -21,31 +24,9 @@ void Hexapod::init(Servo* dxlCtrl) {
 //    legs[i]->init();
 }
 
-// Set the gait type
-void Hexapod::setGaitType(int Type) {
-  gaitType = Type;
-}
-
-// Set the gait speed
-void Hexapod::setGaitSpeed(float Speed) {
-  gaitSpeed = Speed;
-}
-
 // Set the servo speed
 void Hexapod::setServoSpeed(float Speed) {
   servoSpeed = Speed;
-}
-
-// Stand up the hexapod
-void Hexapod::standUp() {
-  for(int i=0; i<6; i++)
-    legs[i].legUp();
-}
-
-// Sit down the hexapod
-void Hexapod::sitDown() {
-  for(int i=0; i<6; i++)
-    legs[i].legDown();
 }
 
 // Print the status of all legs

@@ -1,10 +1,9 @@
 #include "AXS1Sensor.h"
 
 AXS1Sensor::AXS1Sensor(){
-    #ifdef DEBUG
-        Serial.println("AX-S1 Sensor instance initiated");
-    #endif // DEBUG
-    }
+    dxl = nullptr;
+    id  = 0;
+}
 
 bool AXS1Sensor::init(DynamixelWorkbench* workbench, uint8_t sensor_id){
     dxl=workbench;

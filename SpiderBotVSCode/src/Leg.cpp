@@ -1,19 +1,20 @@
 #include "Leg.h"
 #include "Servo.h"
 
-
+// Default constructor for Leg class
 Leg::Leg(){
-  #ifdef DEBUG
-    Serial.println("Leg instance initilized");
-  #endif // DEBUG  
+  coxa = 0;
+  femur = 0;
+  tibia = 0;
+  dxl = nullptr;
 }
 
 // Initialize the leg servos
 void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxlCtrl) {
-  coxa=coxaID;
-  femur=femurID;
-  tibia=tibiaID;
-  dxl=dxlCtrl;
+  coxa  = coxaID;
+  femur = femurID;
+  tibia = tibiaID;
+  dxl   = dxlCtrl;
 
   dxl->initServo(coxa);     // Initialize coxa servo with limits
   dxl->initServo(femur);    // Initialize femur servo with limits
