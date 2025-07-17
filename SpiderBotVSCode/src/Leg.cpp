@@ -3,10 +3,10 @@
 
 // Default constructor for Leg class
 Leg::Leg(){
-  coxa = 0;
+  coxa  = 0;
   femur = 0;
   tibia = 0;
-  dxl = nullptr;
+  dxl   = nullptr;
 }
 
 // Initialize the leg servos

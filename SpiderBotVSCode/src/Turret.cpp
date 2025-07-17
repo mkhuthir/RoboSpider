@@ -1,16 +1,16 @@
 #include "Turret.h"
 
 Turret::Turret(){
-  #ifdef DEBUG
-    Serial.println("Turret initialized with Pan ID: " + String(panID) + " and Tilt ID: " + String(tiltID));
-  #endif // DEBUG
-  }
+  panID   = 0;         // Initialize pan ID
+  tiltID  = 0;         // Initialize tilt ID
+  dxl     = nullptr;   // Dynamixel controller not initialized
+}
 
 // Initialize the turret servos
 void Turret::init(uint8_t pan, uint8_t tilt, Servo* dxlCtrl) {
-  panID=pan;
-  tiltID=tilt;
-  dxl=dxlCtrl;
+  panID   = pan;
+  tiltID  = tilt;
+  dxl     = dxlCtrl;
 
   dxl->initServo(panID);      // Initialize pan servo with limits
   dxl->initServo(tiltID);     // Initialize tilt servo with limits

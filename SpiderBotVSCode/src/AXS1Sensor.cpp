@@ -6,8 +6,8 @@ AXS1Sensor::AXS1Sensor(){
 }
 
 bool AXS1Sensor::init(DynamixelWorkbench* workbench, uint8_t sensor_id){
-    dxl=workbench;
-    id=sensor_id;
+    dxl =   workbench;
+    id  =   sensor_id;
 }
 
 bool AXS1Sensor::ping() {
@@ -33,56 +33,56 @@ int AXS1Sensor::getIRLeft() {
     int32_t val = 0;
     if (readItem("IR_Left", &val))
         return static_cast<int>(val);
-    return -1;
+    return FALSE;
 }
 
 int AXS1Sensor::getIRCenter() {
     int32_t val = 0;
     if (readItem("IR_Center", &val))
         return static_cast<int>(val);
-    return -1;
+    return FALSE;
 }
 
 int AXS1Sensor::getIRRight() {
     int32_t val = 0;
     if (readItem("IR_Right", &val))
         return static_cast<int>(val);
-    return -1;
+    return FALSE;
 }
 
 int AXS1Sensor::getLightLeft() {
     int32_t val = 0;
     if (readItem("Light_Left", &val))
         return static_cast<int>(val);
-    return -1;
+    return FALSE;
 }
 
 int AXS1Sensor::getLightCenter() {
     int32_t val = 0;
     if (readItem("Light_Center", &val))
         return static_cast<int>(val);
-    return -1;
+    return FALSE;
 }
 
 int AXS1Sensor::getLightRight() {
     int32_t val = 0;
     if (readItem("Light_Right", &val))
         return static_cast<int>(val);
-    return -1;
+    return FALSE;
 }
 
 int AXS1Sensor::getSoundLevel() {
     int32_t val = 0;
     if (readItem("Sound_Level", &val))
         return static_cast<int>(val);
-    return -1;
+    return FALSE;
 }
 
 int AXS1Sensor::getSoundCount() {
     int32_t val = 0;
     if (readItem("Sound_Count", &val))
         return static_cast<int>(val);
-    return -1;
+    return FALSE;
 }
 
 float AXS1Sensor::getVoltage() {

@@ -5,6 +5,7 @@
 Hexapod::Hexapod(){
   servoSpeed  = 1.0;            // Default servo speed
   dxl         = nullptr;        // Dynamixel controller not initialized
+  
   for (int i = 0; i < 6; i++) {
     legs[i] = Leg();            // Initialize each leg
   }

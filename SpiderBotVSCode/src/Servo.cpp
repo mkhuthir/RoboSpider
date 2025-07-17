@@ -3,9 +3,8 @@
 
 // Constructor for Servo
 Servo::Servo(){
-    #ifdef DEBUG
-        Serial.println("Servo instance initilized.");
-    #endif // DEBUG
+    result          = false;    // Initialize result to false
+    model_number    = 0;        // Initialize model number to 0
 }
 
 //initialize the DynamixelWorkbench instance

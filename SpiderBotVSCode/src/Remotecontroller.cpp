@@ -2,11 +2,7 @@
 #include "Remotecontroller.h" 
 
 // Constructor for Remotecontroller
-Remotecontroller::Remotecontroller() {
-    #ifdef DEBUG
-        Serial.println("Remotecontroller initialized.");
-    #endif // DEBUG
-}
+Remotecontroller::Remotecontroller() {}
 
 void Remotecontroller::init(int serial_port) {
     rc.begin(serial_port); // Initialize the remote controller with the specified serial port
