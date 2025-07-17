@@ -134,8 +134,6 @@ bool Servo::LEDOff(uint8_t dxl_id) {
     return result;
 }
 
-
-
 // Return the DynamixelWorkbench instance
 DynamixelWorkbench* Servo::getWorkbench() {
     return &dxl;

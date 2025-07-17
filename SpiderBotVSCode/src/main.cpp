@@ -39,7 +39,6 @@ void setup() {
     servo.init(19);              // Initialize the servo with default settings
     servo.init(20);              // Initialize the servo with default settings
     
-
 }
 
 // Loop function to handle remote controller input and control the robot
