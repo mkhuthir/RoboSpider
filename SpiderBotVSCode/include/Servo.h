@@ -20,18 +20,22 @@
             uint16_t            getModelNumber(uint8_t id);
             const ModelInfo*    getModelInfo(uint8_t id);
 
+            bool                ping(uint8_t dxl_id);                               // ping a servo to check if it is connected
             bool                torqueOn(uint8_t id);
             bool                torqueOff(uint8_t id);
 
-            bool            ping(uint8_t dxl_id);                               // ping a servo to check if it is connected
+            bool                itemWrite(uint8_t id, const char *item_name, int32_t data);
+            bool                itemRead(uint8_t id, const char *item_name, int32_t *data);
+
+            bool                ledOn(uint8_t dxl_id);                              // turn on the LED of a servo
+            bool                ledOff(uint8_t dxl_id);                             // turn off the LED of a servo
+
             bool            jointMode(uint8_t dxl_id);                          // set a servo to joint mode
             bool            init(uint8_t dxl_id);                               // initialize a servo with default settings
 
             bool            goalPosition(uint8_t dxl_id, int32_t position);     // set the goal position of a servo
             bool            goalVelocity(uint8_t dxl_id, int32_t velocity);     // set the goal velocity of a servo
 
-            bool            LEDOn(uint8_t dxl_id);                              // turn on the LED of a servo
-            bool            LEDOff(uint8_t dxl_id);                             // turn off the LED of a servo
 
             DynamixelWorkbench* getWorkbench();                                 // if you need to expose the workbench pointer
 
