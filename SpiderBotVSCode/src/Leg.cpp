@@ -52,12 +52,3 @@ void Leg::printJointAngles() {
   Serial.println(getTibiaAngle());
 }
 
-// Lift the leg to a default position
-void Leg::legUp() {
-  setJointAngles(COXA_UP_ANGLE_DEG, FEMUR_UP_ANGLE_DEG, TIBIA_UP_ANGLE_DEG);        // Lift the leg by setting specific angles
-}
-
-// Move the leg forward to a default position
-void Leg::legDown() {
-  setJointAngles(COXA_DOWN_ANGLE_DEG, FEMUR_DOWN_ANGLE_DEG, TIBIA_DOWN_ANGLE_DEG);  // Move the leg down by setting specific angles
-}
