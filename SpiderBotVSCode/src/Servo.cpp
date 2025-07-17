@@ -111,30 +111,38 @@ uint32_t Servo::getBaudrate(void) {
 }
 
 // Get the model name of a servo
-const char * Servo::getModelName(uint8_t id, const char **log) {
-    const char *model_name = dxl.getModelName(id, log);
+const char * Servo::getModelName(uint8_t id) {
+    model_name = dxl.getModelName(id, &log);
     if (model_name == NULL)  // If getting model name fails
-    {        
-        Serial.println("Failed to get model name!");
+    {   
+        Serial.println(log);
+        Serial.print("Failed to get model name for id: ");
+        Serial.println(id);     
         return NULL;  // Return NULL to indicate failure
     }
     #ifdef DEBUG
-        Serial.print("Model Name: ");
-        Serial.println(model_name);
+        Serial.print("Model Name for id ");
+        Serial.print(id);
+        Serial.print(": ");
+        Serial.println(model_name); 
     #endif // DEBUG
     return model_name;  // Return the model name
 }
 
 // Get the model number of a servo
-uint16_t Servo::getModelNumber(uint8_t id, const char **log) {
-    uint16_t model_number = dxl.getModelNumber(id, log);
-    if (model_number == 0)  // If getting model number fails        
-    {        
-        Serial.println("Failed to get model number!");
+uint16_t Servo::getModelNumber(uint8_t id) {
+    model_number = dxl.getModelNumber(id, &log);
+    if (model_number == 0)  // If getting model number fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to get model number for id: ");
+        Serial.println(id); 
         return 0;  // Return 0 to indicate failure
     }
     #ifdef DEBUG
-        Serial.print("Model Number: ");
+        Serial.print("Model Number for id ");
+        Serial.print(id);
+        Serial.print(": ");
         Serial.println(model_number);
     #endif // DEBUG
     return model_number;  // Return the model number
