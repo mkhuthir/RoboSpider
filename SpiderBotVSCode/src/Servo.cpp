@@ -26,6 +26,120 @@ bool Servo::begin(const char* device_name, uint32_t baudrate) {
     return result;
 }
 
+// Set the port handler with the device name
+bool Servo::setPortHandler(const char *device_name, const char **log) {
+    result = dxl.setPortHandler(device_name, log);
+    if (!result)  // If setting port handler fails
+    {        
+        Serial.println(*log);
+        Serial.println("Failed to set port handler!");
+    }
+    else
+    {        
+        #ifdef DEBUG
+            Serial.print("Port handler set to: ");
+            Serial.println(device_name);
+        #endif // DEBUG
+    }
+    return result;
+}   
+
+// Set the baudrate for the port handler
+bool Servo::setBaudrate(uint32_t baud_rate, const char **log) {     
+    result = dxl.setBaudrate(baud_rate, log);
+    if (!result)  // If setting baudrate fails
+    {        
+        Serial.println(*log);
+        Serial.println("Failed to set baudrate!");
+    }
+    else
+    {        
+        #ifdef DEBUG
+            Serial.print("Baudrate set to: ");
+            Serial.println(baud_rate);
+        #endif // DEBUG
+    }
+    return result;
+}   
+
+// Set the packet handler with the protocol version
+bool Servo::setPacketHandler(float protocol_version, const char **log) {
+    result = dxl.setPacketHandler(protocol_version, log);
+    if (!result)  // If setting packet handler fails
+    {        
+        Serial.println(*log);
+        Serial.println("Failed to set packet handler!");
+    }
+    else
+    {        
+        #ifdef DEBUG
+            Serial.print("Packet handler set with protocol version: ");
+            Serial.println(protocol_version);
+        #endif // DEBUG
+    }
+    return result;
+}
+
+// Get the protocol version
+float Servo::getProtocolVersion(void) {
+    float protocol_version = dxl.getProtocolVersion();
+    if (protocol_version < 0)  // If getting protocol version fails
+    {        
+        Serial.println("Failed to get protocol version!");
+        return -1.0;  // Return -1.0 to indicate failure
+    }
+    #ifdef DEBUG
+        Serial.print("Protocol Version: ");
+        Serial.println(protocol_version);
+    #endif // DEBUG
+    return protocol_version;  // Return the protocol version
+}
+
+// Get the baudrate
+uint32_t Servo::getBaudrate(void) {
+    uint32_t baudrate = dxl.getBaudrate();
+    if (baudrate == 0)  // If getting baudrate fails
+    {        
+        Serial.println("Failed to get baudrate!");
+        return 0;  // Return 0 to indicate failure
+    }
+    #ifdef DEBUG
+        Serial.print("Baudrate: ");
+        Serial.println(baudrate);
+    #endif // DEBUG
+    return baudrate;  // Return the baudrate
+}
+
+// Get the model name of a servo
+const char * Servo::getModelName(uint8_t id, const char **log) {
+    const char *model_name = dxl.getModelName(id, log);
+    if (model_name == NULL)  // If getting model name fails
+    {        
+        Serial.println("Failed to get model name!");
+        return NULL;  // Return NULL to indicate failure
+    }
+    #ifdef DEBUG
+        Serial.print("Model Name: ");
+        Serial.println(model_name);
+    #endif // DEBUG
+    return model_name;  // Return the model name
+}
+
+// Get the model number of a servo
+uint16_t Servo::getModelNumber(uint8_t id, const char **log) {
+    uint16_t model_number = dxl.getModelNumber(id, log);
+    if (model_number == 0)  // If getting model number fails        
+    {        
+        Serial.println("Failed to get model number!");
+        return 0;  // Return 0 to indicate failure
+    }
+    #ifdef DEBUG
+        Serial.print("Model Number: ");
+        Serial.println(model_number);
+    #endif // DEBUG
+    return model_number;  // Return the model number
+}
+
 // Ping a servo to check if it is connected
 bool Servo::ping(uint8_t dxl_id) {
     result = dxl.ping(dxl_id, &model_number, &log);
@@ -95,6 +209,14 @@ bool Servo::goalPosition(uint8_t dxl_id, int32_t position) {
         Serial.println(log);
         Serial.print("Failed to set goal position for id: ");
         Serial.println(dxl_id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Set goal position for id: ");
+            Serial.print(dxl_id);
+            Serial.print(" to position: ");
+            Serial.println(position);
+        #endif // DEBUG
     }
     return result;
 }
@@ -107,9 +229,18 @@ bool Servo::goalVelocity(uint8_t dxl_id, int32_t velocity) {
         Serial.println(log);
         Serial.print("Failed to set goal velocity for id: ");
         Serial.println(dxl_id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Set goal velocity for id: ");
+            Serial.print(dxl_id);
+            Serial.print(" to velocity: ");
+            Serial.println(velocity);
+        #endif // DEBUG
     }
     return result;
 }
+
 // Turn on the LED of a servo
 bool Servo::LEDOn(uint8_t dxl_id) {
     result = dxl.ledOn(dxl_id, &log);
