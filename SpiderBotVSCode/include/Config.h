@@ -51,13 +51,21 @@
 
   #define MAX_NO_OF_SERVOS            256 // Max number of servos supported by Dynamixel2Arduino
 
-  #define TURRET_PAN_MIN_ANGLE_DEG    0   // Min angle for turret pan servo
-  #define TURRET_PAN_MAX_ANGLE_DEG    300 // Max angle for turret pan servo
-  #define TURRET_PAN_DEFAULT_DEG      512 // Default pan angle for turret
+  #define TURRET_PAN_MIN_DEG    0     // Min angle for turret pan servo
+  #define TURRET_PAN_MAX_DEG    300   // Max angle for turret pan servo
+  #define TURRET_PAN_HOME_DEG   512   // Home position for turret pan servo
+  #define TURRET_PAN_LEFT_DEG   0     // Left position for turret pan servo
+  #define TURRET_PAN_RIGHT_DEG  1023  // Right position for turret pan servo
+  #define TURRET_PAN_DOWN_DEG   512   // Down position for turret pan servo
+  #define TURRET_PAN_UP_DEG     0     // Up position for turret pan servo
 
-  #define TURRET_TILT_MIN_ANGLE_DEG   0   // Min angle for turret tilt servo
-  #define TURRET_TILT_MAX_ANGLE_DEG   300 // Max angle for turret tilt servo
-  #define TURRET_TILT_DEFAULT_DEG     200 // Default tilt angle for turret
+  #define TURRET_TILT_MIN_DEG   0     // Min angle for turret tilt servo
+  #define TURRET_TILT_MAX_DEG   300   // Max angle for turret tilt servo
+  #define TURRET_TILT_HOME_DEG  512   // Home position for turret tilt servo
+  #define TURRET_TILT_LEFT_DEG  0     // Left position for turret tilt servo
+  #define TURRET_TILT_RIGHT_DEG 1023  // Right position for turret tilt servo
+  #define TURRET_TILT_DOWN_DEG  0     // Down position for turret tilt servo
+  #define TURRET_TILT_UP_DEG    1023  // Up position for turret tilt servo
 
   #define COXA_MIN_ANGLE_DEG          0   // Min angle for COXA servo
   #define COXA_MAX_ANGLE_DEG          300 // Max angle for COXA servo
