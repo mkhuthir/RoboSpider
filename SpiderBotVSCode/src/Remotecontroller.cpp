@@ -9,7 +9,7 @@ void Remotecontroller::begin(int serial_port) {
     rc.begin(serial_port); // Initialize the remote controller with the specified serial port
 }
 
-void Remotecontroller::update() {
+void Remotecontroller::update(Turret* turret) {
  if (rc.available())
   {
     int RCRx = rc.readData();
@@ -25,28 +25,28 @@ void Remotecontroller::update() {
             #ifdef DEBUG
                 Serial.println("RC Button U pressed");
             #endif // DEBUG
-
+            turret->rotateTurretUp();
             break;
 
         case RC100_BTN_D:
             #ifdef DEBUG
                 Serial.println("RC Button D pressed");
             #endif // DEBUG
-
+            turret->rotateTurretDown();
             break;
 
         case RC100_BTN_L:
             #ifdef DEBUG
                 Serial.println("RC Button L pressed");
             #endif // DEBUG
-
+            turret->rotateTurretLeft();
             break;
 
         case RC100_BTN_R:
             #ifdef DEBUG
                 Serial.println("RC Button R pressed");
             #endif // DEBUG
-
+            turret->rotateTurretRight();
             break;
 
         case RC100_BTN_1:
@@ -88,7 +88,7 @@ void Remotecontroller::update() {
             #ifdef DEBUG
                 Serial.println("RC Button 6 pressed");
             #endif // DEBUG
-
+            turret->rotateTurretHome(); // Rotate turret to home position
             break;
     }
    

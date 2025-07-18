@@ -7,7 +7,7 @@
 class Turret {
   public:
     Turret();    // Constructor
-    void init(uint8_t pan, uint8_t tilt, Servo* dxlCtrl);                                          // Initialize the turret servos
+    void begin(uint8_t pan, uint8_t tilt, Servo* dxlCtrl);                                          // Initialize the turret servos
 
     void rotateTurret(float panAngle, float tiltAngle);   // Rotate the turret to specified angles
     void rotateTurretHome();                              // Rotate the turret to default position

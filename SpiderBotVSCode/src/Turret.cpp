@@ -8,7 +8,7 @@ Turret::Turret(){
 }
 
 // Initialize the turret servos
-void Turret::init(uint8_t pan, uint8_t tilt, Servo* dxlCtrl) {
+void Turret::begin(uint8_t pan, uint8_t tilt, Servo* dxlCtrl) {
   panID   = pan;
   tiltID  = tilt;
   dxl     = dxlCtrl;
