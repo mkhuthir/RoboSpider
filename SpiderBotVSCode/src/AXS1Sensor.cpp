@@ -1,4 +1,5 @@
 #include "AXS1Sensor.h"
+#include "Config.h"
 
 AXS1Sensor::AXS1Sensor(){
     dxl = nullptr;
@@ -11,8 +12,20 @@ bool AXS1Sensor::init(DynamixelWorkbench* workbench, uint8_t sensor_id){
 }
 
 bool AXS1Sensor::ping() {
-    return dxl->ping(id);
-    Serial.println("AX-S1 Sensor pinged successfully.");
+    result = dxl->ping(id);
+    if (!result) {
+        Serial.print("AX-S1 Sensor ID ");
+        Serial.print(id);
+        Serial.println(" ping failed!");
+        return false;
+    } else {
+        #ifdef DEBUG
+            Serial.print("AX-S1 Sensor ID ");
+            Serial.print(id);
+            Serial.println(" ping successful!");
+        #endif
+        return true;
+    }
 }
 
 bool AXS1Sensor::ledOn() {

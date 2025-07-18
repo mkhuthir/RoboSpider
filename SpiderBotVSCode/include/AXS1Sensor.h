@@ -29,8 +29,9 @@
         float getTemperature();
 
     private:
-        DynamixelWorkbench* dxl;         // Pointer to DynamixelWorkbench instance
-        uint8_t id;
+        DynamixelWorkbench* dxl;            // Pointer to DynamixelWorkbench instance
+        uint8_t id;                         // ID of the AX-S1 sensor
+        bool result;                        // Result of the last operation
 
         bool readItem(const char* item_name, int32_t* data);
         bool writeItem(const char* item_name, int32_t data);

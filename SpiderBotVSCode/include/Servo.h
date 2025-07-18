@@ -1,7 +1,6 @@
 #ifndef SERVO_H
 #define SERVO_H
 
-    #define PROTOCOL_VERSION 1.0 // Protocol version for Dynamixel servos
 
     #include <DynamixelWorkbench.h> // Include DynamixelWorkbench for managing servos
 
@@ -41,11 +40,11 @@
 
         private:
             DynamixelWorkbench  dxl;                // DynamixelWorkbench instance for managing servos
-            const char          *log;               // Log string for debugging 
+            const char*         log = NULL;         // Log string for debugging 
             bool                result = false;     // Result of operations
             uint16_t            model_number = 0;   // Model number of the servo being operated on
-            const char*         model_name = NULL; // Model name of the servo being operated on
-            const ModelInfo*    model_info = NULL;   // Model info of the servo being operated on
+            const char*         model_name = NULL;  // Model name of the servo being operated on
+            const ModelInfo*    model_info = NULL;  // Model info of the servo being operated on
     };
 
 #endif // SERVO_H

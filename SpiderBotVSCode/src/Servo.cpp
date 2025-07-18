@@ -1,5 +1,6 @@
 #include "Servo.h"
-
+#include "DynamixelWorkbench.h" // Include DynamixelWorkbench library for servo control
+#include "Config.h"             // Include configuration header for constants and settings
 
 // Constructor for Servo
 Servo::Servo(){
@@ -23,6 +24,7 @@ bool Servo::begin(const char* device_name, uint32_t baudrate) {
             Serial.println(" bps.");
         #endif // DEBUG
     }
+    setPacketHandler(PROTOCOL_VERSION); // Set the packet handler with the protocol version
     return result;
 }
 
@@ -161,7 +163,6 @@ const ModelInfo* Servo::getModelInfo(uint8_t id) {
         Serial.print("Model Info for id ");
         Serial.print(id);
         Serial.print(": ");
-        Serial.println(model_info);
     #endif // DEBUG
     return model_info;  // Return the model info
 }
@@ -315,12 +316,11 @@ bool Servo::jointMode(uint8_t dxl_id) {
 
 // Initialize a servo with default settings
 bool Servo::init(uint8_t dxl_id) {
-    
-    result = ping(dxl_id);                          // Ping the servo to
+    result = ping(dxl_id);                          // Ping the servo to check if it is connected
     result = result && jointMode(dxl_id);           // Set servo to joint mode
     result = result && goalVelocity(dxl_id,-100);   // Set goal velocity to 0
     result = result && goalPosition(dxl_id, 512);   // Set goal position to 512
-    result = result && ledOn(dxl_id);          // Turn on LED for the servo
+    result = result && ledOn(dxl_id);               // Turn on LED for the servo
 
     if (!result) {
         Serial.print("Failed to initialize servo with ID: ");

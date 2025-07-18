@@ -1,5 +1,6 @@
 #include "Leg.h"
 #include "Servo.h"
+#include "Config.h"             // Include configuration header
 
 // Default constructor for Leg class
 Leg::Leg(){

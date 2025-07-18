@@ -1,5 +1,6 @@
 
 #include "Remotecontroller.h" 
+#include "Config.h"             // Include configuration header
 
 // Constructor for Remotecontroller
 Remotecontroller::Remotecontroller() {}

@@ -1,5 +1,6 @@
 #include "GaitController.h"
 #include "Hexapod.h"
+#include "Config.h"             // Include configuration header
 
 // Constructor for GaitController class
 GaitController::GaitController() {

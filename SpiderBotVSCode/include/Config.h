@@ -4,8 +4,8 @@
   // Config.h - Configuration file for SpiderBot project
 
   // Define DEBUG to enable debug output
-  //#define DEBUG 
-  #undef DEBUG 
+  #define DEBUG 
+  //#undef DEBUG 
 
   // ------------------------
   // SERIAL PORTS
@@ -22,6 +22,12 @@
   #define DXL_BAUD_RATE         1000000   // Default baud rate for Dynamixel servos
   #define DEBUG_BAUD_RATE       115200    // Baud rate for debugging output
   #define RC100_BAUD_RATE       115200    // Baud rate for RC controller communication
+
+  // ------------------------
+  // Dynamixel PROTOCOL VERSION
+  // ------------------------
+  
+  #define PROTOCOL_VERSION 1.0 // Protocol version for Dynamixel servos
 
   // ------------------------
   // SERVO IDs
