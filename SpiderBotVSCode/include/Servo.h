@@ -1,7 +1,6 @@
 #ifndef SERVO_H
 #define SERVO_H
 
-
     #include <DynamixelWorkbench.h> // Include DynamixelWorkbench for managing servos
 
     class Servo {
