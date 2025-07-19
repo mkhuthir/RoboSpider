@@ -57,6 +57,7 @@ void setup() {
 
 // Loop function to handle remote controller input and control the robot
 void loop() {
+    mc.update(); // Update microcontroller state
     gc.update(); // Update gait controller state
     rc.update(); // Update remote controller state
 }

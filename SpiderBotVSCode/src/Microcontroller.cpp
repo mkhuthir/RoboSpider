@@ -26,10 +26,17 @@ bool Microcontroller::begin() {
         LEDOff(leds[i]); // Turn off all user control LEDs
     }  
     return true;  // Return true to indicate successful initialization
-}   
+}
+
+// Update the microcontroller state
+void Microcontroller::update() {
+    // Update code for the microcontroller
+    // This can include reading sensors, updating states, etc.
+    // Currently, no specific update logic is implemented.
+}
 
 // Turn on a LED on OpenCR1.0 board
-bool Microcontroller::LEDOn(uint8_t LED_id) {
+bool Microcontroller::ledOn(uint8_t LED_id) {
     // OpenCR1.0 LED IDs are as follows:
     // LED_BUILTIN             13
     // BDPIN_LED_USER_1        22
@@ -48,7 +55,7 @@ bool Microcontroller::LEDOn(uint8_t LED_id) {
 }
 
 // Turn off a LED on OpenCR1.0 board
-bool Microcontroller::LEDOff(uint8_t LED_id) {
+bool Microcontroller::ledOff(uint8_t LED_id) {
     // OpenCR1.0 LED IDs are as follows:
     // LED_BUILTIN             13
     // BDPIN_LED_USER_1        22
@@ -67,14 +74,14 @@ bool Microcontroller::LEDOff(uint8_t LED_id) {
 }
 
 // Get the battery voltage from the ADC pin on OpenCR1.0 board
-float Microcontroller::BatteryVoltage() {
+float Microcontroller::batteryVoltage() {
     int adc_value = analogRead(BDPIN_BAT_PWR_ADC);          // Read the ADC value from the battery power pin
     return (map(adc_value, 0, 1023, 0, 330*57/10)/100.0);   // Convert ADC value to voltage (assuming 3300mV reference and 57:10 voltage divider)
 }
 
 // Play a melody using OpenCR1.0 Buzzer
-bool Microcontroller::PlayMelody() {
-    
+bool Microcontroller::playMelody() {
+
     int melody[] = {NOTE_C7, NOTE_G3, NOTE_C6};             // melody notes
     int noteDurations[] = {8, 4, 8};                        // note durations: 4 = quarter note, 8 = eighth note, etc.:
 

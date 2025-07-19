@@ -6,11 +6,12 @@
 class Microcontroller {
     public:
         Microcontroller();
-        bool    begin();                                             // initialize the microcontroller
-        bool    LEDOn(uint8_t LED_id);                            // turn on the user control LED
-        bool    LEDOff(uint8_t LED_id);                           // turn off the user control LED
-        bool    PlayMelody();                                     // play a melody using the servos
-        float   BatteryVoltage();                                 // get the battery voltage
+        bool    begin();                                          // initialize the microcontroller
+        void    update();                                         // update the microcontroller state
+        bool    ledOn(uint8_t LED_id);                            // turn on the user control LED
+        bool    ledOff(uint8_t LED_id);                           // turn off the user control LED
+        bool    playMelody();                                     // play a melody using the servos
+        float   batteryVoltage();                                 // get the battery voltage
 
     private:
         
