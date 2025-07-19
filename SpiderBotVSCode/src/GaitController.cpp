@@ -14,10 +14,10 @@ GaitController::GaitController() {
 // Initialize the GaitController with a Hexapod instance
 void GaitController::begin(Hexapod* hexapod){
     this->hexapod   = hexapod;
-    gaitType        = GAIT_WAVE;
-    lastUpdate      = millis();
+    gaitType        = GAIT_IDLE;    // Start with idle gait
+    lastUpdate      = millis();     // Initialize last update time
     currentPhase    = 0;
-    stepInterval    = 1000;  // Default 1000ms between steps
+    stepInterval    = 500;          // Default 500ms between steps
 }
 
 // Set the current gait type    
@@ -71,8 +71,8 @@ void GaitController::update() {
 // This creates a smooth wave-like motion across the hexapod
 void GaitController::doWaveGait() {
     // One leg swings at a time
-    hexapod->moveLeg(currentPhase, 512, 512, 800);  // swing phase
-    hexapod->moveLeg(currentPhase, 512, 300, 700);  // stance phase
+    hexapod->moveLeg(currentPhase, COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);  // swing phase
+    hexapod->moveLeg(currentPhase, COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);  // stance phase
     currentPhase = (currentPhase + 1) % 6;
 }
 
@@ -87,11 +87,10 @@ void GaitController::doRippleGait() {
     };
 
     for (int i = 0; i < 2; ++i) {
-        hexapod->moveLeg(swingLegs[i], 512, 300, 700);
+        hexapod->moveLeg(swingLegs[i], COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);
     }
- 
     for (int i = 0; i < 2; ++i) {
-        hexapod->moveLeg(swingLegs[i], 512, 512, 512);
+        hexapod->moveLeg(swingLegs[i], COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);
     }
 
     currentPhase = (currentPhase + 1) % 3;
@@ -110,15 +109,12 @@ void GaitController::doTripodGait() {
     } else {
         swingGroup = groupB;
     }
-
     for (int i = 0; i < 3; ++i) {
-        hexapod->moveLeg(swingGroup[i], 512, 300, 700);
+        hexapod->moveLeg(swingGroup[i], COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);
     }
- 
     for (int i = 0; i < 3; ++i) {
-        hexapod->moveLeg(swingGroup[i], 512, 512, 512);
+        hexapod->moveLeg(swingGroup[i], COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);
     }
-
     currentPhase = (currentPhase + 1) % 2;
 }
 // GaitController.cpp

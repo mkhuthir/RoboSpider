@@ -76,7 +76,7 @@
   #define COXA_HOME_DEG         512 // Home position for COXA servo
   #define COXA_UP_DEG           512 // Default up angle for COXA servo
   #define COXA_DOWN_DEG         512 // Default down angle for COXA servo
-
+  
   #define FEMUR_MIN_DEG         0   // Min angle for FEMUR servo
   #define FEMUR_MAX_DEG         1023 // Max angle for FEMUR servo
   #define FEMUR_HOME_DEG        358 // Home position for FEMUR servo
