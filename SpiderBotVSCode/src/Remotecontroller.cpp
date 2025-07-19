@@ -5,9 +5,10 @@
 // Constructor for Remotecontroller
 Remotecontroller::Remotecontroller() {}
 
-void Remotecontroller::begin(int serial_port, Turret* turret) {
-    rc.begin(serial_port);  // Initialize the remote controller with the specified serial port
-    this->turret = turret;  // Store the turret instance
+void Remotecontroller::begin(int serial_port, Turret* turret, GaitController* gc) {
+    rc.begin(serial_port);      // Initialize the remote controller with the specified serial port
+    this->turret    = turret;   // Store the turret instance
+    this->gc        = gc;       // Store the GaitController instance
 }
 
 void Remotecontroller::update() {
@@ -54,35 +55,34 @@ void Remotecontroller::update() {
             #ifdef DEBUG
                 Serial.println("RC Button 1 pressed");
             #endif // DEBUG
-
+            gc->setGait(GAIT_WAVE); // Set gait to WAVE
             break;
 
         case RC100_BTN_2:
             #ifdef DEBUG
                 Serial.println("RC Button 2 pressed");
             #endif // DEBUG
-
+            gc->setGait(GAIT_RIPPLE); // Set gait to RIPPLE
             break;
 
         case RC100_BTN_3:
             #ifdef DEBUG
                 Serial.println("RC Button 3 pressed");
             #endif // DEBUG
-
+            gc->setGait(GAIT_TRIPOD); // Set gait to TRIPOD
             break;
 
         case RC100_BTN_4:
             #ifdef DEBUG
                 Serial.println("RC Button 4 pressed");
             #endif // DEBUG
-
             break;
 
         case RC100_BTN_5:
             #ifdef DEBUG
                 Serial.println("RC Button 5 pressed");
             #endif // DEBUG
-
+            gc->setGait(GAIT_IDLE); // Set gait to IDLE
             break;
 
         case RC100_BTN_6:
