@@ -11,11 +11,11 @@ Leg::Leg(){
 }
 
 // Initialize the leg servos
-void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxlCtrl) {
-  coxa  = coxaID;
-  femur = femurID;
-  tibia = tibiaID;
-  dxl   = dxlCtrl;
+void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxl) {
+  coxa      = coxaID;
+  femur     = femurID;
+  tibia     = tibiaID;
+  this->dxl = dxl;
 
   dxl->init(coxa);     // Initialize coxa servo with limits
   dxl->init(femur);    // Initialize femur servo with limits

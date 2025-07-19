@@ -8,10 +8,10 @@ Turret::Turret(){
 }
 
 // Initialize the turret servos
-void Turret::begin(uint8_t pan, uint8_t tilt, Servo* dxlCtrl) {
-  panID   = pan;
-  tiltID  = tilt;
-  dxl     = dxlCtrl;
+void Turret::begin(uint8_t pan, uint8_t tilt, Servo* dxl) {
+  panID     = pan;
+  tiltID    = tilt;
+  this->dxl = dxl;
 
   dxl->init(panID);      // Initialize pan servo with limits
   dxl->init(tiltID);     // Initialize tilt servo with limits
@@ -26,27 +26,27 @@ void Turret::rotateTurret(float panAngle, float tiltAngle) {
 
 // Rotate the turret to home position
 void Turret::rotateTurretHome() {
-  rotateTurret(TURRET_PAN_DEFAULT_DEG, TURRET_TILT_DEFAULT_DEG);    // Reset turret to default position
+  rotateTurret(TURRET_PAN_HOME_DEG, TURRET_TILT_HOME_DEG);    // Reset turret to home position
 }
 
 // Rotate turret to the right
 void Turret::rotateTurretRight() {
-  rotateTurret(270,60); // Rotate turret to the right
+  rotateTurret(TURRET_PAN_RIGHT_DEG, TURRET_TILT_RIGHT_DEG); // Rotate turret to the right
 } 
 
 // Rotate turret to the left
 void Turret::rotateTurretLeft() {
-  rotateTurret(60,60);  // Rotate turret to the left
+  rotateTurret(TURRET_PAN_LEFT_DEG, TURRET_TILT_LEFT_DEG);  // Rotate turret to the left
 }
 
 // Rotate turret up
 void Turret::rotateTurretUp() {
-  rotateTurret(60, 30);  // Rotate turret up
+  rotateTurret(TURRET_PAN_UP_DEG, TURRET_TILT_UP_DEG);  // Rotate turret up
 }
 
 // Rotate turret down
 void Turret::rotateTurretDown() {
-  rotateTurret(60, 90); // Rotate turret down
+  rotateTurret(TURRET_PAN_DOWN_DEG, TURRET_TILT_DOWN_DEG); // Rotate turret down
 } 
 
 // Print current turret angles to Serial

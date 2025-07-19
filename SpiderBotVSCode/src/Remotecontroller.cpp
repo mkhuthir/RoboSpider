@@ -5,11 +5,12 @@
 // Constructor for Remotecontroller
 Remotecontroller::Remotecontroller() {}
 
-void Remotecontroller::begin(int serial_port) {
-    rc.begin(serial_port); // Initialize the remote controller with the specified serial port
+void Remotecontroller::begin(int serial_port, Turret* turret) {
+    rc.begin(serial_port);  // Initialize the remote controller with the specified serial port
+    this->turret = turret;  // Store the turret instance
 }
 
-void Remotecontroller::update(Turret* turret) {
+void Remotecontroller::update() {
  if (rc.available())
   {
     int RCRx = rc.readData();

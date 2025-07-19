@@ -10,11 +10,12 @@
     class Remotecontroller {
         public:
             Remotecontroller();
-            void begin(int serial_port); // Initialize the remote controller with a stream
-            void update(Turret* turret); // Update the remote controller state
+            void begin(int serial_port, Turret* turret); // Initialize the remote controller with a stream
+            void update(); // Update the remote controller state
 
         private:
             RC100 rc; // Instance of the RC100 remote controller
+            Turret* turret; // Pointer to the turret instance
     };
 
 #endif // REMOTECONTROLLER_H

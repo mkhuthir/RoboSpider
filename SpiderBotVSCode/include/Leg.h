@@ -7,7 +7,7 @@
   class Leg {
     public:
       Leg(); // Constructor
-      void  init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxlCtrl); // Initialize the leg servos
+      void  init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxl);     // Initialize the leg servos
       void  setJointAngles(float coxaAngle, float femurAngle, float tibiaAngle);    // Set angles for the leg joints
       float getCoxaAngle();                                                         // Get current coxa angle
       float getFemurAngle();                                                        // Get current femur angle
