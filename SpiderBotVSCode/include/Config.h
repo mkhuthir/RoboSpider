@@ -51,6 +51,8 @@
 
   #define MAX_NO_OF_SERVOS            256 // Max number of servos supported by Dynamixel2Arduino
 
+  // ------------------------
+  // TURRET SERVOS
   #define TURRET_PAN_MIN_DEG    0     // Min angle for turret pan servo
   #define TURRET_PAN_MAX_DEG    300   // Max angle for turret pan servo
   #define TURRET_PAN_HOME_DEG   512   // Home position for turret pan servo
@@ -67,21 +69,22 @@
   #define TURRET_TILT_DOWN_DEG  0     // Down position for turret tilt servo
   #define TURRET_TILT_UP_DEG    1023  // Up position for turret tilt servo
 
-  #define COXA_MIN_ANGLE_DEG          0   // Min angle for COXA servo
-  #define COXA_MAX_ANGLE_DEG          300 // Max angle for COXA servo
-  #define COXA_UP_ANGLE_DEG          150 // Default up angle for COXA servo
-  #define COXA_DOWN_ANGLE_DEG        100 // Default down angle for COXA servo 
+  // ------------------------
+  // LEG SERVOS
+  #define COXA_MIN_DEG          0   // Min angle for COXA servo
+  #define COXA_MAX_DEG          300 // Max angle for COXA servo
+  #define COXA_UP_DEG          150 // Default up angle for COXA servo
+  #define COXA_DOWN_DEG        100 // Default down angle for COXA servo
 
-  #define FEMUR_MIN_ANGLE_DEG         0   // Min angle for FEMUR servo
-  #define FEMUR_MAX_ANGLE_DEG         300 // Max angle for FEMUR servo
-  #define FEMUR_UP_ANGLE_DEG         150 // Default up angle for FEMUR servo
-  #define FEMUR_DOWN_ANGLE_DEG       100 // Default down angle for FEMUR servo
+  #define FEMUR_MIN_DEG         0   // Min angle for FEMUR servo
+  #define FEMUR_MAX_DEG         300 // Max angle for FEMUR servo
+  #define FEMUR_UP_DEG         150 // Default up angle for FEMUR servo
+  #define FEMUR_DOWN_DEG       100 // Default down angle for FEMUR servo
 
-  #define TIBIA_MIN_ANGLE_DEG         0   // Min angle for TIBIA servo
-  #define TIBIA_MAX_ANGLE_DEG         300 // Max angle for TIBIA servo
-  #define TIBIA_UP_ANGLE_DEG         150 // Default up angle for TIBIA servo
-  #define TIBIA_DOWN_ANGLE_DEG       100 // Default down angle for TIBIA servo
-
+  #define TIBIA_MIN_DEG         0   // Min angle for TIBIA servo
+  #define TIBIA_MAX_DEG         300 // Max angle for TIBIA servo
+  #define TIBIA_UP_DEG         150 // Default up angle for TIBIA servo
+  #define TIBIA_DOWN_DEG       100 // Default down angle for TIBIA servo
 
   // ------------------------
   // GAIT TIMING
