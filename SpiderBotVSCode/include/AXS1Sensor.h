@@ -2,12 +2,13 @@
 #define AXS1_SENSOR_H
 
     #include <DynamixelWorkbench.h>
+    #include "Servo.h"
 
     class AXS1Sensor {
     public:
         AXS1Sensor();
 
-        bool init(DynamixelWorkbench* workbench, uint8_t sensor_id);
+        bool begin(Servo* servo, uint8_t sensor_id);
         bool ping();
 
         bool ledOn();
@@ -29,10 +30,9 @@
         float getTemperature();
 
     private:
-        DynamixelWorkbench* dxl;            // Pointer to DynamixelWorkbench instance
+        Servo* servo;                       // Pointer to Servo instance
         uint8_t id;                         // ID of the AX-S1 sensor
-        bool result;                        // Result of the last operation
-
+        
         bool readItem(const char* item_name, int32_t* data);
         bool writeItem(const char* item_name, int32_t data);
     };

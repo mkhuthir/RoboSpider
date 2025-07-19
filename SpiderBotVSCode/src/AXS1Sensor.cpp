@@ -1,31 +1,19 @@
 #include "AXS1Sensor.h"
+#include "Servo.h"                     // Include Servo class for managing Dynamixel servos
 #include "Config.h"
 
 AXS1Sensor::AXS1Sensor(){
-    dxl = nullptr;
-    id  = 0;
+    servo   = nullptr;  // Initialize servo pointer to null
+    id      = 0;        // Initialize sensor ID to 0
 }
 
-bool AXS1Sensor::init(DynamixelWorkbench* workbench, uint8_t sensor_id){
-    dxl =   workbench;
+bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
+    this->servo = servo;
     id  =   sensor_id;
 }
 
 bool AXS1Sensor::ping() {
-    result = dxl->ping(id);
-    if (!result) {
-        Serial.print("AX-S1 Sensor ID ");
-        Serial.print(id);
-        Serial.println(" ping failed!");
-        return false;
-    } else {
-        #ifdef DEBUG
-            Serial.print("AX-S1 Sensor ID ");
-            Serial.print(id);
-            Serial.println(" ping successful!");
-        #endif
-        return true;
-    }
+  return servo->ping(id);
 }
 
 bool AXS1Sensor::ledOn() {
@@ -113,9 +101,9 @@ float AXS1Sensor::getTemperature() {
 }
 
 bool AXS1Sensor::readItem(const char* item_name, int32_t* data) {
-    return dxl->itemRead(id, item_name, data);
+    return servo->itemRead(id, item_name, data);
 }
 
 bool AXS1Sensor::writeItem(const char* item_name, int32_t data) {
-    return dxl->itemWrite(id, item_name, data);
+    return servo->itemWrite(id, item_name, data);
 }

@@ -42,7 +42,7 @@
   #define TURRET_TILT_ID        20
 
   // AX-S1 Sensor
-  #define AX_S1_SENSOR_ID       100
+  #define AXS1_SENSOR_ID        100
 
   // ------------------------
   // SERVO LIMITS
