@@ -4,9 +4,7 @@
 
 // Constructor for Hexapod class
 Hexapod::Hexapod(){
-  servoSpeed  = 1.0;            // Default servo speed
   servo         = nullptr;        // Dynamixel controller not initialized
-  
   for (int i = 0; i < 6; i++) {
     legs[i] = Leg();            // Initialize each leg
   }
@@ -24,11 +22,6 @@ void Hexapod::begin(Servo* servo) {
 
 //  for(int i=0; i<6; i++)
 //    legs[i]->init();
-}
-
-// Set the servo speed
-void Hexapod::setServoSpeed(float Speed) {
-  servoSpeed = Speed;
 }
 
 // Print the status of all legs
