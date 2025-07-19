@@ -4,24 +4,25 @@
 #include <Arduino.h>                    // Include Arduino core library
 
 #include "Config.h"                     // Include configuration header
+
 #include "Microcontroller.h"            // Include Microcontroller class for managing OpenCR1.0 board
 #include "Servo.h"                      // Include Servo class for managing Dynamixel servos
-#include "Remotecontroller.h"           // Include RemoteController class for managing remote controller input
 #include "Hexapod.h"                    // Include Hexapod class for managing the hexapod robot
 #include "Turret.h"                     // Include Turret class for managing the sensor turret
 #include "AXS1Sensor.h"                 // Include AXS1Sensor class for managing the AX-S1 sensor
 #include "GaitController.h"             // Include GaitController class for managing the gait of the hexapod
+#include "Remotecontroller.h"           // Include RemoteController class for managing remote controller input
 
 
 // Global variables and instances
 
 Microcontroller     mc;
 Servo               servo;  
-Remotecontroller    rc;     
 Hexapod             hexapod;
 Turret              turret; 
 AXS1Sensor          axs1;   
 GaitController      gc;     
+Remotecontroller    rc;     
 
 // Setup function to initialize the robot components
 void setup() {
