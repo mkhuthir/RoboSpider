@@ -314,6 +314,166 @@ bool Servo::jointMode(uint8_t dxl_id) {
     return result;
 }
 
+
+// Set the goal position of a servo in value
+bool Servo::goalPosition(uint8_t dxl_id, int32_t position) {
+    result = dxl.goalPosition(dxl_id, position, &log);
+    if (!result)  // If setting goal position fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to set goal position for id: ");
+        Serial.println(dxl_id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Set goal position for id: ");
+            Serial.print(dxl_id);
+            Serial.print(" to position: ");
+            Serial.println(position);
+        #endif // DEBUG
+    }
+    return result;
+}
+
+// Set the goal position of a servo in radians
+bool Servo::goalPosition(uint8_t dxl_id, float radian) {
+    result = dxl.goalPosition(dxl_id, radian, &log);
+    if (!result)  // If setting goal position fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to set goal position for id: ");
+        Serial.println(dxl_id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Set goal position for id: ");
+            Serial.print(dxl_id);
+            Serial.print(" to radian: ");
+            Serial.println(radian);
+        #endif // DEBUG
+    }
+    return result;
+}
+
+// Set the goal velocity of a servo in int value
+bool Servo::goalVelocity(uint8_t dxl_id, int32_t velocity) {
+    result = dxl.goalVelocity(dxl_id, velocity, &log);
+    if (!result)  // If setting goal velocity fails 
+    {
+        Serial.println(log);
+        Serial.print("Failed to set goal velocity for id: ");
+        Serial.println(dxl_id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Set goal velocity for id: ");
+            Serial.print(dxl_id);
+            Serial.print(" to velocity: ");
+            Serial.println(velocity);
+        #endif // DEBUG
+    }
+    return result;
+}
+
+// Set the goal velocity of a servo in float
+bool Servo::goalVelocity(uint8_t dxl_id, float velocity) {
+    result = dxl.goalVelocity(dxl_id, velocity, &log);
+    if (!result)  // If setting goal velocity fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to set goal velocity for id: ");
+        Serial.println(dxl_id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Set goal velocity for id: ");
+            Serial.print(dxl_id);
+            Serial.print(" to velocity: ");
+            Serial.println(velocity);
+        #endif // DEBUG
+    }
+    return result;
+}
+
+// Get the present position data of a servo in value
+bool Servo::getPresentPositionData(uint8_t id, int32_t* data) {
+    result = dxl.getPresentPositionData(id, data, &log);
+    if (!result)  // If getting present position data fails
+    {        
+        Serial.println(log);
+        Serial.print("Failed to get present position data for id: ");
+        Serial.println(id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Present position data for id: ");
+            Serial.print(id);
+            Serial.print(" is: ");
+            Serial.println(*data);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
+// Get the present position of a servo in radians
+bool Servo::getRadian(uint8_t id, float* radian) {
+    result = dxl.getRadian(id, radian, &log);
+    if (!result)  // If getting radian fails
+    {        
+        Serial.println(log);
+        Serial.print("Failed to get radian for id: ");
+        Serial.println(id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Radian for id: ");
+            Serial.print(id);
+            Serial.print(" is: ");
+            Serial.println(*radian);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
+// Get the present velocity data of a servo in value
+bool Servo::getPresentVelocityData(uint8_t id, int32_t* data) {
+    result = dxl.getPresentVelocityData(id, data, &log);
+    if (!result)  // If getting present velocity data fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to get present velocity data for id: ");
+        Serial.println(id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Present velocity data for id: ");
+            Serial.print(id);
+            Serial.print(" is: ");
+            Serial.println(*data);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
+// Get the present velocity of a servo in float
+bool Servo::getVelocity(uint8_t id, float* velocity) {
+    result = dxl.getVelocity(id, velocity, &log);
+    if (!result)  // If getting velocity fails
+    {        Serial.println(log);
+        Serial.print("Failed to get velocity for id: ");
+        Serial.println(id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Velocity for id: ");
+            Serial.print(id);
+            Serial.print(" is: ");
+            Serial.println(*velocity);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
 // Initialize a servo with default settings
 bool Servo::init(uint8_t dxl_id, int32_t position) {
     result = ping(dxl_id);                              // Ping the servo to check if it is connected
@@ -334,48 +494,6 @@ bool Servo::init(uint8_t dxl_id, int32_t position) {
     }
     return result;
 }
-
-// Set the goal position of a servo
-bool Servo::goalPosition(uint8_t dxl_id, int32_t position) {
-    result = dxl.goalPosition(dxl_id, position, &log);
-    if (!result)  // If setting goal position fails
-    {
-        Serial.println(log);
-        Serial.print("Failed to set goal position for id: ");
-        Serial.println(dxl_id);
-    } else
-    {
-        #ifdef DEBUG
-            Serial.print("Set goal position for id: ");
-            Serial.print(dxl_id);
-            Serial.print(" to position: ");
-            Serial.println(position);
-        #endif // DEBUG
-    }
-    return result;
-}
-
-// Set the goal velocity of a servo
-bool Servo::goalVelocity(uint8_t dxl_id, int32_t velocity) {
-    result = dxl.goalVelocity(dxl_id, velocity, &log);
-    if (!result)  // If setting goal velocity fails 
-    {
-        Serial.println(log);
-        Serial.print("Failed to set goal velocity for id: ");
-        Serial.println(dxl_id);
-    } else
-    {
-        #ifdef DEBUG
-            Serial.print("Set goal velocity for id: ");
-            Serial.print(dxl_id);
-            Serial.print(" to velocity: ");
-            Serial.println(velocity);
-        #endif // DEBUG
-    }
-    return result;
-}
-
-
 
 // Return the DynamixelWorkbench instance
 DynamixelWorkbench* Servo::getWorkbench() {

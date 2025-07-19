@@ -28,12 +28,24 @@
             bool                ledOn(uint8_t dxl_id);                                      // turn on the LED of a servo
             bool                ledOff(uint8_t dxl_id);                                     // turn off the LED of a servo
 
+            bool                setNormalDirection(uint8_t id);
+            bool                setReverseDirection(uint8_t id);
+
             bool                jointMode(uint8_t dxl_id);                                  // set a servo to joint mode
+
+            bool                goalPosition(uint8_t id, int32_t value);
+            bool                goalPosition(uint8_t id, float radian);
+
+            bool                goalVelocity(uint8_t id, int32_t value);
+            bool                goalVelocity(uint8_t id, float velocity);
+
+            bool                getPresentPositionData(uint8_t id, int32_t* data);
+            bool                getRadian(uint8_t id, float* radian);
+
+            bool                getPresentVelocityData(uint8_t id, int32_t* data);
+            bool                getVelocity(uint8_t id, float* velocity);
+
             bool                init(uint8_t dxl_id, int32_t position);                     // initialize a servo with default settings
-
-            bool                goalPosition(uint8_t dxl_id, int32_t position);             // set the goal position of a servo
-            bool                goalVelocity(uint8_t dxl_id, int32_t velocity);             // set the goal velocity of a servo
-
 
             DynamixelWorkbench* getWorkbench();                                             // if you need to expose the workbench pointer
 
