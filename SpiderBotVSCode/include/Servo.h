@@ -29,7 +29,7 @@
             bool                ledOff(uint8_t dxl_id);                                     // turn off the LED of a servo
 
             bool                jointMode(uint8_t dxl_id);                                  // set a servo to joint mode
-            bool                init(uint8_t dxl_id);                                       // initialize a servo with default settings
+            bool                init(uint8_t dxl_id, int32_t position);                     // initialize a servo with default settings
 
             bool                goalPosition(uint8_t dxl_id, int32_t position);             // set the goal position of a servo
             bool                goalVelocity(uint8_t dxl_id, int32_t velocity);             // set the goal velocity of a servo

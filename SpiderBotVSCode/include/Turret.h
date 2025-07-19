@@ -7,7 +7,7 @@
 class Turret {
   public:
     Turret();    // Constructor
-    void begin(uint8_t pan, uint8_t tilt, Servo* dxl);    // Initialize the turret servos
+    void begin(uint8_t pan, uint8_t tilt, Servo* servo);    // Initialize the turret servos
 
     void rotateTurret(float panAngle, float tiltAngle);   // Rotate the turret to specified angles
     void rotateTurretHome();                              // Rotate the turret to home position
@@ -18,7 +18,7 @@ class Turret {
     void printTurretStatus();                             // Print current turret angles to Serial 
             
   private:
-    Servo*  dxl;                                          // Pointer to the Dynamixel controller instance  
+    Servo*  servo;                                        // Pointer to the servo instance
     uint8_t panID, tiltID;                                // Servo IDs for pan, tilt and sensor
     
 };

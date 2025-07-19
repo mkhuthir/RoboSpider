@@ -7,26 +7,26 @@ Leg::Leg(){
   coxa  = 0;
   femur = 0;
   tibia = 0;
-  dxl   = nullptr;
+  servo = nullptr;
 }
 
 // Initialize the leg servos
-void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* dxl) {
+void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
   coxa      = coxaID;
   femur     = femurID;
   tibia     = tibiaID;
-  this->dxl = dxl;
+  this->servo = servo;  // Set the servo pointer
 
-  dxl->init(coxa);     // Initialize coxa servo with limits
-  dxl->init(femur);    // Initialize femur servo with limits
-  dxl->init(tibia);    // Initialize tibia servo with limits
+  servo->init(coxa, COXA_HOME_DEG);     // Initialize coxa servo with limits
+  servo->init(femur, FEMUR_HOME_DEG);   // Initialize femur servo with limits
+  servo->init(tibia, TIBIA_HOME_DEG);   // Initialize tibia servo with limits
 }
 
 // Set angles for the leg joints
 void Leg::setJointAngles(float coxaAngle, float femurAngle, float tibiaAngle) {
-  dxl->goalPosition(coxa, coxaAngle);      // Set coxa angle
-  dxl->goalPosition(femur, femurAngle);    // Set femur angle
-  dxl->goalPosition(tibia, tibiaAngle);    // Set tibia angle
+  servo->goalPosition(coxa, coxaAngle);      // Set coxa angle
+  servo->goalPosition(femur, femurAngle);    // Set femur angle
+  servo->goalPosition(tibia, tibiaAngle);    // Set tibia angle
 }
 
 float Leg::getCoxaAngle() {
