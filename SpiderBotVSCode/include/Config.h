@@ -56,18 +56,18 @@
   #define TURRET_PAN_MIN_DEG    0     // Min angle for turret pan servo
   #define TURRET_PAN_MAX_DEG    300   // Max angle for turret pan servo
   #define TURRET_PAN_HOME_DEG   512   // Home position for turret pan servo
-  #define TURRET_PAN_LEFT_DEG   0     // Left position for turret pan servo
-  #define TURRET_PAN_RIGHT_DEG  1023  // Right position for turret pan servo
+  #define TURRET_PAN_LEFT_DEG   819   // Left position for turret pan servo
+  #define TURRET_PAN_RIGHT_DEG  204   // Right position for turret pan servo
   #define TURRET_PAN_DOWN_DEG   512   // Down position for turret pan servo
-  #define TURRET_PAN_UP_DEG     0     // Up position for turret pan servo
+  #define TURRET_PAN_UP_DEG     512   // Up position for turret pan servo
 
   #define TURRET_TILT_MIN_DEG   0     // Min angle for turret tilt servo
   #define TURRET_TILT_MAX_DEG   300   // Max angle for turret tilt servo
-  #define TURRET_TILT_HOME_DEG  512   // Home position for turret tilt servo
-  #define TURRET_TILT_LEFT_DEG  0     // Left position for turret tilt servo
-  #define TURRET_TILT_RIGHT_DEG 1023  // Right position for turret tilt servo
-  #define TURRET_TILT_DOWN_DEG  0     // Down position for turret tilt servo
-  #define TURRET_TILT_UP_DEG    1023  // Up position for turret tilt servo
+  #define TURRET_TILT_HOME_DEG  204   // Home position for turret tilt servo
+  #define TURRET_TILT_LEFT_DEG  204   // Left position for turret tilt servo
+  #define TURRET_TILT_RIGHT_DEG 204   // Right position for turret tilt servo
+  #define TURRET_TILT_DOWN_DEG  100   // Down position for turret tilt servo
+  #define TURRET_TILT_UP_DEG    512   // Up position for turret tilt servo
 
   // ------------------------
   // LEG SERVOS
