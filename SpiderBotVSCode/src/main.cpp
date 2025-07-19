@@ -37,7 +37,7 @@ void setup() {
     servo.begin(DXL_SERIAL, DXL_BAUD_RATE);                 // Initialize Dynamixel controller with specified serial port and baud rate
     hexapod.begin(&servo);                                  // Initialize the hexapod
     turret.begin(TURRET_PAN_ID, TURRET_TILT_ID, &servo);    // Initialize the turret
-    axs1.begin(&servo, AXS1_SENSOR_ID);                       // Initialize the AX-S1 sensor
+    axs1.begin(&servo, AXS1_SENSOR_ID);                     // Initialize the AX-S1 sensor
     rc.begin(RC100_SERIAL,&turret);                         // Initialize the remote controller with the turret instance
 }
 
