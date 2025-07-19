@@ -38,6 +38,7 @@ void setup() {
     hexapod.begin(&servo);                                  // Initialize the hexapod
     turret.begin(TURRET_PAN_ID, TURRET_TILT_ID, &servo);    // Initialize the turret
     axs1.begin(&servo, AXS1_SENSOR_ID);                     // Initialize the AX-S1 sensor
+    gc.begin(&hexapod);                                     // Initialize the gait controller with the hexapod instance
     rc.begin(RC100_SERIAL,&turret);                         // Initialize the remote controller with the turret instance
 
     axs1.ping();                               // Ping the AX-S1 sensor to check if it's connected
@@ -56,5 +57,6 @@ void setup() {
 
 // Loop function to handle remote controller input and control the robot
 void loop() {
+    gc.update(); // Update gait controller state
     rc.update(); // Update remote controller state
 }

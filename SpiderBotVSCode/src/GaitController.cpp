@@ -4,17 +4,17 @@
 
 // Constructor for GaitController class
 GaitController::GaitController() {
-    robot           = nullptr;
-    gait            = GAIT_IDLE;
+    hexapod         = nullptr;
+    gaitType        = GAIT_IDLE;
     lastUpdate      = 0;
     currentPhase    = 0;
     stepInterval    = 500;  // Default 500ms between steps
 }
 
 // Initialize the GaitController with a Hexapod instance
-void GaitController::init(Hexapod* hexapod){
-    robot           = hexapod;
-    gait            = GAIT_IDLE;
+void GaitController::begin(Hexapod* hexapod){
+    this->hexapod   = hexapod;
+    gaitType        = GAIT_IDLE;
     lastUpdate      = millis();
     currentPhase    = 0;
     stepInterval    = 500;  // Default 500ms between steps
@@ -22,14 +22,14 @@ void GaitController::init(Hexapod* hexapod){
 
 // Set the current gait type    
 void GaitController::setGait(GaitType newGait) {
-    gait            = newGait;
+    gaitType        = newGait;
     currentPhase    = 0;
     lastUpdate      = millis();
 }
 
 // Get the current gait type
 GaitType GaitController::getGait() const {
-    return gait;
+    return gaitType;
 }
 
 // Set the step interval for the gait
@@ -44,14 +44,14 @@ unsigned long GaitController::getStepInterval() const {
 
 // Update the gait controller, called periodically
 void GaitController::update() {
-    if (gait == GAIT_IDLE) return;
+    if (gaitType == GAIT_IDLE) return;
 
     unsigned long now = millis();
     if (now - lastUpdate < stepInterval) return;
 
     lastUpdate = now;
 
-    switch (gait) {
+    switch (gaitType) {
         case GAIT_WAVE:
             doWaveGait();
             break;
@@ -71,9 +71,9 @@ void GaitController::update() {
 // This creates a smooth wave-like motion across the hexapod
 void GaitController::doWaveGait() {
     // One leg swings at a time
-    //robot->moveLeg(currentPhase, 512, 300, 700);  // swing phase
+    //hexapod->moveLeg(currentPhase, 512, 300, 700);  // swing phase
     delay(50);
-    //robot->moveLeg(currentPhase, 512, 512, 512);  // stance phase
+    //hexapod->moveLeg(currentPhase, 512, 512, 512);  // stance phase
 
     currentPhase = (currentPhase + 1) % 6;
 }
@@ -89,11 +89,11 @@ void GaitController::doRippleGait() {
     };
 
     for (int i = 0; i < 2; ++i) {
-        //robot->moveLeg(swingLegs[i], 512, 300, 700);
+        //hexapod->moveLeg(swingLegs[i], 512, 300, 700);
     }
     delay(50);
     for (int i = 0; i < 2; ++i) {
-        //robot->moveLeg(swingLegs[i], 512, 512, 512);
+        //hexapod->moveLeg(swingLegs[i], 512, 512, 512);
     }
 
     currentPhase = (currentPhase + 1) % 3;
@@ -116,11 +116,11 @@ void GaitController::doTripodGait() {
     }
 
     for (int i = 0; i < 3; ++i) {
-        //robot->moveLeg(swingGroup[i], 512, 300, 700);
+        //hexapod->moveLeg(swingGroup[i], 512, 300, 700);
     }
     delay(50);
     for (int i = 0; i < 3; ++i) {
-        //robot->moveLeg(swingGroup[i], 512, 512, 512);
+        //hexapod->moveLeg(swingGroup[i], 512, 512, 512);
     }
 
     currentPhase = (currentPhase + 1) % 2;
