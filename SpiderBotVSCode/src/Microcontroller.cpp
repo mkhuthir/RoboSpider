@@ -12,19 +12,19 @@ bool Microcontroller::begin() {
     // Initialization code for the microcontroller
     int leds[] = {LED_BUILTIN, BDPIN_LED_USER_1, BDPIN_LED_USER_2, BDPIN_LED_USER_3, BDPIN_LED_USER_4, BDPIN_LED_STATUS}; // User control LEDs
     for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
-        LEDOn(leds[i]);  // Turn on all user control LEDs
+        ledOn(leds[i]);  // Turn on all user control LEDs
     }
-    
-    PlayMelody();                 // Play a melody using the buzzer
+
+    playMelody();                 // Play a melody using the buzzer
     #ifdef DEBUG
         Serial.println("Dynamixel Controller initialized successfully.");
         Serial.print("Dynamixel Controller Battery Voltage: ");
-        Serial.println(BatteryVoltage());
+        Serial.println(batteryVoltage());
     #endif // DEBUG
     
     for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
-        LEDOff(leds[i]); // Turn off all user control LEDs
-    }  
+        ledOff(leds[i]); // Turn off all user control LEDs
+    }
     return true;  // Return true to indicate successful initialization
 }
 
