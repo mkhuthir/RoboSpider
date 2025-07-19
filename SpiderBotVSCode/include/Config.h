@@ -30,7 +30,7 @@
   #define PROTOCOL_VERSION 1.0 // Protocol version for Dynamixel servos
 
   // ------------------------
-  // SERVO IDs
+  // Servos & Sensors IDs
   // ------------------------
 
   // Legs (IDs 1 to 18)
