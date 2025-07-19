@@ -39,6 +39,18 @@ void setup() {
     turret.begin(TURRET_PAN_ID, TURRET_TILT_ID, &servo);    // Initialize the turret
     axs1.begin(&servo, AXS1_SENSOR_ID);                     // Initialize the AX-S1 sensor
     rc.begin(RC100_SERIAL,&turret);                         // Initialize the remote controller with the turret instance
+
+    Serial.println(axs1.getIRLeft());          // Print the left IR sensor value for debugging
+    Serial.println(axs1.getIRCenter());        // Print the center IR sensor value for debugging
+    Serial.println(axs1.getIRRight());         // Print the right IR sensor value for debugging
+    Serial.println(axs1.getLightLeft());       // Print the left light sensor value for debugging
+    Serial.println(axs1.getLightCenter());     // Print the center light sensor value for debugging
+    Serial.println(axs1.getLightRight());      // Print the right light sensor value for debugging
+    Serial.println(axs1.getSoundLevel());      // Print the sound level for debugging
+    Serial.println(axs1.getSoundCount());      // Print the sound count for debugging
+    Serial.println(axs1.getVoltage());         // Print the voltage level for debugging
+    Serial.println(axs1.getTemperature());     // Print the temperature for debugging
+
 }
 
 // Loop function to handle remote controller input and control the robot

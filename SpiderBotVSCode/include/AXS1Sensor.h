@@ -32,9 +32,6 @@
     private:
         Servo* servo;                       // Pointer to Servo instance
         uint8_t id;                         // ID of the AX-S1 sensor
-        
-        bool readItem(const char* item_name, int32_t* data);
-        bool writeItem(const char* item_name, int32_t data);
     };
 
 #endif // AXS1_SENSOR_H
