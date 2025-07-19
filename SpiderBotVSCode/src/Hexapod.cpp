@@ -5,7 +5,7 @@
 // Constructor for Hexapod class
 Hexapod::Hexapod(){
   servoSpeed  = 1.0;            // Default servo speed
-  dxl         = nullptr;        // Dynamixel controller not initialized
+  servo         = nullptr;        // Dynamixel controller not initialized
   
   for (int i = 0; i < 6; i++) {
     legs[i] = Leg();            // Initialize each leg
@@ -13,14 +13,14 @@ Hexapod::Hexapod(){
 }
 
 // Initialize the hexapod
-void Hexapod::init(Servo* dxlCtrl) {
-  dxl=dxlCtrl;
-  legs[0].init(1,  2,  3,  dxl);
-  legs[1].init(4,  5,  6,  dxl);
-  legs[2].init(7,  8,  9,  dxl);
-  legs[3].init(10, 11, 12, dxl);
-  legs[4].init(13, 14, 15, dxl);
-  legs[5].init(16, 17, 18, dxl);
+void Hexapod::begin(Servo* servo) {
+  this->servo=servo;
+  legs[0].init(1,  2,  3,  servo);
+  legs[1].init(4,  5,  6,  servo);
+  legs[2].init(7,  8,  9,  servo);
+  legs[3].init(10, 11, 12, servo);
+  legs[4].init(13, 14, 15, servo);
+  legs[5].init(16, 17, 18, servo);
 
 //  for(int i=0; i<6; i++)
 //    legs[i]->init();
