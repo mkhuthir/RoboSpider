@@ -49,8 +49,9 @@
   // Define safe limits to avoid mechanical overrun
   // AX-18A typical physical limit ~0-300 deg
 
-  #define MAX_NO_OF_SERVOS            256 // Max number of servos supported by Dynamixel2Arduino
-
+  #define MAX_NO_OF_SERVOS            256       // Max number of servos supported by Dynamixel2Arduino
+  #define DEFAULT_SERVO_VELOCITY      -100.0f   // Default velocity for servos
+  
   // ------------------------
   // TURRET SERVOS
   #define TURRET_PAN_MIN_DEG    0     // Min angle for turret pan servo
