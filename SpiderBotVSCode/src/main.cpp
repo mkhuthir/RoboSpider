@@ -40,6 +40,7 @@ void setup() {
     axs1.begin(&servo, AXS1_SENSOR_ID);                     // Initialize the AX-S1 sensor
     rc.begin(RC100_SERIAL,&turret);                         // Initialize the remote controller with the turret instance
 
+    axs1.ping();                               // Ping the AX-S1 sensor to check if it's connected
     Serial.println(axs1.getIRLeft());          // Print the left IR sensor value for debugging
     Serial.println(axs1.getIRCenter());        // Print the center IR sensor value for debugging
     Serial.println(axs1.getIRRight());         // Print the right IR sensor value for debugging

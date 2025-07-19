@@ -11,8 +11,6 @@
         bool begin(Servo* servo, uint8_t sensor_id);
         bool ping();
 
-        bool ledOn();
-        bool ledOff();
         bool setBuzzer(uint8_t note, uint8_t duration);
 
         int getIRLeft();

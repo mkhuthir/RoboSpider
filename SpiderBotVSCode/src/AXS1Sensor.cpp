@@ -16,14 +16,6 @@ bool AXS1Sensor::ping() {
   return servo->ping(id);
 }
 
-bool AXS1Sensor::ledOn() {
-    return servo->itemWrite(id, "LED", 0);
-}
-
-bool AXS1Sensor::ledOff() {
-    return servo->itemWrite(id, "LED", 1);
-}
-
 bool AXS1Sensor::setBuzzer(uint8_t note, uint8_t duration) {
     bool ok = servo->itemWrite(id, "Buzzer_Index", note);
     ok &= servo->itemWrite(id, "Buzzer_Time", duration);
