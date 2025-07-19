@@ -27,6 +27,7 @@ void Hexapod::begin(Servo* servo) {
 bool Hexapod::moveLeg(int legIndex, int coxa, int femur, int tibia) {
   if (legIndex < 0 || legIndex >= 6) return false;  // Invalid leg index
   legs[legIndex].setJointAngles(coxa, femur, tibia);
+  delay(1000);  // Wait for the movement to complete
   return true;
 }
 

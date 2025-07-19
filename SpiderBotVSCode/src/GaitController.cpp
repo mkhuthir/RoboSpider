@@ -72,9 +72,7 @@ void GaitController::update() {
 void GaitController::doWaveGait() {
     // One leg swings at a time
     hexapod->moveLeg(currentPhase, 512, 512, 800);  // swing phase
-    delay(1000);
     hexapod->moveLeg(currentPhase, 512, 300, 700);  // stance phase
-
     currentPhase = (currentPhase + 1) % 6;
 }
 
@@ -91,7 +89,7 @@ void GaitController::doRippleGait() {
     for (int i = 0; i < 2; ++i) {
         hexapod->moveLeg(swingLegs[i], 512, 300, 700);
     }
-    delay(50);
+ 
     for (int i = 0; i < 2; ++i) {
         hexapod->moveLeg(swingLegs[i], 512, 512, 512);
     }
@@ -103,8 +101,6 @@ void GaitController::doRippleGait() {
 // In tripod gait, three legs swing while the other three are in stance
 void GaitController::doTripodGait() {
     // Tripod groups:
-    // Group A: 0, 3, 4
-    // Group B: 1, 2, 5
     int groupA[3] = {0, 3, 4};
     int groupB[3] = {1, 2, 5};
 
@@ -118,7 +114,7 @@ void GaitController::doTripodGait() {
     for (int i = 0; i < 3; ++i) {
         hexapod->moveLeg(swingGroup[i], 512, 300, 700);
     }
-    delay(50);
+ 
     for (int i = 0; i < 3; ++i) {
         hexapod->moveLeg(swingGroup[i], 512, 512, 512);
     }
