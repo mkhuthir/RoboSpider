@@ -45,7 +45,7 @@
             bool                getPresentVelocityData(uint8_t id, int32_t* data);
             bool                getVelocity(uint8_t id, float* velocity);
 
-            bool                init(uint8_t dxl_id, int32_t position);                     // initialize a servo with default settings
+            bool                init(uint8_t dxl_id, int32_t position, int32_t velocity);   // initialize a servo with default settings
 
             DynamixelWorkbench* getWorkbench();                                             // if you need to expose the workbench pointer
 

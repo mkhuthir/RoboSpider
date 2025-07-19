@@ -475,12 +475,12 @@ bool Servo::getVelocity(uint8_t id, float* velocity) {
 }
 
 // Initialize a servo with default settings
-bool Servo::init(uint8_t dxl_id, int32_t position) {
-    result = ping(dxl_id);                                              // Ping the servo to check if it is connected
-    result = result && jointMode(dxl_id);                               // Set servo to joint mode
-    result = result && goalVelocity(dxl_id, DEFAULT_SERVO_VELOCITY);    // Set goal velocity to default
-    result = result && goalPosition(dxl_id, position);                  // Set goal position to 512
-    result = result && ledOn(dxl_id);                                   // Turn on LED for the servo
+bool Servo::init(uint8_t dxl_id, int32_t position, int32_t velocity) {
+    result = ping(dxl_id);                              // Ping the servo to check if it is connected
+    result = result && jointMode(dxl_id);               // Set servo to joint mode
+    result = result && goalVelocity(dxl_id, velocity);  // Set goal velocity to default
+    result = result && goalPosition(dxl_id, position);  // Set goal position to 512
+    result = result && ledOn(dxl_id);                   // Turn on LED for the servo
 
     if (!result) {
         Serial.print("Failed to initialize servo with ID: ");

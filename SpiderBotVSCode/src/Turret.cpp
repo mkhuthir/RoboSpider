@@ -13,8 +13,8 @@ void Turret::begin(uint8_t pan, uint8_t tilt, Servo* servo) {
   tiltID    = tilt;
   this->servo = servo;  // Set the servo pointer
 
-  servo->init(panID, TURRET_PAN_HOME_DEG);      // Initialize pan servo with limits
-  servo->init(tiltID, TURRET_TILT_HOME_DEG);     // Initialize tilt servo with limits
+  servo->init(panID, TURRET_PAN_HOME_DEG, TURRET_VELOCITY);         // Initialize pan servo with limits
+  servo->init(tiltID, TURRET_TILT_HOME_DEG, TURRET_VELOCITY);       // Initialize tilt servo with limits
 }
 
 // Rotate the turret to specified angles

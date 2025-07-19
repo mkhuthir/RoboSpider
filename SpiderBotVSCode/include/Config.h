@@ -54,6 +54,8 @@
   
   // ------------------------
   // TURRET SERVOS
+
+  #define TURRET_VELOCITY       100   // Default velocity for turret servos
   #define TURRET_PAN_MIN_DEG    0     // Min angle for turret pan servo
   #define TURRET_PAN_MAX_DEG    1023  // Max angle for turret pan servo
   #define TURRET_PAN_HOME_DEG   512   // Home position for turret pan servo
@@ -72,23 +74,26 @@
 
   // ------------------------
   // LEG SERVOS
-  #define COXA_MIN_DEG          0   // Min angle for COXA servo
-  #define COXA_MAX_DEG          1023 // Max angle for COXA servo
-  #define COXA_HOME_DEG         512 // Home position for COXA servo
-  #define COXA_UP_DEG           512 // Default up angle for COXA servo
-  #define COXA_DOWN_DEG         512 // Default down angle for COXA servo
-  
-  #define FEMUR_MIN_DEG         0   // Min angle for FEMUR servo
-  #define FEMUR_MAX_DEG         1023 // Max angle for FEMUR servo
-  #define FEMUR_HOME_DEG        358 // Home position for FEMUR servo
-  #define FEMUR_UP_DEG          665 // Default up angle for FEMUR servo
-  #define FEMUR_DOWN_DEG        358 // Default down angle for FEMUR servo
+  #define COXA_VELOCITY         100   // Default velocity for coxa servo
+  #define COXA_MIN_DEG          0     // Min angle for COXA servo
+  #define COXA_MAX_DEG          1023  // Max angle for COXA servo
+  #define COXA_HOME_DEG         512   // Home position for COXA servo
+  #define COXA_UP_DEG           512   // Default up angle for COXA servo
+  #define COXA_DOWN_DEG         512   // Default down angle for COXA servo
 
-  #define TIBIA_MIN_DEG         0   // Min angle for TIBIA servo
-  #define TIBIA_MAX_DEG         1023 // Max angle for TIBIA servo
-  #define TIBIA_HOME_DEG        665 // Home position for TIBIA servo
-  #define TIBIA_UP_DEG          819 // Default up angle for TIBIA servo
-  #define TIBIA_DOWN_DEG        665 // Default down angle for TIBIA servo
+  #define FEMUR_VELOCITY        100   // Default velocity for femur servo
+  #define FEMUR_MIN_DEG         0     // Min angle for FEMUR servo
+  #define FEMUR_MAX_DEG         1023  // Max angle for FEMUR servo
+  #define FEMUR_HOME_DEG        358   // Home position for FEMUR servo
+  #define FEMUR_UP_DEG          665   // Default up angle for FEMUR servo
+  #define FEMUR_DOWN_DEG        358   // Default down angle for FEMUR servo
+
+  #define TIBIA_VELOCITY        100   // Default velocity for tibia servo
+  #define TIBIA_MIN_DEG         0     // Min angle for TIBIA servo
+  #define TIBIA_MAX_DEG         1023  // Max angle for TIBIA servo
+  #define TIBIA_HOME_DEG        665   // Home position for TIBIA servo
+  #define TIBIA_UP_DEG          819   // Default up angle for TIBIA servo
+  #define TIBIA_DOWN_DEG        665   // Default down angle for TIBIA servo
 
   // ------------------------
   // GAIT TIMING

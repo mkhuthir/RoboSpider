@@ -17,9 +17,9 @@ void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
   tibia     = tibiaID;
   this->servo = servo;  // Set the servo pointer
 
-  servo->init(coxa, COXA_HOME_DEG);     // Initialize coxa servo with limits
-  servo->init(femur, FEMUR_HOME_DEG);   // Initialize femur servo with limits
-  servo->init(tibia, TIBIA_HOME_DEG);   // Initialize tibia servo with limits
+  servo->init(coxa,   COXA_HOME_DEG,  COXA_VELOCITY);     // Initialize coxa servo with limits
+  servo->init(femur,  FEMUR_HOME_DEG, FEMUR_VELOCITY);   // Initialize femur servo with limits
+  servo->init(tibia,  TIBIA_HOME_DEG, TIBIA_VELOCITY);   // Initialize tibia servo with limits
 }
 
 // Set angles for the leg joints
