@@ -27,28 +27,28 @@ void Remotecontroller::update() {
             #ifdef DEBUG
                 Serial.println("RC Button U pressed");
             #endif // DEBUG
-            turret->rotateTurretUp();
+            turret->moveUp();
             break;
 
         case RC100_BTN_D:
             #ifdef DEBUG
                 Serial.println("RC Button D pressed");
             #endif // DEBUG
-            turret->rotateTurretDown();
+            turret->moveDown();
             break;
 
         case RC100_BTN_L:
             #ifdef DEBUG
                 Serial.println("RC Button L pressed");
             #endif // DEBUG
-            turret->rotateTurretLeft();
+            turret->moveLeft();
             break;
 
         case RC100_BTN_R:
             #ifdef DEBUG
                 Serial.println("RC Button R pressed");
             #endif // DEBUG
-            turret->rotateTurretRight();
+            turret->moveRight();
             break;
 
         case RC100_BTN_1:
@@ -89,7 +89,7 @@ void Remotecontroller::update() {
             #ifdef DEBUG
                 Serial.println("RC Button 6 pressed");
             #endif // DEBUG
-            turret->rotateTurretHome(); // Rotate turret to home position
+            turret->moveHome(); // Move turret to home position
             break;
     }
    

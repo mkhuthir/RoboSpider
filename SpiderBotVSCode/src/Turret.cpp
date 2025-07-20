@@ -18,38 +18,38 @@ void Turret::begin(uint8_t pan, uint8_t tilt, Servo* servo) {
 }
 
 // Rotate the turret to specified angles
-void Turret::rotateTurret(float panAngle, float tiltAngle) {
+void Turret::moveTurret(float panAngle, float tiltAngle) {
   servo->goalPosition(panID, panAngle);                              // Set pan angle
   servo->goalPosition(tiltID, tiltAngle);                            // Set tilt angle 
 }
 
 // Rotate the turret to home position
-void Turret::rotateTurretHome() {
-  rotateTurret(TURRET_PAN_HOME_DEG, TURRET_TILT_HOME_DEG);    // Reset turret to home position
+void Turret::moveHome() {
+  moveTurret(TURRET_PAN_HOME_DEG, TURRET_TILT_HOME_DEG);    // Reset turret to home position
 }
 
 // Rotate turret to the right
-void Turret::rotateTurretRight() {
-  rotateTurret(TURRET_PAN_RIGHT_DEG, TURRET_TILT_RIGHT_DEG); // Rotate turret to the right
+void Turret::moveRight() {
+  moveTurret(TURRET_PAN_RIGHT_DEG, TURRET_TILT_RIGHT_DEG); // Rotate turret to the right
 } 
 
 // Rotate turret to the left
-void Turret::rotateTurretLeft() {
-  rotateTurret(TURRET_PAN_LEFT_DEG, TURRET_TILT_LEFT_DEG);  // Rotate turret to the left
+void Turret::moveLeft() {
+  moveTurret(TURRET_PAN_LEFT_DEG, TURRET_TILT_LEFT_DEG);  // Rotate turret to the left
 }
 
 // Rotate turret up
-void Turret::rotateTurretUp() {
-  rotateTurret(TURRET_PAN_UP_DEG, TURRET_TILT_UP_DEG);  // Rotate turret up
+void Turret::moveUp() {
+  moveTurret(TURRET_PAN_UP_DEG, TURRET_TILT_UP_DEG);  // Rotate turret up
 }
 
 // Rotate turret down
-void Turret::rotateTurretDown() {
-  rotateTurret(TURRET_PAN_DOWN_DEG, TURRET_TILT_DOWN_DEG); // Rotate turret down
+void Turret::moveDown() {
+  moveTurret(TURRET_PAN_DOWN_DEG, TURRET_TILT_DOWN_DEG); // Rotate turret down
 } 
 
 // Print current turret angles to Serial
-void Turret::printTurretStatus() {
+void Turret::printStatus() {
   Serial.println("\nTurret Status:");
   Serial.print("Pan: ");
   //Serial.print(servo->getGoalPosition(panID));
