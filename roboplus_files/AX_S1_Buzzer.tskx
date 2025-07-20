@@ -1,0 +1,109 @@
+﻿version 4.00
+cm_version 1.0
+platform CM-700
+o // param_text:(C) Muthanna A. Attyah 2017
+o // param_text:Initial Release : 12 Jan 2017
+o // param_text:Last Modified : 12 Jan 2017
+o // param_text:---------------------------------------------------
+o // param_text:Play a melody using AX-S1 buzzer and Blink controller AUX LED
+o main
+o begin
+o // param_text:Buzzer index is the required melody number
+o for param_var:index param_src:dec_num:0 param_src:dec_num:16
+o begin
+- 
+o // param_text:Turn on Controller AUX LED
+o load param_dest:cm:3 param_src:bool_num:1
+o // param_text:Buzzer timer value 255 means play a melody instead of single tone
+o load param_dest:s1:100:18 param_src:dec_num:255
+o // param_text:Buzzer index is the required melody number
+o load param_dest:s1:100:17 param_src:var:index
+o call faddr_dest:wait
+o load param_dest:cm:3 param_src:bool_num:0
+o end
+o end
+o function faddr_src:wait
+o begin
+o load param_dest:cm:5 param_src:timer_num:40
+o wait param_src:cm:5 lop:> param_src:timer_num:0 rop:then
+o end
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
