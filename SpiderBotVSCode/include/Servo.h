@@ -19,6 +19,12 @@
             const ModelInfo*    getModelInfo(uint8_t id);                                   // get the model info of a servo by its ID
 
             bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
+
+            bool                addSyncWriteHandler(uint16_t address, uint16_t length);
+            bool                addSyncWriteHandler(uint8_t id, const char *item_name);
+            bool                syncWrite(uint8_t index, int32_t *data);
+            bool                syncWrite(uint8_t index, uint8_t *id, uint8_t id_num, int32_t *data, uint8_t data_num_for_each_id);
+
             bool                torqueOn(uint8_t id);                                       // turn on the torque of a servo
             bool                torqueOff(uint8_t id);                                      // turn off the torque of a servo
 

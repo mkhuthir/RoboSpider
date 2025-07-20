@@ -187,6 +187,92 @@ bool Servo::ping(uint8_t dxl_id) {
     return result;
 }
 
+// Add a sync write handler with address and length
+bool Servo::addSyncWriteHandler(uint16_t address, uint16_t length) {
+    result = dxl.addSyncWriteHandler(address, length, &log);
+    if (!result)  // If adding sync write handler fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to add sync write handler for address: ");
+        Serial.print(address);
+        Serial.print(" and length: ");
+        Serial.println(length);
+    }
+    else
+    {
+        #ifdef DEBUG
+            Serial.print("Sync write handler added for address: ");
+            Serial.print(address);
+            Serial.print(" and length: ");
+            Serial.println(length);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
+// Add a sync write handler with ID and item name
+bool Servo::addSyncWriteHandler(uint8_t id, const char *item_name) {
+    result = dxl.addSyncWriteHandler(id, item_name, &log);
+    if (!result)  // If adding sync write handler fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to add sync write handler for id: ");
+        Serial.println(id);
+        Serial.print(" and item name: ");
+        Serial.println(item_name);
+    }
+    else
+    {
+        #ifdef DEBUG
+            Serial.print("Sync write handler added for id: ");
+            Serial.println(id);
+            Serial.print(" and item name: ");
+            Serial.println(item_name);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
+// Sync write data for a specific index
+bool Servo::syncWrite(uint8_t index, int32_t *data) {
+    result = dxl.syncWrite(index, data, &log);
+    if (!result)  // If sync write fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to sync write for index: ");
+        Serial.println(index);
+    }
+    else
+    {
+        #ifdef DEBUG
+            Serial.print("Sync write successful for index: ");
+            Serial.println(index);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
+// Sync write data for multiple IDs
+bool Servo::syncWrite(uint8_t index, uint8_t *id, uint8_t id_num, int32_t *data, uint8_t data_num_for_each_id) {
+    result = dxl.syncWrite(index, id, id_num, data, data_num_for_each_id, &log);
+    if (!result)  // If sync write fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to sync write for index: ");
+        Serial.println(index);
+    }
+    else
+    {
+        #ifdef DEBUG
+            Serial.print("Sync write successful for index: ");
+            Serial.println(index);
+            Serial.print(" with id_num: ");
+            Serial.println(id_num);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
 // Turn on the torque for a servo
 bool Servo::torqueOn(uint8_t id) {
     result = dxl.torqueOn(id, &log);
