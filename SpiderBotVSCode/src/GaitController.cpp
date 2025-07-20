@@ -8,7 +8,7 @@ GaitController::GaitController() {
     gaitType        = GAIT_IDLE;
     lastUpdate      = 0;
     currentPhase    = 0;
-    stepInterval    = 500;  // Default 500ms between steps
+    stepInterval    = 6000;  // Default 6000ms between steps
 }
 
 // Initialize the GaitController with a Hexapod instance
@@ -17,7 +17,7 @@ void GaitController::begin(Hexapod* hexapod){
     gaitType        = GAIT_IDLE;    // Start with idle gait
     lastUpdate      = millis();     // Initialize last update time
     currentPhase    = 0;
-    stepInterval    = 500;          // Default 500ms between steps
+    stepInterval    = 6000;          // Default 6000ms between steps
 }
 
 // Set the current gait type    
@@ -25,6 +25,26 @@ void GaitController::setGait(GaitType newGait) {
     gaitType        = newGait;
     currentPhase    = 0;
     lastUpdate      = millis();
+    #ifdef DEBUG
+    Serial.print("Gait set to: ");
+    switch (gaitType) {
+        case GAIT_IDLE:
+            Serial.println("Idle");
+            break;
+        case GAIT_WAVE:
+            Serial.println("Wave");
+            break;
+        case GAIT_RIPPLE:
+            Serial.println("Ripple");
+            break;
+        case GAIT_TRIPOD:
+            Serial.println("Tripod");
+            break;
+        default:
+            Serial.println("Unknown");
+            break;
+    }
+    #endif // DEBUG
 }
 
 // Get the current gait type
@@ -50,7 +70,6 @@ void GaitController::update() {
     if (now - lastUpdate < stepInterval) return;
 
     lastUpdate = now;
-
     switch (gaitType) {
         case GAIT_WAVE:
             doWaveGait();

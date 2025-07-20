@@ -23,33 +23,36 @@ void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
 }
 
 // Set angles for the leg joints
-void Leg::setJointAngles(float coxaAngle, float femurAngle, float tibiaAngle) {
+void Leg::setLeg(int32_t coxaAngle, int32_t femurAngle, int32_t tibiaAngle) {
   servo->goalPosition(coxa, coxaAngle);      // Set coxa angle
   servo->goalPosition(femur, femurAngle);    // Set femur angle
   servo->goalPosition(tibia, tibiaAngle);    // Set tibia angle
 }
 
-float Leg::getCoxaAngle() {
-  // TODO: Replace with real implementation reading from servo
-  return 0.0f;
+int32_t Leg::getCoxa() {
+  int32_t angle = 0;
+  servo->getPresentPositionData(coxa, &angle);
+  return angle;
 }
 
-float Leg::getFemurAngle() {
-  // TODO: Replace with real implementation reading from servo
-  return 0.0f;
+int32_t Leg::getFemur() {
+  int32_t angle = 0;
+  servo->getPresentPositionData(femur, &angle);
+  return angle;
 }
 
-float Leg::getTibiaAngle() {
-  // TODO: Replace with real implementation reading from servo
-  return 0.0f;
+int32_t Leg::getTibia() {
+  int32_t angle = 0;
+  servo->getPresentPositionData(tibia, &angle);
+  return angle;
 }
 
-void Leg::printJointAngles() {
+void Leg::printLeg() {
   Serial.print("Coxa: ");
-  Serial.print(getCoxaAngle());
+  Serial.print(getCoxa());
   Serial.print(" | Femur: ");
-  Serial.print(getFemurAngle());
+  Serial.print(getFemur());
   Serial.print(" | Tibia: ");
-  Serial.println(getTibiaAngle());
+  Serial.println(getTibia());
 }
 

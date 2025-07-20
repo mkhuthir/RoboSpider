@@ -6,12 +6,12 @@
   class Leg {
     public:
       Leg(); // Constructor
-      void  init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo);   // Initialize the leg servos
-      void  setJointAngles(float coxaAngle, float femurAngle, float tibiaAngle);    // Set angles for the leg joints
-      float getCoxaAngle();                                                         // Get current coxa angle
-      float getFemurAngle();                                                        // Get current femur angle
-      float getTibiaAngle();                                                        // Get current tibia angle
-      void  printJointAngles();                                                     // Print current joint angles to Serial
+      void    init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo);   // Initialize the leg servos
+      void    setLeg(int32_t coxaAngle, int32_t femurAngle, int32_t tibiaAngle);    // Set angles for the leg joints
+      int32_t getCoxa();                                                         // Get current coxa angle
+      int32_t getFemur();                                                        // Get current femur angle
+      int32_t getTibia();                                                        // Get current tibia angle
+      void    printLeg();                                                     // Print current joint angles to Serial
 
     private:
       Servo* servo;                                                                 // Pointer to the servo instance

@@ -50,12 +50,12 @@
   // AX-18A typical physical limit ~0-300 deg
 
   #define MAX_NO_OF_SERVOS            256       // Max number of servos supported by Dynamixel2Arduino
-  #define DEFAULT_SERVO_VELOCITY      -100.0f   // Default velocity for servos
+  #define DEFAULT_SERVO_VELOCITY      200   // Default velocity for servos
   
   // ------------------------
   // TURRET SERVOS
 
-  #define TURRET_VELOCITY       100   // Default velocity for turret servos
+  #define TURRET_VELOCITY       200   // Default velocity for turret servos
   #define TURRET_PAN_MIN_DEG    0     // Min angle for turret pan servo
   #define TURRET_PAN_MAX_DEG    1023  // Max angle for turret pan servo
   #define TURRET_PAN_HOME_DEG   512   // Home position for turret pan servo
@@ -74,21 +74,21 @@
 
   // ------------------------
   // LEG SERVOS
-  #define COXA_VELOCITY         100   // Default velocity for coxa servo
+  #define COXA_VELOCITY         200   // Default velocity for coxa servo
   #define COXA_MIN_DEG          0     // Min angle for COXA servo
   #define COXA_MAX_DEG          1023  // Max angle for COXA servo
   #define COXA_HOME_DEG         512   // Home position for COXA servo
   #define COXA_UP_DEG           512   // Default up angle for COXA servo
   #define COXA_DOWN_DEG         512   // Default down angle for COXA servo
 
-  #define FEMUR_VELOCITY        100   // Default velocity for femur servo
+  #define FEMUR_VELOCITY        200   // Default velocity for femur servo
   #define FEMUR_MIN_DEG         0     // Min angle for FEMUR servo
   #define FEMUR_MAX_DEG         1023  // Max angle for FEMUR servo
   #define FEMUR_HOME_DEG        358   // Home position for FEMUR servo
   #define FEMUR_UP_DEG          665   // Default up angle for FEMUR servo
   #define FEMUR_DOWN_DEG        358   // Default down angle for FEMUR servo
 
-  #define TIBIA_VELOCITY        100   // Default velocity for tibia servo
+  #define TIBIA_VELOCITY        200   // Default velocity for tibia servo
   #define TIBIA_MIN_DEG         0     // Min angle for TIBIA servo
   #define TIBIA_MAX_DEG         1023  // Max angle for TIBIA servo
   #define TIBIA_HOME_DEG        665   // Home position for TIBIA servo

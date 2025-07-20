@@ -24,9 +24,9 @@ void Hexapod::begin(Servo* servo) {
 //    legs[i]->init();
 }
 
-bool Hexapod::moveLeg(int legIndex, int coxa, int femur, int tibia) {
+bool Hexapod::moveLeg(int legIndex, int32_t coxa, int32_t femur, int32_t tibia) {
   if (legIndex < 0 || legIndex >= 6) return false;  // Invalid leg index
-  legs[legIndex].setJointAngles(coxa, femur, tibia);
+  legs[legIndex].setLeg(coxa, femur, tibia);
   delay(1000);  // Wait for the movement to complete
   return true;
 }
@@ -38,7 +38,7 @@ void Hexapod::printLegsStatus() {
     Serial.print("Leg ");
     Serial.print(i + 1);
     Serial.print(": ");
-    legs[i].printJointAngles();  // Print joint angles of each leg 
+    legs[i].printLeg();  // Print leg angles of each leg
   }
   Serial.println("---");
 

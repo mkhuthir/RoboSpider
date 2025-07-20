@@ -7,7 +7,7 @@
     public:
       Hexapod(); // Constructor
       void begin(Servo* servo);                                   // Initialize the hexapod
-      bool moveLeg(int legIndex, int coxa, int femur, int tibia); // Move a specific leg
+      bool moveLeg(int legIndex, int32_t coxa, int32_t femur, int32_t tibia); // Move a specific leg
 
       void printLegsStatus();                                     // Print the status of all legs
   

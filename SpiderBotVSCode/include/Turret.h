@@ -8,7 +8,7 @@
       Turret();    // Constructor
       void begin(uint8_t pan, uint8_t tilt, Servo* servo);    // Initialize the turret servos
 
-      void moveTurret(float panAngle, float tiltAngle);       // Rotate the turret to specified angles
+      void moveTurret(int32_t panAngle, int32_t tiltAngle);       // Rotate the turret to specified angles
       void moveHome();                                        // Rotate the turret to home position
       void moveRight();                                       // Rotate turret to the right
       void moveLeft();                                        // Rotate turret to the left

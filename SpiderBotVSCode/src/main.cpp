@@ -40,7 +40,7 @@ void setup() {
     turret.begin(TURRET_PAN_ID, TURRET_TILT_ID, &servo);    // Initialize the turret
     axs1.begin(&servo, AXS1_SENSOR_ID);                     // Initialize the AX-S1 sensor
     gc.begin(&hexapod);                                     // Initialize the gait controller with the hexapod instance
-    rc.begin(RC100_SERIAL,&turret,&gc);                     // Initialize the remote controller with the turret instance
+    rc.begin(RC100_SERIAL,&hexapod,&turret,&gc);                     // Initialize the remote controller with the turret instance
 
     axs1.ping();                               // Ping the AX-S1 sensor to check if it's connected
     Serial.println(axs1.getIRLeft());          // Print the left IR sensor value for debugging

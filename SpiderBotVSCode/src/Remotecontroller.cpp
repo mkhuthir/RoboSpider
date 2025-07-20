@@ -5,17 +5,19 @@
 // Constructor for Remotecontroller
 Remotecontroller::Remotecontroller() {}
 
-void Remotecontroller::begin(int serial_port, Turret* turret, GaitController* gc) {
+void Remotecontroller::begin(int serial_port, Hexapod* hexapod, Turret* turret, GaitController* gc) {
     rc.begin(serial_port);      // Initialize the remote controller with the specified serial port
+    this->hexapod   = hexapod;   // Store the hexapod instance
     this->turret    = turret;   // Store the turret instance
     this->gc        = gc;       // Store the GaitController instance
+
 }
 
 void Remotecontroller::update() {
- if (rc.available())
-    switch (rc.readData()) {
-        case 00:
-            #ifdef DEBUG
+    if (rc.available()) {
+        switch (rc.readData()) {
+            case 00:
+                #ifdef DEBUG
                 Serial.println("RC Button depressed");
             #endif // DEBUG
 
@@ -74,6 +76,8 @@ void Remotecontroller::update() {
             #ifdef DEBUG
                 Serial.println("RC Button 4 pressed");
             #endif // DEBUG
+            turret->printStatus(); // Print turret status
+            hexapod->printLegsStatus(); // Print hexapod legs status
             break;
 
         case RC100_BTN_5:
@@ -89,5 +93,6 @@ void Remotecontroller::update() {
             #endif // DEBUG
             turret->moveHome(); // Move turret to home position
             break;
-    } 
-}
+        }
+    }
+}   

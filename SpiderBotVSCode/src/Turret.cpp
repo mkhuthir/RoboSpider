@@ -18,7 +18,7 @@ void Turret::begin(uint8_t pan, uint8_t tilt, Servo* servo) {
 }
 
 // Rotate the turret to specified angles
-void Turret::moveTurret(float panAngle, float tiltAngle) {
+void Turret::moveTurret(int32_t panAngle, int32_t tiltAngle) {
   servo->goalPosition(panID, panAngle);                              // Set pan angle
   servo->goalPosition(tiltID, tiltAngle);                            // Set tilt angle 
 }
@@ -50,10 +50,14 @@ void Turret::moveDown() {
 
 // Print current turret angles to Serial
 void Turret::printStatus() {
-  Serial.println("\nTurret Status:");
+  int32_t panPosition = 0, tiltPosition = 0;
+  
+  servo->getPresentPositionData(panID, &panPosition);
+  servo->getPresentPositionData(tiltID, &tiltPosition);
+
+  Serial.print("\nTurret Status:");
   Serial.print("Pan: ");
-  //Serial.print(servo->getGoalPosition(panID));
+  Serial.print(panPosition);
   Serial.print(" | Tilt: ");
-  //Serial.println(servo->getGoalPosition(tiltID));
-  Serial.println("---");
+  Serial.println(tiltPosition);
 }
