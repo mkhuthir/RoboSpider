@@ -381,6 +381,42 @@ bool Servo::ledOff(uint8_t dxl_id) {
     return result;
 }
 
+// Set the normal direction for a servo
+bool Servo::setNormalDirection(uint8_t id) {
+    result = dxl.setNormalDirection(id, &log);
+    if (!result)  // If setting normal direction fails
+    {        
+        Serial.println(log);
+        Serial.print("Failed to set normal direction for id: ");
+        Serial.println(id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Normal direction set for id: ");
+            Serial.println(id);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}   
+
+// Set the reverse direction for a servo
+bool Servo::setReverseDirection(uint8_t id) {
+    result = dxl.setReverseDirection(id, &log);
+    if (!result)  // If setting reverse direction fails
+    {     
+        Serial.println(log);
+        Serial.print("Failed to set reverse direction for id: ");
+        Serial.println(id);
+    } else
+    {
+        #ifdef DEBUG
+            Serial.print("Reverse direction set for id: ");
+            Serial.println(id);
+        #endif // DEBUG
+    }
+    return result;  // Return the result of the operation
+}
+
 // Set a servo to joint mode
 bool Servo::jointMode(uint8_t dxl_id) {
     result = dxl.jointMode(dxl_id, 0, 0, &log);
@@ -563,6 +599,8 @@ bool Servo::getVelocity(uint8_t id, float* velocity) {
 bool Servo::init(uint8_t dxl_id, int32_t position, int32_t velocity) {
     result = ping(dxl_id);                              // Ping the servo to check if it is connected and update tool model_number
     result = result && jointMode(dxl_id);               // Set servo to joint mode
+    result = result && torqueOn(dxl_id);                // Turn on the torque for the servo
+   // result = result && setNormalDirection(dxl_id);      // Set servo direction to normal
     result = result && goalVelocity(dxl_id, velocity);  // Set goal velocity to default
     result = result && goalPosition(dxl_id, position);  // Set goal position to 512
     result = result && ledOn(dxl_id);                   // Turn on LED for the servo

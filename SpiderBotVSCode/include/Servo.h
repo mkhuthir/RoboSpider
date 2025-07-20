@@ -34,8 +34,8 @@
             bool                ledOn(uint8_t dxl_id);                                      // turn on the LED of a servo
             bool                ledOff(uint8_t dxl_id);                                     // turn off the LED of a servo
 
-            bool                setNormalDirection(uint8_t id);
-            bool                setReverseDirection(uint8_t id);
+            bool                setNormalDirection(uint8_t id);                             // set the servo direction to normal
+            bool                setReverseDirection(uint8_t id);                            // set the servo direction to reverse
 
             bool                jointMode(uint8_t dxl_id);                                  // set a servo to joint mode
 
