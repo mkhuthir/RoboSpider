@@ -9,7 +9,7 @@
       void begin(Servo* servo);                                   // Initialize the hexapod
       bool moveLeg(int legIndex, int32_t coxa, int32_t femur, int32_t tibia); // Move a specific leg
 
-      void printLegsStatus();                                     // Print the status of all legs
+      void printStatus();                                     // Print the status of all legs
   
     private:
       Leg                   legs[6];                              // Array of legs

@@ -14,6 +14,7 @@
 
             float               getProtocolVersion(void);                                   // get the protocol version being used
             uint32_t            getBaudrate(void);                                          // get the current baudrate
+
             const char *        getModelName(uint8_t id);                                   // get the model name of a servo by its ID
             uint16_t            getModelNumber(uint8_t id);                                 // get the model number of a servo by its ID
             const ModelInfo*    getModelInfo(uint8_t id);                                   // get the model info of a servo by its ID
@@ -52,6 +53,7 @@
             bool                getVelocity(uint8_t id, float* velocity);
 
             bool                init(uint8_t dxl_id, int32_t position, int32_t velocity);   // initialize a servo with default settings
+            bool                printStatus(uint8_t id);                                    // print the status of a servo for debugging
 
             DynamixelWorkbench* getWorkbench();                                             // if you need to expose the workbench pointer
 

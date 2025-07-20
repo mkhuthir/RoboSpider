@@ -32,7 +32,7 @@ bool Hexapod::moveLeg(int legIndex, int32_t coxa, int32_t femur, int32_t tibia) 
 }
 
 // Print the status of all legs
-void Hexapod::printLegsStatus() {
+void Hexapod::printStatus() {
   Serial.println("\nHexapod Legs Status:");
   for (int i = 0; i < 6; i++) {
     Serial.print("Leg ");

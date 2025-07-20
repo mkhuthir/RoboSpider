@@ -618,6 +618,39 @@ bool Servo::init(uint8_t dxl_id, int32_t position, int32_t velocity) {
     return result;
 }
 
+// Print the status of a servo for debugging
+bool Servo::printStatus(uint8_t id) {
+    Serial.println("\nServo Status:");
+    
+    Serial.print("Servo ID\t\t: ");
+    Serial.println(id); // Print the ID of the servo
+    
+    Serial.print("Model Number\t\t: ");
+    Serial.println(getModelNumber(id)); // Get the model number of the servo
+    
+    Serial.print("Model Name\t\t: ");
+    Serial.println(getModelName(id)); // Get the model name of the servo
+
+    const ModelInfo* model_info = getModelInfo(id); // Get the model info of the servo
+    if (model_info != NULL) {
+        Serial.print("RPM\t\t\t: ");
+        Serial.println(model_info->rpm);
+        Serial.print("Min Radian\t\t: "); 
+        Serial.println(model_info->min_radian);
+        Serial.print("Max Radian\t\t: ");
+        Serial.println(model_info->max_radian);
+        Serial.print("Min Radian Position\t: ");
+        Serial.printf("%d\n", model_info->value_of_min_radian_position);
+        Serial.print("Zero Radian Position\t: ");
+        Serial.printf("%d\n", model_info->value_of_zero_radian_position);
+        Serial.print("Max Radian Position\t: ");
+        Serial.printf("%d\n", model_info->value_of_max_radian_position);
+
+    } else {
+        Serial.println("Failed to get model info for ID 20");
+    }
+}
+
 // Return the DynamixelWorkbench instance
 DynamixelWorkbench* Servo::getWorkbench() {
     return &dxl;

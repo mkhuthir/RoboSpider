@@ -77,7 +77,7 @@ void Remotecontroller::update() {
                 Serial.println("RC Button 4 pressed");
             #endif // DEBUG
             turret->printStatus(); // Print turret status
-            hexapod->printLegsStatus(); // Print hexapod legs status
+            hexapod->printStatus(); // Print hexapod status
             break;
 
         case RC100_BTN_5:
