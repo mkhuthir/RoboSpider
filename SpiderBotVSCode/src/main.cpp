@@ -43,7 +43,7 @@ void setup() {
     rc.begin(RC100_SERIAL,&hexapod,&turret,&gc);                     // Initialize the remote controller with the turret instance
 
     axs1.ping();                               // Ping the AX-S1 sensor to check if it's connected
-    servo.printStatus(1);                      // Print the status of servo with ID 1 for debugging
+    servo.printStatus(100);                      // Print the status of servo with ID 1 for debugging
  
 }
 

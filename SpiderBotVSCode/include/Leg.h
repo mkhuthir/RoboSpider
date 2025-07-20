@@ -11,7 +11,7 @@
       int32_t getCoxa();                                                         // Get current coxa angle
       int32_t getFemur();                                                        // Get current femur angle
       int32_t getTibia();                                                        // Get current tibia angle
-      void    printLeg();                                                     // Print current joint angles to Serial
+      void    printStatus();                                                     // Print current joint angles to Serial
 
     private:
       Servo* servo;                                                                 // Pointer to the servo instance

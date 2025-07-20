@@ -38,7 +38,7 @@ void Hexapod::printStatus() {
     Serial.print("Leg ");
     Serial.print(i + 1);
     Serial.print(": ");
-    legs[i].printLeg();  // Print leg angles of each leg
+    legs[i].printStatus();  // Print leg angles of each leg
   }
 }
 

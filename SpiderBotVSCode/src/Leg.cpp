@@ -47,7 +47,7 @@ int32_t Leg::getTibia() {
   return angle;
 }
 
-void Leg::printLeg() {
+void Leg::printStatus() {
   Serial.print("Coxa: ");
   Serial.print(getCoxa());
   Serial.print(" | Femur: ");

@@ -1,6 +1,8 @@
 #ifndef AXS1_SENSOR_H
 #define AXS1_SENSOR_H
 
+    #define AX_S1 13
+
     #include "Servo.h"
 
     class AXS1Sensor {
