@@ -13,9 +13,7 @@ void Remotecontroller::begin(int serial_port, Turret* turret, GaitController* gc
 
 void Remotecontroller::update() {
  if (rc.available())
-  {
-    int RCRx = rc.readData();
-    switch (RCRx) {
+    switch (rc.readData()) {
         case 00:
             #ifdef DEBUG
                 Serial.println("RC Button depressed");
@@ -91,7 +89,5 @@ void Remotecontroller::update() {
             #endif // DEBUG
             turret->moveHome(); // Move turret to home position
             break;
-    }
-   
-  }
+    } 
 }
