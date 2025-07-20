@@ -1,7 +1,6 @@
 #ifndef AXS1_SENSOR_H
 #define AXS1_SENSOR_H
 
-    #include <DynamixelWorkbench.h>
     #include "Servo.h"
 
     class AXS1Sensor {

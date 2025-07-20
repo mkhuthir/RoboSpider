@@ -1,5 +1,4 @@
 #include "Servo.h"
-#include "DynamixelWorkbench.h" // Include DynamixelWorkbench library for servo control
 #include "Config.h"             // Include configuration header for constants and settings
 
 // Constructor for Servo

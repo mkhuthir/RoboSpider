@@ -1,7 +1,6 @@
 #ifndef GaitController_h
 #define GaitController_h
 
-    #include <Arduino.h>
     #include "Hexapod.h"
 
     enum GaitType {

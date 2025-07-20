@@ -1,13 +1,10 @@
 #ifndef REMOTECONTROLLER_H
 #define REMOTECONTROLLER_H
 
-    #include <Arduino.h>
-    #include <RC100.h> // Include RC100 remote controller library
-    #include "Turret.h" // Include Turret class for managing the sensor turret
-    #include "GaitController.h" // Include GaitController for movement control
+    #include <RC100.h>              // Include RC100 remote controller library
+    #include "Turret.h"             // Include Turret class for managing the sensor turret
+    #include "GaitController.h"     // Include GaitController for movement control
     
-    #include "Config.h" // Include configuration header
-
     class Remotecontroller {
         public:
             Remotecontroller();
