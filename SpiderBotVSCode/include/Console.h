@@ -13,6 +13,7 @@
     private:
         Stream&     con;
         String      inputBuffer;
+        String      shell;
 
         void processCommand(const String& command);
     };

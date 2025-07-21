@@ -1,6 +1,6 @@
 #include "Console.h"
 
-Console::Console(Stream& stream) : con(stream), inputBuffer("") {}
+Console::Console(Stream& stream) : con(stream), inputBuffer(""), shell("$") {}
 
 void Console::begin(unsigned long baud) {
     
@@ -9,9 +9,9 @@ void Console::begin(unsigned long baud) {
         #ifdef DEBUG
             while (!Serial);  // Wait for Serial if using USB
         #endif // DEBUG
-        con.println("[Console] Ready. Type commands.");
+        con.println("Ready. Type command or help.");
+        con.print("\n"+shell);
     }
-        
 }
 
 void Console::update() {
@@ -21,6 +21,8 @@ void Console::update() {
             if (inputBuffer.length() > 0) {
                 processCommand(inputBuffer);
                 inputBuffer = "";
+            } else {
+                con.print("\n"+shell);
             }
         } else {
             inputBuffer += c;
@@ -29,8 +31,10 @@ void Console::update() {
 }
 
 void Console::processCommand(const String& command) {
-    con.print("[Console] Received: ");
-    con.println(command);
+    #ifdef DEBUG
+        con.print("[Console] Received: ");
+        con.println(command);
+    #endif // DEBUG
 
     if (command == "walk") {
         con.println("[Action] Start walking");
@@ -45,4 +49,5 @@ void Console::processCommand(const String& command) {
         con.println("[Error] Unknown command: " + command);
         con.println("Type 'help' or '?' for a list of commands.");
     }
+    con.print("\n" + shell);
 }
