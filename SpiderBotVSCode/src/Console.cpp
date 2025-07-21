@@ -3,11 +3,15 @@
 Console::Console(Stream& stream) : con(stream), inputBuffer("") {}
 
 void Console::begin(unsigned long baud) {
-    con.begin(baud);
-    #ifdef DEBUG
-        while (!con);  // Wait for the console to be ready
-    #endif // DEBUG
-    con.println("[Console] Ready. Type commands.");
+    
+    if (&con == &Serial) {
+        Serial.begin(baud);
+        #ifdef DEBUG
+            while (!Serial);  // Wait for Serial if using USB
+        #endif // DEBUG
+        con.println("[Console] Ready. Type commands.");
+    }
+        
 }
 
 void Console::update() {
