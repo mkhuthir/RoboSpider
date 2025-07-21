@@ -5,6 +5,7 @@
 
 #include "Config.h"                     // Include configuration header
 
+#include "Console.h"                    // Include Console class for managing serial console
 #include "Microcontroller.h"            // Include Microcontroller class for managing OpenCR1.0 board
 #include "Servo.h"                      // Include Servo class for managing Dynamixel servos
 #include "Hexapod.h"                    // Include Hexapod class for managing the hexapod robot
@@ -16,6 +17,7 @@
 
 // Global variables and instances
 
+Console             con;       
 Microcontroller     mc;
 Servo               servo;  
 Hexapod             hexapod;
@@ -27,13 +29,7 @@ Remotecontroller    rc;
 // Setup function to initialize the robot components
 void setup() {
 
-    
-    Serial.begin(DEBUG_BAUD_RATE);          // Initialize Serial for debugging
-    #ifdef DEBUG                            // if DEBUG enabled
-       while (!Serial); 
-       Serial.println("Debug serial ready"); // Wait for the debug serial to be ready
-    #endif // DEBUG
-
+    con.begin(DEBUG_BAUD_RATE);                             // Initialize the console for debugging
     mc.begin();                                             // Initialize the microcontroller (OpenCR1.0 board)
     servo.begin(DXL_SERIAL, DXL_BAUD_RATE);                 // Initialize Dynamixel controller with specified serial port and baud rate
     hexapod.begin(&servo);                                  // Initialize the hexapod
@@ -49,7 +45,8 @@ void setup() {
 
 // Loop function to handle remote controller input and control the robot
 void loop() {
-    mc.update(); // Update microcontroller state
-    gc.update(); // Update gait controller state
-    rc.update(); // Update remote controller state
+    con.update();   // Update console state
+    mc.update();    // Update microcontroller state
+    gc.update();    // Update gait controller state
+    rc.update();    // Update remote controller state
 }
