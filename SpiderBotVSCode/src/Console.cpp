@@ -44,23 +44,16 @@ void Console::processCommand(const String& command) {
         con.println(command);
     #endif // DEBUG
 
-    if (command == "walk") {
-        con.print("walking");
-        
-    } else if (command == "stop") {
-        con.print("stopped");
-
-    } else if (command == "status") {
+    if (command == "status") {
         mc->printStatus(con);
         hexapod->printStatus(con);
         turret->printStatus(con);
         gc->printStatus(con);
 
-    } else if (command == "help" || command == "?") {
+    } else if (command == "help" || command == "h" || command == "?") {
         con.println("Available commands:");
-        con.println("  walk - Start walking");
-        con.println("  stop - Stop walking");
-        con.print("  status - Show current status");
+        con.println("  status    - Show current status of the system");
+        con.print(  "  help/h/?  - Show this help message");
     } else {
         con.println("[Error] Unknown command: " + command);
         con.print("Type 'help' or '?' for a list of commands.");
