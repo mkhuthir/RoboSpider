@@ -87,28 +87,28 @@ void GaitController::update() {
 
 // Print the current gait status to Serial
 void GaitController::printStatus(Stream& stream) {
-    stream.print("GaitController Status:\n");
-    stream.print("Current Gait: ");
+    stream.print("GaitController Status: ");
+    stream.print("Gait: ");
     switch (gaitType) {
         case GAIT_IDLE:
-            stream.println("Idle");
+            stream.print("Idle");
             break;
         case GAIT_WAVE:
-            stream.println("Wave");
+            stream.print("Wave");
             break;
         case GAIT_RIPPLE:
-            stream.println("Ripple");
+            stream.print("Ripple");
             break;
         case GAIT_TRIPOD:
-            stream.println("Tripod");
+            stream.print("Tripod");
             break;
         default:
-            stream.println("Unknown");
+            stream.print("Unknown");
             break;
     }
-    stream.print("Step Interval: ");
-    stream.println(stepInterval);
-    stream.print("Current Phase: ");
+    stream.print(" | Interval: ");
+    stream.print(stepInterval);
+    stream.print(" | Phase: ");
     stream.println(currentPhase);
 }
 
