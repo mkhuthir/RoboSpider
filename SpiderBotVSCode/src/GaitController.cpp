@@ -87,7 +87,7 @@ void GaitController::update() {
 
 // Print the current gait status to Serial
 void GaitController::printStatus(Stream& stream) {
-    stream.print("GaitController Status: ");
+    stream.print("\nGaitController Status: ");
     stream.print("Gait: ");
     switch (gaitType) {
         case GAIT_IDLE:

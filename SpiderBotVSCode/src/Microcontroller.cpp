@@ -49,8 +49,12 @@ bool Microcontroller::ledOn(uint8_t LED_id) {
         Serial.println("Invalid LED ID!");
         return false;                                           // Return false if LED ID is invalid
     }
-    pinMode(LED_id, OUTPUT);    // Set the LED pin as output
-    digitalWrite(LED_id, LOW);  // Turn on the user control LED
+    pinMode(LED_id, OUTPUT);         // Set the LED pin as output
+    if (LED_id == LED_BUILTIN) {
+        digitalWrite(LED_id, HIGH);  // Turn on the built-in LED
+    } else {
+        digitalWrite(LED_id, LOW);   // Turn on the user control LED
+    }
     return true;                // Return true as the operation is successful
 }
 
@@ -69,7 +73,11 @@ bool Microcontroller::ledOff(uint8_t LED_id) {
         return false;                                           // Return false if LED ID is invalid
     }
     pinMode(LED_id, OUTPUT);            // Set the LED pin as output
-    digitalWrite(LED_id, HIGH);         // Turn off the user control LED
+    if (LED_id == LED_BUILTIN) {
+        digitalWrite(LED_id, LOW);      // Turn off the built-in LED
+    } else {
+        digitalWrite(LED_id, HIGH);     // Turn off the user control LED
+    }
     return true;                        // Return true as the operation is successful
 }
 
@@ -102,21 +110,20 @@ bool Microcontroller::playMelody() {
 
 // Print the current status of the microcontroller to the given stream
 void Microcontroller::printStatus(Stream& stream) {
-    stream.println("Microcontroller Status:");
+    stream.println("\nMicrocontroller Status:");
     stream.print("Battery Voltage: ");
     stream.print(batteryVoltage());
     stream.println(" V");
-    stream.println("LEDs: ");
-    stream.print("  Built-in LED: ");
-    stream.println(digitalRead(LED_BUILTIN) == LOW ? "On" : "Off");
-    stream.print("  User LED 1: ");
-    stream.println(digitalRead(BDPIN_LED_USER_1) == LOW ? "On" : "Off");
-    stream.print("  User LED 2: ");
-    stream.println(digitalRead(BDPIN_LED_USER_2) == LOW ? "On" : "Off");
-    stream.print("  User LED 3: ");
-    stream.println(digitalRead(BDPIN_LED_USER_3) == LOW ? "On" : "Off");
-    stream.print("  User LED 4: ");
-    stream.println(digitalRead(BDPIN_LED_USER_4) == LOW ? "On" : "Off");
-    stream.print("  Status LED: ");
-    stream.println(digitalRead(BDPIN_LED_STATUS) == LOW ? "On" : "Off");
-}   
+    stream.print("LEDs: User1:");
+    stream.print(digitalRead(BDPIN_LED_USER_1) == LOW ? "On" : "Off");
+    stream.print(" | User2:");
+    stream.print(digitalRead(BDPIN_LED_USER_2) == LOW ? "On" : "Off");
+    stream.print(" | User3:");
+    stream.print(digitalRead(BDPIN_LED_USER_3) == LOW ? "On" : "Off");
+    stream.print(" | User4:");
+    stream.print(digitalRead(BDPIN_LED_USER_4) == LOW ? "On" : "Off");
+    stream.print(" | Status:");
+    stream.print(digitalRead(BDPIN_LED_STATUS) == LOW ? "On" : "Off");
+    stream.print(" | Arduino:");
+    stream.println(digitalRead(LED_BUILTIN) == HIGH ? "On" : "Off");
+}

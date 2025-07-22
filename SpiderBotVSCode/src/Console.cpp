@@ -53,24 +53,26 @@ void Console::processCommand(const String& command) {
         con.print("[Console] Received: ");
         con.println(command);
     #endif // DEBUG
+    
+    if (command == "help" || command == "h" || command == "?") {
+        con.println("Available commands:");
+        con.println("  help/h/?  - Show this help message");
+        con.println("  cls       - Clear the terminal screen");
+        con.println("  status    - Show current status of the system");
+        
 
-    if (command == "status") {
+    } else if (command == "cls") {                      
+        con.print("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
+
+    } else if (command == "status") {
         mc->printStatus(con);
         hexapod->printStatus(con);
         turret->printStatus(con);
         gc->printStatus(con);
 
-    } else if (command == "help" || command == "h" || command == "?") {
-        con.println("Available commands:");
-        con.println("  status    - Show current status of the system");
-        con.println("  cls       - Clear the terminal screen");
-        con.print(  "  help/h/?  - Show this help message");
-
-    } else if (command == "cls") { // Ctrl-L (ASCII 12)
-        con.print("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
     } else {
         con.println("[Error] Unknown command: " + command);
-        con.print("Type 'help' or '?' for a list of commands.");
+        con.print("Type 'help', 'h' or '?' for a list of commands.");
 
     }
     con.print(shell);
