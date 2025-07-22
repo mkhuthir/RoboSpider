@@ -12,6 +12,7 @@
             bool    ledOff(uint8_t LED_id);                           // turn off the user control LED
             bool    playMelody();                                     // play a melody using the servos
             float   batteryVoltage();                                 // get the battery voltage
+            void    printStatus(Stream& stream);                      // print the current status to the given stream
 
         private:
             

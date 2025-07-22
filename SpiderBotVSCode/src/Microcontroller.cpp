@@ -99,3 +99,24 @@ bool Microcontroller::playMelody() {
     }
     return true;
 }
+
+// Print the current status of the microcontroller to the given stream
+void Microcontroller::printStatus(Stream& stream) {
+    stream.println("Microcontroller Status:");
+    stream.print("Battery Voltage: ");
+    stream.print(batteryVoltage());
+    stream.println(" V");
+    stream.println("LEDs: ");
+    stream.print("  Built-in LED: ");
+    stream.println(digitalRead(LED_BUILTIN) == LOW ? "On" : "Off");
+    stream.print("  User LED 1: ");
+    stream.println(digitalRead(BDPIN_LED_USER_1) == LOW ? "On" : "Off");
+    stream.print("  User LED 2: ");
+    stream.println(digitalRead(BDPIN_LED_USER_2) == LOW ? "On" : "Off");
+    stream.print("  User LED 3: ");
+    stream.println(digitalRead(BDPIN_LED_USER_3) == LOW ? "On" : "Off");
+    stream.print("  User LED 4: ");
+    stream.println(digitalRead(BDPIN_LED_USER_4) == LOW ? "On" : "Off");
+    stream.print("  Status LED: ");
+    stream.println(digitalRead(BDPIN_LED_STATUS) == LOW ? "On" : "Off");
+}   

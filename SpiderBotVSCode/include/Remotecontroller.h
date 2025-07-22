@@ -5,18 +5,25 @@
     #include "Turret.h"             // Include Turret class for managing the sensor turret
     #include "GaitController.h"     // Include GaitController for movement control
     #include "Hexapod.h"           // Include Hexapod class for managing the hexapod robot
+    #include "Microcontroller.h"    // Include Microcontroller class for managing the microcontroller
     
     class Remotecontroller {
         public:
             Remotecontroller();
-            void begin(int serial_port, Hexapod* hexapod, Turret* turret, GaitController* gc); // Initialize the remote controller with a stream
+            void begin( int                 serial_port, 
+                        Hexapod*            hexapod, 
+                        Turret*             turret, 
+                        GaitController*     gc, 
+                        Microcontroller*    mc);                
+
             void update(); // Update the remote controller state
 
         private:
-            RC100           rc;       // Instance of the RC100 remote controller
-            Hexapod*        hexapod;  // Pointer to the Hexapod instance
-            Turret*         turret;   // Pointer to the turret instance
-            GaitController* gc;       // Pointer to the GaitController instance
+            RC100               rc;       // Instance of the RC100 remote controller
+            Hexapod*            hexapod;  // Pointer to the Hexapod instance
+            Turret*             turret;   // Pointer to the turret instance
+            GaitController*     gc;       // Pointer to the GaitController instance
+            Microcontroller*    mc;       // Pointer to the Microcontroller instance
     };
 
 #endif // REMOTECONTROLLER_H
