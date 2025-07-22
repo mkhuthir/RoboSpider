@@ -38,10 +38,6 @@ void setup() {
     gc.begin(&hexapod);                                         // Initialize the gait controller with the hexapod instance
 
     rc.begin(RC100_SERIAL,&hexapod,&turret,&gc,&mc);            // Initialize the remote controller with the turret instance
-
-    axs1.ping();                               // Ping the AX-S1 sensor to check if it's connected
-    servo.printStatus(100);                      // Print the status of servo with ID 1 for debugging
- 
 }
 
 // Loop function to handle remote controller input and control the robot

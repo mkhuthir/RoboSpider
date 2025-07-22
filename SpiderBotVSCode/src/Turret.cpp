@@ -49,15 +49,15 @@ void Turret::moveDown() {
 } 
 
 // Print current turret angles to Serial
-void Turret::printStatus() {
+void Turret::printStatus(Stream& stream) {
   int32_t panPosition = 0, tiltPosition = 0;
   
   servo->getPresentPositionData(panID, &panPosition);
   servo->getPresentPositionData(tiltID, &tiltPosition);
 
-  Serial.print("\nTurret Status:");
-  Serial.print("Pan: ");
-  Serial.print(panPosition);
-  Serial.print(" | Tilt: ");
-  Serial.println(tiltPosition);
+  stream.print("\nTurret Status:");
+  stream.print("Pan: ");
+  stream.print(panPosition);
+  stream.print(" | Tilt: ");
+  stream.println(tiltPosition);
 }

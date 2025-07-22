@@ -85,6 +85,33 @@ void GaitController::update() {
     }
 }
 
+// Print the current gait status to Serial
+void GaitController::printStatus(Stream& stream) {
+    stream.print("GaitController Status:\n");
+    stream.print("Current Gait: ");
+    switch (gaitType) {
+        case GAIT_IDLE:
+            stream.println("Idle");
+            break;
+        case GAIT_WAVE:
+            stream.println("Wave");
+            break;
+        case GAIT_RIPPLE:
+            stream.println("Ripple");
+            break;
+        case GAIT_TRIPOD:
+            stream.println("Tripod");
+            break;
+        default:
+            stream.println("Unknown");
+            break;
+    }
+    stream.print("Step Interval: ");
+    stream.println(stepInterval);
+    stream.print("Current Phase: ");
+    stream.println(currentPhase);
+}
+
 // Perform the wave gait
 // In wave gait, one leg swings at a time
 // This creates a smooth wave-like motion across the hexapod

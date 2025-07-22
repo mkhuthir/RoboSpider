@@ -47,12 +47,12 @@ int32_t Leg::getTibia() {
   return angle;
 }
 
-void Leg::printStatus() {
-  Serial.print("Coxa: ");
-  Serial.print(getCoxa());
-  Serial.print(" | Femur: ");
-  Serial.print(getFemur());
-  Serial.print(" | Tibia: ");
-  Serial.println(getTibia());
+void Leg::printStatus(Stream& stream) {
+  stream.print("Coxa: ");
+  stream.print(getCoxa());
+  stream.print(" | Femur: ");
+  stream.print(getFemur());
+  stream.print(" | Tibia: ");
+  stream.println(getTibia());
 }
 

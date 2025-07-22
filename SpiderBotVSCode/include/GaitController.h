@@ -19,6 +19,7 @@
             void            setStepInterval(unsigned long interval);    // Set the step interval
             unsigned long   getStepInterval() const;                    // Get the step interval
             void            update();                                   // Update the gait controller
+            void            printStatus(Stream& stream);                // Print current gait status to Serial
 
         private:
             Hexapod*        hexapod;                                    // Pointer to the Hexapod instance
