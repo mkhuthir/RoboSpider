@@ -13,10 +13,10 @@ void Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitCo
         con.print(shell);
     } 
     
-    this->hexapod   = hexapod;   // Store the hexapod instance
-    this->turret    = turret;   // Store the turret instance
-    this->gc        = gc;       // Store the GaitController instance
-    this->mc        = mc;       // Store the Microcontroller instance
+    this->hexapod   = hexapod;      // Store the hexapod instance
+    this->turret    = turret;       // Store the turret instance
+    this->gc        = gc;           // Store the GaitController instance
+    this->mc        = mc;           // Store the Microcontroller instance
 }
 
 void Console::update() {
@@ -52,6 +52,9 @@ void Console::processCommand(const String& command) {
 
     } else if (command == "status") {
         mc->printStatus(con);
+        hexapod->printStatus(con);
+        turret->printStatus(con);
+        gc->printStatus(con);
 
     } else if (command == "help" || command == "?") {
         con.println("Available commands:");

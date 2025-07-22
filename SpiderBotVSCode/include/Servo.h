@@ -53,7 +53,7 @@
             bool                getVelocity(uint8_t id, float* velocity);
 
             bool                init(uint8_t dxl_id, int32_t position, int32_t velocity);   // initialize a servo with default settings
-            bool                printStatus(uint8_t id);                                    // print the status of a servo for debugging
+            bool                printStatus(uint8_t id, Stream& stream);                    // print the status of a servo for debugging
 
             DynamixelWorkbench* getWorkbench();                                             // if you need to expose the workbench pointer
 

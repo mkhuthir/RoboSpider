@@ -17,13 +17,13 @@
                     Turret*             turret = nullptr, 
                     GaitController*     gc = nullptr, 
                     Microcontroller*    mc = nullptr);
-                    
+
         void update();  // Call in loop()
 
     private:
-        Stream&             con;                // Reference to the stream for console output
-        String              inputBuffer;        // Buffer for input commands
-        String              shell;              // Shell prompt string
+        Stream&             con = DEBUG_SERIAL; // Reference to the stream for console output
+        String              inputBuffer = "";   // Buffer for input commands
+        String              shell = "\n\r$";    // Shell prompt string
         Hexapod*            hexapod = nullptr;  // Pointer to Hexapod instance
         Turret*             turret = nullptr;   // Pointer to Turret instance
         GaitController*     gc = nullptr;       // Pointer to GaitController instance

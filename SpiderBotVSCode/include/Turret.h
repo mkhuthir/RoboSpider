@@ -14,7 +14,7 @@
       void moveLeft();                                        // Rotate turret to the left
       void moveUp();                                          // Rotate turret up
       void moveDown();                                        // Rotate turret down
-      void printStatus();                                     // Print current turret angles to Serial
+      void printStatus(Stream& stream);                       // Print current turret angles to Serial
 
     private:
       Servo*  servo;                                          // Pointer to the servo instance
