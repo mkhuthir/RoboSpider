@@ -22,18 +22,28 @@ void Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitCo
 void Console::update() {
     while (con.available()) {
         char c = con.read();
-        con.write(c);  // Echo to Serial for debugging
-
-        if (c == '\n' || c == '\r') {
+        if (c == '\b' || c == 127) {                            // Backspace or DEL
             if (inputBuffer.length() > 0) {
-                con.print("\n\r");
-                processCommand(inputBuffer);
-                inputBuffer = "";
-            } else {
-                con.print(shell);
+                inputBuffer.remove(inputBuffer.length() - 1);   // Move cursor back, erase character, move cursor back again
+                con.print("\b \b");
             }
+        } else if (c == '\x0C') {                               // Ctrl-L (ASCII 12)
+            con.print("\033[2J\033[H");                         // ANSI escape code to clear screen and move cursor to home
+            inputBuffer = "";                                   // Clear input buffer
+            con.print(shell);                                   // Print shell prompt
         } else {
-            inputBuffer += c;
+            con.write(c);  // Echo to Serial for debugging
+            if (c == '\n' || c == '\r') {                     // Newline or carriage return
+                if (inputBuffer.length() > 0) {
+                    con.print("\n\r");
+                    processCommand(inputBuffer);
+                    inputBuffer = "";
+                } else {
+                    con.print(shell);
+                }
+            } else {
+                inputBuffer += c;
+            }
         }
     }
 }
@@ -53,10 +63,17 @@ void Console::processCommand(const String& command) {
     } else if (command == "help" || command == "h" || command == "?") {
         con.println("Available commands:");
         con.println("  status    - Show current status of the system");
+        con.println("  cls       - Clear the terminal screen");
         con.print(  "  help/h/?  - Show this help message");
+
+    } else if (command == "cls") { // Ctrl-L (ASCII 12)
+        con.print("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
     } else {
         con.println("[Error] Unknown command: " + command);
         con.print("Type 'help' or '?' for a list of commands.");
+
     }
     con.print(shell);
 }
+
+
