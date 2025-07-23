@@ -8,6 +8,7 @@
     #include "GaitController.h"     // Include GaitController for movement control
     #include "Hexapod.h"            // Include Hexapod class for managing the hexapod robot
     #include "Microcontroller.h"    // Include Microcontroller class for managing the microcontroller
+    #include "CommandHistory.h"     // Include CommandHistory class for command history management
 
     class Console {
     public:
@@ -25,9 +26,13 @@
         String              inputBuffer = "";   // Buffer for input commands
         String              shell = "\n\r$";    // Shell prompt string
         Hexapod*            hexapod = nullptr;  // Pointer to Hexapod instance
-        Turret*             turret = nullptr;   // Pointer to Turret instance
-        GaitController*     gc = nullptr;       // Pointer to GaitController instance
-        Microcontroller*    mc = nullptr;       // Pointer to Microcontroller instance
+        Turret*             turret = nullptr;       // Pointer to Turret instance
+        GaitController*     gc = nullptr;           // Pointer to GaitController instance
+        Microcontroller*    mc = nullptr;           // Pointer to Microcontroller instance
+        
+        // Command history and input handling
+        CommandHistory      commandHistory;         // Command history manager
+        int                 cursorPos = 0;          // Current cursor position in input buffer
 
         void processCommand(const String& command);
     };
