@@ -154,10 +154,14 @@ void Console::update() {
                     con.print(shell);                           // Print shell prompt again
                 } else {
                     con.print("\n\r"+shell);                    // If no input, just print the shell prompt again
+                    inputBuffer = "";                           // Clear input buffer
+                    cursorPos = 0;                              // Reset cursor position
+                    commandHistory.resetToEnd();                // Reset command history cursor to end
                 }
 
             } else {
                 inputBuffer += c;                               // Add character to input buffer
+                cursorPos++;
             }
         }
     }
