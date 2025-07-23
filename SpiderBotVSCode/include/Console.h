@@ -12,27 +12,27 @@
 
     class Console {
     public:
-        Console(Stream& stream = DEBUG_SERIAL);
+        Console(Stream& stream = DEBUG_SERIAL);     // Constructor with default stream
         void begin( unsigned long       baud = DEBUG_BAUD_RATE, 
                     Hexapod*            hexapod = nullptr, 
                     Turret*             turret = nullptr, 
                     GaitController*     gc = nullptr, 
                     Microcontroller*    mc = nullptr);
 
-        void update();  // Call in loop()
+        void update();                              // Call in loop()
 
     private:
-        Stream&             con = DEBUG_SERIAL; // Reference to the stream for console output
-        String              inputBuffer = "";   // Buffer for input commands
-        String              shell = "\n\r$";    // Shell prompt string
-        Hexapod*            hexapod = nullptr;  // Pointer to Hexapod instance
+        Stream&             con = DEBUG_SERIAL;     // Reference to the stream for console output
+        
+        String              inputBuffer = "";       // Buffer for input commands
+        CommandHistory      commandHistory;         // Command history manager
+        int                 cursorPos = 0;          // Current cursor position in input buffer
+        String              shell = "\n\r$";        // Shell prompt string
+
+        Hexapod*            hexapod = nullptr;      // Pointer to Hexapod instance
         Turret*             turret = nullptr;       // Pointer to Turret instance
         GaitController*     gc = nullptr;           // Pointer to GaitController instance
         Microcontroller*    mc = nullptr;           // Pointer to Microcontroller instance
-        
-        // Command history and input handling
-        CommandHistory      commandHistory;         // Command history manager
-        int                 cursorPos = 0;          // Current cursor position in input buffer
 
         void processCommand(const String& command);
     };
