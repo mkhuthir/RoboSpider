@@ -39,12 +39,12 @@ void Console::update() {
 
             if (c1 == '[' && con.available()) {
                 char c2 = con.read();
-                switch (c2) {                                       // Arrow keys: A=up, B=down, C=right, D=left
-                    case 'A':                                       // Up arrow - Command history: previous
+                switch (c2) {                                   // Arrow keys: A=up, B=down, C=right, D=left
+                    case 'A':                                   // Up arrow - Command history: previous
                     {
                         String prevCommand = commandHistory.getPrevious();
                         if (prevCommand.length() > 0) {
-                            while (inputBuffer.length() > 0) {      // Clear current line
+                            while (inputBuffer.length() > 0) {  // Clear current line
                                 con.print("\b \b");
                                 inputBuffer.remove(inputBuffer.length() - 1);
                             }
@@ -55,9 +55,9 @@ void Console::update() {
                     }
                     break;
 
-                    case 'B': // Down arrow - Command history: next
+                    case 'B':                                   // Down arrow - Command history: next
                     {
-                        while (inputBuffer.length() > 0) {         // Clear current line
+                        while (inputBuffer.length() > 0) {      // Clear current line
                             con.print("\b \b");
                             inputBuffer.remove(inputBuffer.length() - 1);
                         }
@@ -69,14 +69,14 @@ void Console::update() {
                     }
                     break;
 
-                    case 'C': // Right arrow - Move cursor right if not at end
+                    case 'C':                                   // Right arrow - Move cursor right if not at end
                     if (cursorPos < (int)inputBuffer.length()) {
                         con.print("\033[C");
                         cursorPos++;
                     }
                     break;
 
-                    case 'D': // Left arrow - Move cursor left if not at start
+                    case 'D':                                   // Left arrow - Move cursor left if not at start
                     if (cursorPos > 0) {
                         con.print("\033[D");
                         cursorPos--;
@@ -99,7 +99,7 @@ void Console::update() {
                 } else {
                     con.print(shell);                           // If no input, just print the shell prompt again
                 }
-                
+
             } else {
                 inputBuffer += c;                               // Add character to input buffer
             }
