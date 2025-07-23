@@ -1,7 +1,7 @@
 #include "Console.h"
 
 // Constructor for Console class
-Console::Console(Stream& stream) : con(stream), inputBuffer(""), shell("\n\r$") {}
+Console::Console(Stream& stream) : con(stream), inputBuffer(""), shell("$") {}
 
 // Initialize the console with a baud rate and instances of Hexapod, Turret, GaitController, and Microcontroller
 void Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitController* gc, Microcontroller* mc) {
@@ -10,9 +10,9 @@ void Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitCo
         Serial.begin(baud);
         #ifdef DEBUG
             while (!Serial);  // Wait for Serial if using USB
+            con.println("Ready. Type a command or help.");
+            con.print(shell);
         #endif // DEBUG
-        con.println("Ready. Type a command or help.");
-        con.print(shell);
     } 
     
     this->hexapod   = hexapod;      // Store the hexapod instance
@@ -27,62 +27,115 @@ void Console::update() {
         
         char c = con.read();                                    // Read a character from the console input
 
-        if (c == '\b' || c == 127) {                            // Backspace or DEL
-            if (inputBuffer.length() > 0) {
-                inputBuffer.remove(inputBuffer.length() - 1);   // Remove last character from input buffer
-                con.print("\b \b");                             // Move cursor back, print space to erase character, move cursor back again
-            }
-
-        } else if (c == '\x1B') {                               // Escape character (start of arrow key sequence)
+        if (c == '\x1B') {                                      // Escape character (start of arrow key sequence)
             while (!con.available());                           // Wait for next two bytes: '[' and the code
             char c1 = con.read();
 
             if (c1 == '[' && con.available()) {
                 char c2 = con.read();
                 switch (c2) {                                   // Arrow keys: A=up, B=down, C=right, D=left
-                    case 'A':                                   // Up arrow - Command history: previous
-                    {
-                        String prevCommand = commandHistory.getPrevious();
-                        if (prevCommand.length() > 0) {
-                            while (inputBuffer.length() > 0) {  // Clear current line
+                    case 'A':                                   // ESC[A Up arrow - Command history: previous
+                        {
+                            String prevCommand = commandHistory.getPrevious();
+                            if (prevCommand.length() > 0) {
+                                while (inputBuffer.length() > 0) {  // Clear current line
+                                    con.print("\b \b");
+                                    inputBuffer.remove(inputBuffer.length() - 1);
+                                }
+                                inputBuffer = prevCommand;
+                                con.print(inputBuffer);
+                                cursorPos = inputBuffer.length();
+                            }
+                        }
+                    break;
+
+                    case 'B':                                   // ESC[B Down arrow - Command history: next
+                        {
+                            while (inputBuffer.length() > 0) {      // Clear current line
                                 con.print("\b \b");
                                 inputBuffer.remove(inputBuffer.length() - 1);
                             }
-                            inputBuffer = prevCommand;
+                            
+                            String nextCommand = commandHistory.getNext();
+                            inputBuffer = nextCommand;
                             con.print(inputBuffer);
                             cursorPos = inputBuffer.length();
                         }
-                    }
                     break;
 
-                    case 'B':                                   // Down arrow - Command history: next
-                    {
-                        while (inputBuffer.length() > 0) {      // Clear current line
-                            con.print("\b \b");
-                            inputBuffer.remove(inputBuffer.length() - 1);
+                    case 'C':                                   // ESC[C Right arrow - Move cursor right if not at end
+                        if (cursorPos < (int)inputBuffer.length()) {
+                            con.print("\033[C");
+                            cursorPos++;
                         }
-                        
-                        String nextCommand = commandHistory.getNext();
-                        inputBuffer = nextCommand;
-                        con.print(inputBuffer);
-                        cursorPos = inputBuffer.length();
-                    }
                     break;
 
-                    case 'C':                                   // Right arrow - Move cursor right if not at end
-                    if (cursorPos < (int)inputBuffer.length()) {
-                        con.print("\033[C");
-                        cursorPos++;
-                    }
+                    case 'D':                                   // ESC[D Left arrow - Move cursor left if not at start
+                        if (cursorPos > 0) {
+                            con.print("\033[D");
+                            cursorPos--;
+                        }
                     break;
 
-                    case 'D':                                   // Left arrow - Move cursor left if not at start
-                    if (cursorPos > 0) {
-                        con.print("\033[D");
-                        cursorPos--;
-                    }
+                    case '1':                                   // Home key sequence: ESC[1~
+                        if (con.available()) {
+                            char c3 = con.read();
+                            if (c3 == '~') {
+                                // Move cursor to beginning of line
+                                while (cursorPos > 0) {
+                                    con.print("\033[D");            // Move cursor left
+                                    cursorPos--;
+                                }
+                            }
+                        }
+                    break;
+
+                    case '2':                                   // Insert key sequence: ESC[2~
+                        if (con.available()) {
+                            char c3 = con.read();
+                            if (c3 == '~') {
+                                insertMode = !insertMode;           // Toggle insert/overwrite mode
+                                // Visual feedback could be added here if desired
+                            }
+                        }
+                    break;
+
+                    case '3':                                   // Delete key sequence: ESC[3~
+                        if (con.available()) {
+                            char c3 = con.read();
+                            if (c3 == '~') {
+                                
+                                if (cursorPos < (int)inputBuffer.length()) {                // Delete character at cursor position
+                                    int savedPos = cursorPos;                               // Save current cursor position
+                                    inputBuffer.remove(cursorPos);                          // Remove character from buffer
+                                    con.print("\033[K");                                    // Clear line from cursor to end
+                                    String remaining = inputBuffer.substring(cursorPos);    // Print remaining text after cursor
+                                    con.print(remaining);
+                                    for (int i = remaining.length(); i > 0; i--) {
+                                        con.print("\033[D");                                // Move cursor back to original position
+                                    }
+                                }
+                            }
+                        }
+                    break;
+
+                    case '4':                                               // End key sequence: ESC[4~
+                        if (con.available()) {
+                            char c3 = con.read();
+                            if (c3 == '~') {
+                                while (cursorPos < (int)inputBuffer.length()) { // Move cursor to end of line
+                                    con.print("\033[C");                        // Move cursor right
+                                    cursorPos++;
+                                }
+                            }
+                        }
                     break;
                 }
+            }
+        } else if (c == '\b') {                                 // Backspace
+            if (inputBuffer.length() > 0) {
+                inputBuffer.remove(inputBuffer.length() - 1);   // Remove last character from input buffer
+                con.print("\b \b");                             // Move cursor back, print space to erase character, move cursor back again
             }
         } else if (c == '\x0C') {                               // Ctrl-L (ASCII 12)
             con.print("\033[2J\033[H");                         // ANSI escape code to clear screen and move cursor to home
@@ -96,8 +149,11 @@ void Console::update() {
                     con.print("\n\r");                          // Print newline and carriage return to move to the next line
                     processCommand(inputBuffer);                // Process the command entered
                     inputBuffer = "";
+                    cursorPos = 0;                              // Reset cursor position
+                    commandHistory.resetToEnd();                // Reset command history cursor to end
+                    con.print(shell);                           // Print shell prompt again
                 } else {
-                    con.print(shell);                           // If no input, just print the shell prompt again
+                    con.print("\n\r"+shell);                    // If no input, just print the shell prompt again
                 }
 
             } else {
@@ -169,10 +225,9 @@ void Console::processCommand(const String& command) {
 
     } else {
         con.println("[Error] Unknown command: " + command);
-        con.print("Type 'help', 'h' or '?' for a list of commands.");
+        con.println("Type 'help', 'h' or '?' for a list of commands.");
 
     }
-    con.print(shell);
 }
 
 

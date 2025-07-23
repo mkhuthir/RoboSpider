@@ -22,17 +22,18 @@
         void update();                              // Call in loop()
 
     private:
-        Stream&             con = DEBUG_SERIAL;     // Reference to the stream for console output
+        Stream&             con;                                // Reference to the stream (Serial, etc.)
+        String              inputBuffer;                        // Buffer to store the input command
+        String              shell;                              // Shell prompt string
+        int                 cursorPos = 0;                      // Current cursor position in input buffer
+        bool                insertMode = true;                  // Insert mode flag (true=insert, false=overwrite)
+        CommandHistory      commandHistory;                     // Command history management
         
-        String              inputBuffer = "";       // Buffer for input commands
-        CommandHistory      commandHistory;         // Command history manager
-        int                 cursorPos = 0;          // Current cursor position in input buffer
-        String              shell = "\n\r$";        // Shell prompt string
-
-        Hexapod*            hexapod = nullptr;      // Pointer to Hexapod instance
-        Turret*             turret = nullptr;       // Pointer to Turret instance
-        GaitController*     gc = nullptr;           // Pointer to GaitController instance
-        Microcontroller*    mc = nullptr;           // Pointer to Microcontroller instance
+        // Component instances
+        Hexapod*            hexapod;                            // Pointer to hexapod instance
+        Turret*             turret;                             // Pointer to turret instance  
+        GaitController*     gc;                                 // Pointer to GaitController instance
+        Microcontroller*    mc;                                 // Pointer to Microcontroller instance
 
         void processCommand(const String& command);
     };
