@@ -18,7 +18,7 @@
 
     private:
       Servo*  servo;                                          // Pointer to the servo instance
-      uint8_t panID, tiltID;                                  // Servo IDs for pan, tilt and sensor
+      uint8_t panID = 19, tiltID =20;                                  // Servo IDs for pan, tilt and sensor
   };
 
 #endif // TURRET_H

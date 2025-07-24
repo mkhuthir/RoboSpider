@@ -64,6 +64,7 @@
             uint16_t            model_number = 0;   // Model number of the servo being operated on
             const char*         model_name = NULL;  // Model name of the servo being operated on
             const ModelInfo*    model_info = NULL;  // Model info of the servo being operated on
+
     };
 
 #endif // SERVO_H
