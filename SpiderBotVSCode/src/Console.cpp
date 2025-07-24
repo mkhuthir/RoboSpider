@@ -11,6 +11,7 @@ void Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitCo
         #ifdef DEBUG
             while (!Serial);  // Wait for Serial if using USB
             con.println("Ready. Type a command or help.");
+            con.print("\033[4 q");                         // Set initial cursor to underline (insert mode)
             con.print(shell);
         #endif // DEBUG
     } 
@@ -77,65 +78,63 @@ void Console::update() {
                         }
                     break;
 
-                    case '1':                                   // Home key sequence: ESC[1~
+                    case 'H':                                   // Home key sequence: ESC[H
+                        while (cursorPos > 0) {                 // Move cursor to beginning of line
+                            con.print("\033[D");                // Move cursor left
+                            cursorPos--;
+                        }
+                    break;
+
+                    case 'F':                                               // End key sequence: ESC[F
+                        while (cursorPos < (int)inputBuffer.length()) {     // Move cursor to end of line
+                            con.print("\033[C");                            // Move cursor right
+                            cursorPos++;
+                        }
+                    break;
+
+                    case '2':                                                               // Insert key sequence: ESC[2~
                         if (con.available()) {
                             char c3 = con.read();
                             if (c3 == '~') {
-                                // Move cursor to beginning of line
-                                while (cursorPos > 0) {
-                                    con.print("\033[D");            // Move cursor left
-                                    cursorPos--;
-                                }
+                                insertMode = !insertMode;                                   // Toggle insert/overwrite mode
+                                                                                            // Change cursor type based on mode             
+                                con.print(insertMode ? "\033[4 q" : "\033[2 q");            // Underline for insert, block for overwrite
                             }
                         }
                     break;
 
-                    case '2':                                   // Insert key sequence: ESC[2~
-                        if (con.available()) {
-                            char c3 = con.read();
-                            if (c3 == '~') {
-                                insertMode = !insertMode;           // Toggle insert/overwrite mode
-                                // Visual feedback could be added here if desired
-                            }
-                        }
-                    break;
-
-                    case '3':                                   // Delete key sequence: ESC[3~
+                    case '3':                                                               // Delete key sequence: ESC[3~
                         if (con.available()) {
                             char c3 = con.read();
                             if (c3 == '~') {
                                 
                                 if (cursorPos < (int)inputBuffer.length()) {                // Delete character at cursor position
-                                    int savedPos = cursorPos;                               // Save current cursor position
-                                    inputBuffer.remove(cursorPos);                          // Remove character from buffer
+                                    inputBuffer.remove(cursorPos, 1);                       // Remove one character at cursor position
                                     con.print("\033[K");                                    // Clear line from cursor to end
                                     String remaining = inputBuffer.substring(cursorPos);    // Print remaining text after cursor
                                     con.print(remaining);
-                                    for (int i = remaining.length(); i > 0; i--) {
-                                        con.print("\033[D");                                // Move cursor back to original position
+                                    // Move cursor back to original position
+                                    for (int i = 0; i < (int)remaining.length(); i++) {
+                                        con.print("\033[D");                                // Move cursor left
                                     }
-                                }
-                            }
-                        }
-                    break;
-
-                    case '4':                                               // End key sequence: ESC[4~
-                        if (con.available()) {
-                            char c3 = con.read();
-                            if (c3 == '~') {
-                                while (cursorPos < (int)inputBuffer.length()) { // Move cursor to end of line
-                                    con.print("\033[C");                        // Move cursor right
-                                    cursorPos++;
                                 }
                             }
                         }
                     break;
                 }
             }
-        } else if (c == '\b') {                                 // Backspace
-            if (inputBuffer.length() > 0) {
-                inputBuffer.remove(inputBuffer.length() - 1);   // Remove last character from input buffer
-                con.print("\b \b");                             // Move cursor back, print space to erase character, move cursor back again
+        } else if (c == '\b') {                                         // Backspace
+            if (cursorPos > 0) {
+                cursorPos--;
+                inputBuffer.remove(cursorPos, 1);                       // Remove character before cursor
+                con.print("\b");                                        // Move cursor back
+                con.print("\033[K");                                    // Clear line from cursor to end
+                String remaining = inputBuffer.substring(cursorPos);    // Print remaining text after cursor
+                con.print(remaining);
+                // Move cursor back to correct position
+                for (int i = 0; i < (int)remaining.length(); i++) {
+                    con.print("\033[D");
+                }
             }
         } else if (c == '\x0C') {                               // Ctrl-L (ASCII 12)
             con.print("\033[2J\033[H");                         // ANSI escape code to clear screen and move cursor to home
@@ -143,7 +142,6 @@ void Console::update() {
             con.print(shell);                                   // Print shell prompt
 
         } else {
-            con.write(c);                                       // Echo to Serial for debugging
             if (c == '\n' || c == '\r') {                       // Newline or carriage return
                 if (inputBuffer.length() > 0) {                 // If there is input in the buffer
                     con.print("\n\r");                          // Print newline and carriage return to move to the next line
@@ -151,6 +149,7 @@ void Console::update() {
                     inputBuffer = "";
                     cursorPos = 0;                              // Reset cursor position
                     commandHistory.resetToEnd();                // Reset command history cursor to end
+                    con.print("\033[4 q");                     // Reset cursor to insert mode
                     con.print(shell);                           // Print shell prompt again
                 } else {
                     con.print("\n\r"+shell);                    // If no input, just print the shell prompt again
@@ -160,7 +159,30 @@ void Console::update() {
                 }
 
             } else {
-                inputBuffer += c;                               // Add character to input buffer
+                if (insertMode) {
+                    if (cursorPos < (int)inputBuffer.length()) {                // Insert mode: insert character at cursor position
+                        String before = inputBuffer.substring(0, cursorPos);    // Insert character in the middle of the string
+                        String after = inputBuffer.substring(cursorPos);
+                        inputBuffer = before + c + after;
+                        con.print("\033[K");                                    // Clear from cursor to end and reprint
+                        String remaining = inputBuffer.substring(cursorPos);
+                        con.print(remaining);
+                        for (int i = remaining.length() - 1; i > 0; i--) {      // Move cursor back to position after inserted character
+                            con.print("\033[D");
+                        }
+                    } else {
+                        inputBuffer += c;                           // At end of string, just append and echo
+                        con.write(c);
+                    }
+                } else {
+                    if (cursorPos < (int)inputBuffer.length()) {    // Overwrite mode: replace character at cursor position
+                        inputBuffer.setCharAt(cursorPos, c);        // Replace character at cursor position
+                        con.write(c);                               // Echo the character
+                    } else {
+                        inputBuffer += c;                           // At end of string, append new character
+                        con.write(c);                               // Echo the character
+                    }
+                }
                 cursorPos++;
             }
         }
