@@ -9,9 +9,9 @@ void Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitCo
     if (&con == &Serial) {
         Serial.begin(baud);
         #ifdef DEBUG
-            while (!Serial);  // Wait for Serial if using USB
+            while (!Serial);        // Wait for Serial if using USB
             con.println("Ready. Type a command or help.");
-            con.print("\033[4 q");                         // Set initial cursor to underline (insert mode)
+            con.print("\033[4 q");  // Set initial cursor to underline (insert mode)
             con.print(shell);
         #endif // DEBUG
     } 
@@ -26,16 +26,16 @@ void Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitCo
 void Console::update() {
     while (con.available()) {
         
-        char c = con.read();                                    // Read a character from the console input
+        char c = con.read();                                        // Read a character from the console input
 
-        if (c == '\x1B') {                                      // Escape character (start of arrow key sequence)
-            while (!con.available());                           // Wait for next two bytes: '[' and the code
+        if (c == '\x1B') {                                          // Escape character (start of arrow key sequence)
+            while (!con.available());                               // Wait for next two bytes: '[' and the code
             char c1 = con.read();
 
             if (c1 == '[' && con.available()) {
                 char c2 = con.read();
-                switch (c2) {                                   // Arrow keys: A=up, B=down, C=right, D=left
-                    case 'A':                                   // ESC[A Up arrow - Command history: previous
+                switch (c2) {                                       // Arrow keys: A=up, B=down, C=right, D=left
+                    case 'A':                                       // ESC[A Up arrow - Command history: previous
                         {
                             String prevCommand = commandHistory.getPrevious();
                             if (prevCommand.length() > 0) {
@@ -50,7 +50,7 @@ void Console::update() {
                         }
                     break;
 
-                    case 'B':                                   // ESC[B Down arrow - Command history: next
+                    case 'B':                                       // ESC[B Down arrow - Command history: next
                         {
                             while (inputBuffer.length() > 0) {      // Clear current line
                                 con.print("\b \b");
@@ -64,14 +64,14 @@ void Console::update() {
                         }
                     break;
 
-                    case 'C':                                   // ESC[C Right arrow - Move cursor right if not at end
+                    case 'C':                                       // ESC[C Right arrow - Move cursor right if not at end
                         if (cursorPos < (int)inputBuffer.length()) {
                             con.print("\033[C");
                             cursorPos++;
                         }
                     break;
 
-                    case 'D':                                   // ESC[D Left arrow - Move cursor left if not at start
+                    case 'D':                                       // ESC[D Left arrow - Move cursor left if not at start
                         if (cursorPos > 0) {
                             con.print("\033[D");
                             cursorPos--;
@@ -113,8 +113,7 @@ void Console::update() {
                                     con.print("\033[K");                                    // Clear line from cursor to end
                                     String remaining = inputBuffer.substring(cursorPos);    // Print remaining text after cursor
                                     con.print(remaining);
-                                    // Move cursor back to original position
-                                    for (int i = 0; i < (int)remaining.length(); i++) {
+                                    for (int i = 0; i < (int)remaining.length(); i++) {     // Move cursor back to original position
                                         con.print("\033[D");                                // Move cursor left
                                     }
                                 }
@@ -131,8 +130,8 @@ void Console::update() {
                 con.print("\033[K");                                    // Clear line from cursor to end
                 String remaining = inputBuffer.substring(cursorPos);    // Print remaining text after cursor
                 con.print(remaining);
-                // Move cursor back to correct position
-                for (int i = 0; i < (int)remaining.length(); i++) {
+                
+                for (int i = 0; i < (int)remaining.length(); i++) {     // Move cursor back to correct position
                     con.print("\033[D");
                 }
             }
@@ -149,7 +148,7 @@ void Console::update() {
                     inputBuffer = "";
                     cursorPos = 0;                              // Reset cursor position
                     commandHistory.resetToEnd();                // Reset command history cursor to end
-                    con.print("\033[4 q");                     // Reset cursor to insert mode
+                    con.print("\033[4 q");                      // Reset cursor to insert mode
                     con.print(shell);                           // Print shell prompt again
                 } else {
                     con.print("\n\r"+shell);                    // If no input, just print the shell prompt again
@@ -171,16 +170,16 @@ void Console::update() {
                             con.print("\033[D");
                         }
                     } else {
-                        inputBuffer += c;                           // At end of string, just append and echo
+                        inputBuffer += c;                                       // At end of string, just append and echo
                         con.write(c);
                     }
                 } else {
-                    if (cursorPos < (int)inputBuffer.length()) {    // Overwrite mode: replace character at cursor position
-                        inputBuffer.setCharAt(cursorPos, c);        // Replace character at cursor position
-                        con.write(c);                               // Echo the character
+                    if (cursorPos < (int)inputBuffer.length()) {                // Overwrite mode: replace character at cursor position
+                        inputBuffer.setCharAt(cursorPos, c);                    // Replace character at cursor position
+                        con.write(c);                                           // Echo the character
                     } else {
-                        inputBuffer += c;                           // At end of string, append new character
-                        con.write(c);                               // Echo the character
+                        inputBuffer += c;                                       // At end of string, append new character
+                        con.write(c);                                           // Echo the character
                     }
                 }
                 cursorPos++;
