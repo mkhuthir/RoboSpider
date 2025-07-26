@@ -17,12 +17,11 @@
       void printStatus(Stream& stream);                       // Print current turret angles to Serial
 
     private:
-      static constexpr uint8_t handler_index   = 0;                      // Index for sync write handler
-      static constexpr uint8_t num_servos      = 2;                      // Number of servos to control
+      static constexpr uint8_t handler_index   = 0;           // Index for sync write handler
+      static constexpr uint8_t num_servos      = 2;           // Number of servos to control
       
-      Servo*  servo;                                                     // Pointer to the servo instance
-      uint8_t panID = 19, tiltID =20;                                    // Servo IDs for pan, tilt and sensor
-      uint8_t turret_ids[num_servos] = {19, 20};                         // Servo IDs for pan and tilt
+      Servo*  servo;                                          // Pointer to the servo instance
+      uint8_t turret_ids[num_servos] = {19, 20};              // Servo IDs for pan and tilt
   };
 
 #endif // TURRET_H

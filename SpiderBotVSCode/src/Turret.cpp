@@ -2,19 +2,19 @@
 #include "Config.h"             // Include configuration header
 
 Turret::Turret(){
-  panID   = 0;         // Initialize pan ID
-  tiltID  = 0;         // Initialize tilt ID
+  turret_ids[0] = 19;  // Set pan servo ID
+  turret_ids[1] = 20; // Set tilt servo ID
   servo   = nullptr;   // Dynamixel controller not initialized
 }
 
 // Initialize the turret servos
 void Turret::begin(uint8_t pan, uint8_t tilt, Servo* servo) {
-  panID     = pan;
-  tiltID    = tilt;
+  turret_ids[0] = pan;  // Set pan servo ID
+  turret_ids[1] = tilt; // Set tilt servo ID
   this->servo = servo;  // Set the servo pointer
 
-  servo->init(panID, TURRET_VELOCITY);                  // Initialize pan servo with default velocity
-  servo->init(tiltID, TURRET_VELOCITY);                 // Initialize tilt servo with default velocity
+  servo->init(pan, TURRET_VELOCITY);                  // Initialize pan servo with default velocity
+  servo->init(tilt, TURRET_VELOCITY);                 // Initialize tilt servo with default velocity
   moveHome();                                           // Move turret to home position
 
 }
@@ -54,9 +54,9 @@ void Turret::moveDown() {
 // Print current turret angles to Serial
 void Turret::printStatus(Stream& stream) {
   int32_t panPosition = 0, tiltPosition = 0;
-  
-  servo->getPresentPositionData(panID, &panPosition);
-  servo->getPresentPositionData(tiltID, &tiltPosition);
+
+  servo->getPresentPositionData(turret_ids[0], &panPosition);
+  servo->getPresentPositionData(turret_ids[1], &tiltPosition);
 
   stream.print("\nTurret Status:");
   stream.print("Pan: ");
