@@ -17,16 +17,16 @@ void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
   tibia     = tibiaID;
   this->servo = servo;  // Set the servo pointer
 
-  servo->init(coxa,   COXA_HOME_DEG,  COXA_VELOCITY);     // Initialize coxa servo with limits
-  servo->init(femur,  FEMUR_HOME_DEG, FEMUR_VELOCITY);   // Initialize femur servo with limits
-  servo->init(tibia,  TIBIA_HOME_DEG, TIBIA_VELOCITY);   // Initialize tibia servo with limits
+  servo->init(coxa, COXA_VELOCITY);     // Initialize coxa servo with velocity
+  servo->init(femur, FEMUR_VELOCITY);   // Initialize femur servo with velocity
+  servo->init(tibia, TIBIA_VELOCITY);   // Initialize tibia servo with velocity
 }
 
 // Set angles for the leg joints
 void Leg::setLeg(int32_t coxaAngle, int32_t femurAngle, int32_t tibiaAngle) {
-  servo->goalPosition(coxa, coxaAngle);      // Set coxa angle
-  servo->goalPosition(femur, femurAngle);    // Set femur angle
-  servo->goalPosition(tibia, tibiaAngle);    // Set tibia angle
+  //servo->goalPosition(coxa, coxaAngle);      // Set coxa angle
+  //servo->goalPosition(femur, femurAngle);    // Set femur angle
+  //servo->goalPosition(tibia, tibiaAngle);    // Set tibia angle
 }
 
 int32_t Leg::getCoxa() {

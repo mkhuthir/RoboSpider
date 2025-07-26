@@ -19,15 +19,11 @@ void Hexapod::begin(Servo* servo) {
   legs[3].init(10, 11, 12, servo);
   legs[4].init(13, 14, 15, servo);
   legs[5].init(16, 17, 18, servo);
-
-//  for(int i=0; i<6; i++)
-//    legs[i]->init();
 }
 
 bool Hexapod::moveLeg(int legIndex, int32_t coxa, int32_t femur, int32_t tibia) {
   if (legIndex < 0 || legIndex >= 6) return false;  // Invalid leg index
   legs[legIndex].setLeg(coxa, femur, tibia);
-  delay(1000);  // Wait for the movement to complete
   return true;
 }
 

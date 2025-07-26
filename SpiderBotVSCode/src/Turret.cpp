@@ -13,8 +13,11 @@ void Turret::begin(uint8_t pan, uint8_t tilt, Servo* servo) {
   tiltID    = tilt;
   this->servo = servo;  // Set the servo pointer
 
-  servo->init(panID, TURRET_PAN_HOME_DEG, TURRET_VELOCITY);         // Initialize pan servo with limits
-  servo->init(tiltID, TURRET_TILT_HOME_DEG, TURRET_VELOCITY);       // Initialize tilt servo with limits
+  servo->init(panID, TURRET_VELOCITY);                  // Initialize pan servo with default velocity
+  servo->init(tiltID, TURRET_VELOCITY);                 // Initialize tilt servo with default velocity
+  servo->addSyncWriteHandler(panID, "Goal_Position");   // Add sync write handler for pan
+  moveHome();                                           // Move turret to home position
+
 }
 
 // Rotate the turret to specified angles
@@ -24,7 +27,6 @@ void Turret::moveTurret(int32_t panAngle, int32_t tiltAngle) {
   const uint8_t num_positions   = 1;                                            // Number of positions to write
   uint8_t ids[num_servos]       = {panID, tiltID};                              // Servo IDs for pan and tilt
   int32_t positions[num_servos] = {panAngle, tiltAngle};                        // Target positions for pan and tilt
-  servo->addSyncWriteHandler(ids[0], "Goal_Position");                          // Add sync write handler
   servo->syncWrite(handler_index, ids, num_servos, positions, num_positions);   // Write target positions to servos
 }
 
