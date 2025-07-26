@@ -1,6 +1,7 @@
 #include "Hexapod.h"
 #include "Servo.h"
 #include "Config.h"             // Include configuration header
+#include "HexapodPoses.h"       // Include hexapod poses header
 
 // Constructor for Hexapod class
 Hexapod::Hexapod(){
@@ -27,29 +28,13 @@ void Hexapod::begin(Servo* servo) {
 // Move Hexapod Up
 bool Hexapod::moveUp() {
   const uint8_t num_positions   = 1;                                      // Number of positions to write
-  int32_t positions[HEXAPOD_SERVOS] = { COXA_UP, FEMUR_UP, TIBIA_UP,      // Target positions
-                                        COXA_UP, FEMUR_UP, TIBIA_UP,
-                                        COXA_UP, FEMUR_UP, TIBIA_UP,
-                                        COXA_UP, FEMUR_UP, TIBIA_UP,
-                                        COXA_UP, FEMUR_UP, TIBIA_UP,
-                                        COXA_UP, FEMUR_UP, TIBIA_UP
-                                      };
-
-  servo->syncWrite(handler_index, hexapod_ids, HEXAPOD_SERVOS, positions, num_positions);   // Write target positions to servos
+  servo->syncWrite(handler_index, hexapod_ids, HEXAPOD_SERVOS, poseStandUP, num_positions);   // Write target positions to servos
 }
 
 // Move Hexapod Down
 bool Hexapod::moveDown() {
   const uint8_t num_positions   = 1;                                        // Number of positions to write
-  int32_t positions[HEXAPOD_SERVOS] = { COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN,  // Target positions
-                                        COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN,
-                                        COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN,
-                                        COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN,
-                                        COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN,
-                                        COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN
-                                      };
-
-  servo->syncWrite(handler_index, hexapod_ids, HEXAPOD_SERVOS, positions, num_positions);   // Write target positions to servos
+  servo->syncWrite(handler_index, hexapod_ids, HEXAPOD_SERVOS, poseStandDown, num_positions);   // Write target positions to servos
 }
 
 // Print the status of all legs
