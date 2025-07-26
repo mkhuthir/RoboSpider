@@ -27,14 +27,14 @@ void Hexapod::begin(Servo* servo) {
 }
 // Move Hexapod Up
 bool Hexapod::moveUp() {
-  const uint8_t num_positions   = 1;                                      // Number of positions to write
-  servo->syncWrite(handler_index, hexapod_ids, HEXAPOD_SERVOS, poseStandUP, num_positions);   // Write target positions to servos
+  const uint8_t num_positions   = 1;                                      
+  servo->syncWrite(handler_index, hexapod_ids, HEXAPOD_SERVOS, poseStandUP, num_positions);
 }
 
 // Move Hexapod Down
 bool Hexapod::moveDown() {
-  const uint8_t num_positions   = 1;                                        // Number of positions to write
-  servo->syncWrite(handler_index, hexapod_ids, HEXAPOD_SERVOS, poseStandDown, num_positions);   // Write target positions to servos
+  const uint8_t num_positions   = 1;                                        
+  servo->syncWrite(handler_index, hexapod_ids, HEXAPOD_SERVOS, poseStandDown, num_positions);
 }
 
 // Print the status of all legs
