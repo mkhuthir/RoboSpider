@@ -211,6 +211,8 @@ void Console::processCommand(const String& command) {
         con.println("  g-ripple  - Start ripple gait");
         con.println("  g-tripod  - Start tripod gait");
         con.println("  g-idle    - Start idle gait");
+        con.println("  h-up      - hexapod up");
+        con.println("  h-down    - hexapod down");
 
     } else if (command == "cls") {                      
         con.print("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
@@ -247,6 +249,12 @@ void Console::processCommand(const String& command) {
 
     } else if (command == "g-idle") {
         gc->setGait(GAIT_IDLE);
+
+    } else if (command == "h-up") {
+        hexapod->moveUp();
+
+    } else if (command == "h-down") {
+        hexapod->moveDown();
 
     } else {
         con.println("[Error] Unknown command: " + command);

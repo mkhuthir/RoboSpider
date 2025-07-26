@@ -55,45 +55,45 @@
   // ------------------------
   // TURRET SERVOS
 
-  #define TURRET_VELOCITY       200   // Default velocity for turret servos
-  #define TURRET_PAN_MIN_DEG    0     // Min angle for turret pan servo
-  #define TURRET_PAN_MAX_DEG    1023  // Max angle for turret pan servo
-  #define TURRET_PAN_HOME_DEG   512   // Home position for turret pan servo
-  #define TURRET_PAN_LEFT_DEG   819   // Left position for turret pan servo
-  #define TURRET_PAN_RIGHT_DEG  204   // Right position for turret pan servo
-  #define TURRET_PAN_DOWN_DEG   512   // Down position for turret pan servo
-  #define TURRET_PAN_UP_DEG     512   // Up position for turret pan servo
+  #define TURRET_VELOCITY   200   // Default velocity for turret servos
+  #define TURRET_PAN_MIN    0     // Min angle for turret pan servo
+  #define TURRET_PAN_MAX    1023  // Max angle for turret pan servo
+  #define TURRET_PAN_HOME   512   // Home position for turret pan servo
+  #define TURRET_PAN_LEFT   819   // Left position for turret pan servo
+  #define TURRET_PAN_RIGHT  204   // Right position for turret pan servo
+  #define TURRET_PAN_DOWN   512   // Down position for turret pan servo
+  #define TURRET_PAN_UP     512   // Up position for turret pan servo
 
-  #define TURRET_TILT_MIN_DEG   0     // Min angle for turret tilt servo
-  #define TURRET_TILT_MAX_DEG   1023  // Max angle for turret tilt servo
-  #define TURRET_TILT_HOME_DEG  204   // Home position for turret tilt servo
-  #define TURRET_TILT_LEFT_DEG  204   // Left position for turret tilt servo
-  #define TURRET_TILT_RIGHT_DEG 204   // Right position for turret tilt servo
-  #define TURRET_TILT_DOWN_DEG  100   // Down position for turret tilt servo
-  #define TURRET_TILT_UP_DEG    512   // Up position for turret tilt servo
+  #define TURRET_TILT_MIN   0     // Min angle for turret tilt servo
+  #define TURRET_TILT_MAX   1023  // Max angle for turret tilt servo
+  #define TURRET_TILT_HOME  204   // Home position for turret tilt servo
+  #define TURRET_TILT_LEFT  204   // Left position for turret tilt servo
+  #define TURRET_TILT_RIGHT 204   // Right position for turret tilt servo
+  #define TURRET_TILT_DOWN  100   // Down position for turret tilt servo
+  #define TURRET_TILT_UP    512   // Up position for turret tilt servo
 
   // ------------------------
   // LEG SERVOS
-  #define COXA_VELOCITY         200   // Default velocity for coxa servo
-  #define COXA_MIN_DEG          0     // Min angle for COXA servo
-  #define COXA_MAX_DEG          1023  // Max angle for COXA servo
-  #define COXA_HOME_DEG         512   // Home position for COXA servo
-  #define COXA_UP_DEG           512   // Default up angle for COXA servo
-  #define COXA_DOWN_DEG         512   // Default down angle for COXA servo
+  #define COXA_VELOCITY     200   // Default velocity for coxa servo
+  #define COXA_MIN          0     // Min angle for COXA servo
+  #define COXA_MAX          1023  // Max angle for COXA servo
+  #define COXA_HOME         512   // Home position for COXA servo
+  #define COXA_UP           512   // Default up angle for COXA servo
+  #define COXA_DOWN         512   // Default down angle for COXA servo
 
-  #define FEMUR_VELOCITY        200   // Default velocity for femur servo
-  #define FEMUR_MIN_DEG         0     // Min angle for FEMUR servo
-  #define FEMUR_MAX_DEG         1023  // Max angle for FEMUR servo
-  #define FEMUR_HOME_DEG        358   // Home position for FEMUR servo
-  #define FEMUR_UP_DEG          665   // Default up angle for FEMUR servo
-  #define FEMUR_DOWN_DEG        358   // Default down angle for FEMUR servo
+  #define FEMUR_VELOCITY    200   // Default velocity for femur servo
+  #define FEMUR_MIN         0     // Min angle for FEMUR servo
+  #define FEMUR_MAX         1023  // Max angle for FEMUR servo
+  #define FEMUR_HOME        358   // Home position for FEMUR servo
+  #define FEMUR_UP          665   // Default up angle for FEMUR servo
+  #define FEMUR_DOWN        358   // Default down angle for FEMUR servo
 
-  #define TIBIA_VELOCITY        200   // Default velocity for tibia servo
-  #define TIBIA_MIN_DEG         0     // Min angle for TIBIA servo
-  #define TIBIA_MAX_DEG         1023  // Max angle for TIBIA servo
-  #define TIBIA_HOME_DEG        665   // Home position for TIBIA servo
-  #define TIBIA_UP_DEG          819   // Default up angle for TIBIA servo
-  #define TIBIA_DOWN_DEG        665   // Default down angle for TIBIA servo
+  #define TIBIA_VELOCITY    200   // Default velocity for tibia servo
+  #define TIBIA_MIN         0     // Min angle for TIBIA servo
+  #define TIBIA_MAX         1023  // Max angle for TIBIA servo
+  #define TIBIA_HOME        665   // Home position for TIBIA servo
+  #define TIBIA_UP          819   // Default up angle for TIBIA servo
+  #define TIBIA_DOWN        665   // Default down angle for TIBIA servo
 
   // ------------------------
   // GAIT TIMING

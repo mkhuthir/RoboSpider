@@ -117,8 +117,8 @@ void GaitController::printStatus(Stream& stream) {
 // This creates a smooth wave-like motion across the hexapod
 void GaitController::doWaveGait() {
     // One leg swings at a time
-    hexapod->moveLeg(currentPhase, COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);  // swing phase
-    hexapod->moveLeg(currentPhase, COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);  // stance phase
+    //hexapod->moveLeg(currentPhase, COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);  // swing phase
+    //hexapod->moveLeg(currentPhase, COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);  // stance phase
     currentPhase = (currentPhase + 1) % 6;
 }
 
@@ -133,10 +133,10 @@ void GaitController::doRippleGait() {
     };
 
     for (int i = 0; i < 2; ++i) {
-        hexapod->moveLeg(swingLegs[i], COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);
+        //hexapod->moveLeg(swingLegs[i], COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);
     }
     for (int i = 0; i < 2; ++i) {
-        hexapod->moveLeg(swingLegs[i], COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);
+        //hexapod->moveLeg(swingLegs[i], COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);
     }
 
     currentPhase = (currentPhase + 1) % 3;
@@ -156,10 +156,10 @@ void GaitController::doTripodGait() {
         swingGroup = groupB;
     }
     for (int i = 0; i < 3; ++i) {
-        hexapod->moveLeg(swingGroup[i], COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);
+        //hexapod->moveLeg(swingGroup[i], COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);
     }
     for (int i = 0; i < 3; ++i) {
-        hexapod->moveLeg(swingGroup[i], COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);
+        //hexapod->moveLeg(swingGroup[i], COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);
     }
     currentPhase = (currentPhase + 1) % 2;
 }

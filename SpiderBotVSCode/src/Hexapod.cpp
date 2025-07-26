@@ -4,9 +4,9 @@
 
 // Constructor for Hexapod class
 Hexapod::Hexapod(){
-  servo         = nullptr;        // Dynamixel controller not initialized
-  for (int i = 0; i < 6; i++) {
-    legs[i] = Leg();            // Initialize each leg
+  servo         = nullptr;              // Dynamixel controller not initialized
+  for (int i = 0; i < HEXAPOD_LEGS; i++) {
+    legs[i] = Leg();                    // instantiate each leg
   }
 }
 
@@ -19,12 +19,37 @@ void Hexapod::begin(Servo* servo) {
   legs[3].init(10, 11, 12, servo);
   legs[4].init(13, 14, 15, servo);
   legs[5].init(16, 17, 18, servo);
+                                
+  servo->addSyncWriteHandler(1, "Goal_Position");   // Add sync write handler for pan
+  moveUp(); // Move all legs to home position
+
+}
+// Move Hexapod Up
+bool Hexapod::moveUp() {
+  const uint8_t num_positions   = 1;                                      // Number of positions to write
+  int32_t positions[HEXAPOD_SERVOS] = { COXA_UP, FEMUR_UP, TIBIA_UP,      // Target positions
+                                        COXA_UP, FEMUR_UP, TIBIA_UP,
+                                        COXA_UP, FEMUR_UP, TIBIA_UP,
+                                        COXA_UP, FEMUR_UP, TIBIA_UP,
+                                        COXA_UP, FEMUR_UP, TIBIA_UP,
+                                        COXA_UP, FEMUR_UP, TIBIA_UP
+                                      };
+
+  servo->syncWrite(handler_index, hexapod_ids, HEXAPOD_SERVOS, positions, num_positions);   // Write target positions to servos
 }
 
-bool Hexapod::moveLeg(int legIndex, int32_t coxa, int32_t femur, int32_t tibia) {
-  if (legIndex < 0 || legIndex >= 6) return false;  // Invalid leg index
-  legs[legIndex].setLeg(coxa, femur, tibia);
-  return true;
+// Move Hexapod Down
+bool Hexapod::moveDown() {
+  const uint8_t num_positions   = 1;                                        // Number of positions to write
+  int32_t positions[HEXAPOD_SERVOS] = { COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN,  // Target positions
+                                        COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN,
+                                        COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN,
+                                        COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN,
+                                        COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN,
+                                        COXA_DOWN, FEMUR_DOWN, TIBIA_DOWN
+                                      };
+
+  servo->syncWrite(handler_index, hexapod_ids, HEXAPOD_SERVOS, positions, num_positions);   // Write target positions to servos
 }
 
 // Print the status of all legs

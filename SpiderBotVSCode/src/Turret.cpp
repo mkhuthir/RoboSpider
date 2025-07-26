@@ -15,7 +15,6 @@ void Turret::begin(uint8_t pan, uint8_t tilt, Servo* servo) {
 
   servo->init(panID, TURRET_VELOCITY);                  // Initialize pan servo with default velocity
   servo->init(tiltID, TURRET_VELOCITY);                 // Initialize tilt servo with default velocity
-  servo->addSyncWriteHandler(panID, "Goal_Position");   // Add sync write handler for pan
   moveHome();                                           // Move turret to home position
 
 }
@@ -32,27 +31,27 @@ void Turret::moveTurret(int32_t panAngle, int32_t tiltAngle) {
 
 // Rotate the turret to home position
 void Turret::moveHome() {
-  moveTurret(TURRET_PAN_HOME_DEG, TURRET_TILT_HOME_DEG);    // Reset turret to home position
+  moveTurret(TURRET_PAN_HOME, TURRET_TILT_HOME);    // Reset turret to home position
 }
 
 // Rotate turret to the right
 void Turret::moveRight() {
-  moveTurret(TURRET_PAN_RIGHT_DEG, TURRET_TILT_RIGHT_DEG); // Rotate turret to the right
+  moveTurret(TURRET_PAN_RIGHT, TURRET_TILT_RIGHT); // Rotate turret to the right
 } 
 
 // Rotate turret to the left
 void Turret::moveLeft() {
-  moveTurret(TURRET_PAN_LEFT_DEG, TURRET_TILT_LEFT_DEG);  // Rotate turret to the left
+  moveTurret(TURRET_PAN_LEFT, TURRET_TILT_LEFT);  // Rotate turret to the left
 }
 
 // Rotate turret up
 void Turret::moveUp() {
-  moveTurret(TURRET_PAN_UP_DEG, TURRET_TILT_UP_DEG);  // Rotate turret up
+  moveTurret(TURRET_PAN_UP, TURRET_TILT_UP);  // Rotate turret up
 }
 
 // Rotate turret down
 void Turret::moveDown() {
-  moveTurret(TURRET_PAN_DOWN_DEG, TURRET_TILT_DOWN_DEG); // Rotate turret down
+  moveTurret(TURRET_PAN_DOWN, TURRET_TILT_DOWN); // Rotate turret down
 } 
 
 // Print current turret angles to Serial
