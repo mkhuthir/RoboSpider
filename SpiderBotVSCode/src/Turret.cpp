@@ -20,38 +20,35 @@ void Turret::begin(uint8_t pan, uint8_t tilt, Servo* servo) {
 }
 
 // Rotate the turret to specified angles
-void Turret::moveTurret(int32_t panAngle, int32_t tiltAngle) {
-  const uint8_t handler_index   = 0;                                            // Index for sync write handler
-  const uint8_t num_servos      = 2;                                            // Number of servos to control
-  const uint8_t num_positions   = 1;                                            // Number of positions to write
-  uint8_t ids[num_servos]       = {panID, tiltID};                              // Servo IDs for pan and tilt
-  int32_t positions[num_servos] = {panAngle, tiltAngle};                        // Target positions for pan and tilt
-  servo->syncWrite(handler_index, ids, num_servos, positions, num_positions);   // Write target positions to servos
+void Turret::move(int32_t panAngle, int32_t tiltAngle) {
+  const uint8_t num_positions   = 1;                                                  // Number of positions to write
+  int32_t positions[num_servos] = {panAngle, tiltAngle};                              // Target positions for pan and tilt
+  servo->syncWrite(handler_index, turret_ids, num_servos, positions, num_positions);  // Write target positions to servos
 }
 
 // Rotate the turret to home position
 void Turret::moveHome() {
-  moveTurret(TURRET_PAN_HOME, TURRET_TILT_HOME);    // Reset turret to home position
+  move(TURRET_PAN_HOME, TURRET_TILT_HOME);    // Reset turret to home position
 }
 
 // Rotate turret to the right
 void Turret::moveRight() {
-  moveTurret(TURRET_PAN_RIGHT, TURRET_TILT_RIGHT); // Rotate turret to the right
+  move(TURRET_PAN_RIGHT, TURRET_TILT_RIGHT); // Rotate turret to the right
 } 
 
 // Rotate turret to the left
 void Turret::moveLeft() {
-  moveTurret(TURRET_PAN_LEFT, TURRET_TILT_LEFT);  // Rotate turret to the left
+  move(TURRET_PAN_LEFT, TURRET_TILT_LEFT);  // Rotate turret to the left
 }
 
 // Rotate turret up
 void Turret::moveUp() {
-  moveTurret(TURRET_PAN_UP, TURRET_TILT_UP);  // Rotate turret up
+  move(TURRET_PAN_UP, TURRET_TILT_UP);  // Rotate turret up
 }
 
 // Rotate turret down
 void Turret::moveDown() {
-  moveTurret(TURRET_PAN_DOWN, TURRET_TILT_DOWN); // Rotate turret down
+  move(TURRET_PAN_DOWN, TURRET_TILT_DOWN); // Rotate turret down
 } 
 
 // Print current turret angles to Serial
