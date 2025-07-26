@@ -1,6 +1,5 @@
 #include "Turret.h"
 #include "Config.h"             // Include configuration header
-#include "HexapodPoses.h"       // Include hexapod poses header
 
 Turret::Turret(){
   panID   = 0;         // Initialize pan ID

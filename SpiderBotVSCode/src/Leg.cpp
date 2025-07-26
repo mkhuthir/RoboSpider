@@ -1,7 +1,6 @@
 #include "Leg.h"
 #include "Servo.h"
 #include "Config.h"             // Include configuration header
-#include "HexapodPoses.h"       // Include hexapod poses header
 
 // Default constructor for Leg class
 Leg::Leg(){
