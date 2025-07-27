@@ -45,6 +45,17 @@ void Leg::moveOut() {
   move(poseLegOut);
 }
 
+// Check if any servo in the leg is currently moving
+bool Leg::isMoving() {
+  
+  int32_t coxaVel = 0, femurVel = 0, tibiaVel = 0;
+  servo->getPresentVelocityData(coxa, &coxaVel);
+  servo->getPresentVelocityData(femur, &femurVel);
+  servo->getPresentVelocityData(tibia, &tibiaVel);
+  
+  return (coxaVel != 0 || femurVel != 0 || tibiaVel != 0);
+}
+
 // Get current coxa angle
 int32_t Leg::getCoxa() {
   int32_t angle = 0;
@@ -75,4 +86,6 @@ void Leg::printStatus(Stream& stream) {
   stream.print(" | Tibia: ");
   stream.println(getTibia());
 }
+
+
 

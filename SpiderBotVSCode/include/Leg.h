@@ -19,7 +19,8 @@
       void    moveUp();                       // Move leg up
       void    moveDown();                     // Move leg down
       void    moveOut();                      // Move leg out
-
+      bool    isMoving();                     // Check if any servo in the leg is currently moving 
+ 
       int32_t getCoxa();                      // Get current coxa angle
       int32_t getFemur();                     // Get current femur angle
       int32_t getTibia();                     // Get current tibia angle

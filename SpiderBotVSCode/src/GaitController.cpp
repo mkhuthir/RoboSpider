@@ -105,31 +105,31 @@ void GaitController::printStatus(Stream& stream) {
 
 // Perform the wave gait
 // In wave gait, one leg swings at a time
-// This creates a smooth wave-like motion across the hexapod
 void GaitController::doWaveGait() {
+
+    // If the current leg or the previous leg is moving, skip update
+    if (hexapod->legs[currentPhase].isMoving() || hexapod->legs[(currentPhase - 1) % HEXAPOD_LEGS].isMoving()) {
+        return;  
+    }
 
     // One leg swings at a time
     switch(currentStep) {
-        case 0:
+        case 0:                                                                 // Move the current leg up
             hexapod->legs[currentPhase].move(poseLegWaveGaitUp[currentPhase]);
             break;
-        case 1:
+        case 1:                                                                 // Move the current leg down
             hexapod->legs[currentPhase].move(poseLegWaveGaitDown[currentPhase]);
-            currentPhase    = (currentPhase + 1) % 6;  // Move to the next leg
+            currentPhase    = (currentPhase + 1) % HEXAPOD_LEGS;                // Move to the next leg
             break;
     }
-    
-    delay(500);  // Delay to simulate step time
-    currentStep     = (currentStep  + 1) % 2;  // Toggle between up and down poses
-
-    if (currentPhase == 0) {    // Reset hexapod position after a full cycle
+    currentStep     = (currentStep  + 1) % 2;                                   // Toggle between up and down poses
+    if (currentPhase == 0) {                                                    // Reset hexapod position after a full cycle
         hexapod->moveUp();      
     }
 }
 
 // Perform the ripple gait
 // In ripple gait, two legs swing with a phase offset
-// This creates a wave-like motion across the hexapod
 void GaitController::doRippleGait() {
     // Two legs with phase offset
     int swingLegs[2] = {
