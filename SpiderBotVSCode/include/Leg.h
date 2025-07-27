@@ -2,9 +2,9 @@
 #define LEG_H
 
   #include "Servo.h"
-  #include "LegPoses.h"
-
-  #define handler_index  0                    // Index for sync write handler
+  
+  #define handler_index   0                    // Index for sync write handler
+  #define LEG_SERVOS      uint8_t(3)           // Number of servos per leg
 
   class Leg {
     public:
@@ -15,7 +15,10 @@
                     Servo* servo);            
 
       void    move(int32_t *positions);       // Move the leg to the specified positions
-      
+      void    moveUp();                       // Move leg up
+      void    moveDown();                     // Move leg down
+      void    moveOut();                      // Move leg out
+
       int32_t getCoxa();                      // Get current coxa angle
       int32_t getFemur();                     // Get current femur angle
       int32_t getTibia();                     // Get current tibia angle

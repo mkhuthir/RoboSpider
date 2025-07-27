@@ -1,6 +1,7 @@
 #include "Leg.h"
 #include "Servo.h"
-#include "Config.h"             // Include configuration header
+#include "Config.h"     // Include configuration header
+#include "LegPoses.h"   // Include leg poses header
 
 // Default constructor for Leg class
 Leg::Leg(){
@@ -26,28 +27,46 @@ void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
 void Leg::move(int32_t *positions) {
   const uint8_t num_positions   = 1;
   uint8_t ids[3]      = {coxa, femur, tibia};   // Array of servo IDs
-  uint8_t num_servos  = 3;                      // Number of servos in the leg
-  servo->syncWrite(handler_index, ids, num_servos, positions, num_positions);
+  servo->syncWrite(handler_index, ids, LEG_SERVOS, positions, num_positions);
 }
 
+// Move leg up
+void Leg::moveUp() {
+  move(poseLegUp);
+}
+
+// Move leg down
+void Leg::moveDown() {
+  move(poseLegDown);
+}
+
+// Move leg out
+void Leg::moveOut() {
+  move(poseLegOut);
+}
+
+// Get current coxa angle
 int32_t Leg::getCoxa() {
   int32_t angle = 0;
   servo->getPresentPositionData(coxa, &angle);
   return angle;
 }
 
+// Get current femur angle
 int32_t Leg::getFemur() {
   int32_t angle = 0;
   servo->getPresentPositionData(femur, &angle);
   return angle;
 }
 
+// Get current tibia angle
 int32_t Leg::getTibia() {
   int32_t angle = 0;
   servo->getPresentPositionData(tibia, &angle);
   return angle;
 }
 
+// Print current joint angles
 void Leg::printStatus(Stream& stream) {
   stream.print("Coxa: ");
   stream.print(getCoxa());
