@@ -120,9 +120,9 @@ void GaitController::printStatus(Stream& stream) {
 // This creates a smooth wave-like motion across the hexapod
 void GaitController::doWaveGait() {
     // One leg swings at a time
-    hexapod->legs[currentPhase].moveWaveGaitUp();
+    hexapod->legs[currentPhase].move(poseLegWaveGaitUp[currentPhase]);
     delay(500);  // Delay to simulate step time
-    hexapod->legs[currentPhase].moveWaveGaitDown();
+    hexapod->legs[currentPhase].move(poseLegWaveGaitDown[currentPhase]);
     currentPhase = (currentPhase + 1) % 6;
 }
 

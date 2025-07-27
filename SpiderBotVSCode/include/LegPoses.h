@@ -15,7 +15,7 @@
   int32_t poseLegOut[LEG_SERVOS]  = {512, 512, 512};  // Leg pose for out position
 
   // Wave Gait Poses
-  int32_t poseLegWaveGaitUp[LEG_SERVOS]   = {512, 665, 972};  // Leg pose for wave gait up position
-  int32_t poseLegWaveGaitDown[LEG_SERVOS] = {512, 358, 665};  // Leg pose for wave gait down position
-  
+  int32_t poseLegWaveGaitUp[HEXAPOD_LEGS][LEG_SERVOS]   = {{665, 665, 972}, {358, 665, 972}, {512, 665, 972}, {512, 665, 972}, {358, 665, 972}, {665, 665, 972}};  // Leg pose for wave gait up position
+  int32_t poseLegWaveGaitDown[HEXAPOD_LEGS][LEG_SERVOS] = {{665, 358, 665}, {358, 358, 665}, {512, 358, 665}, {512, 358, 665}, {358, 358, 665}, {665, 358, 665}};  // Leg pose for wave gait down position
+
 #endif // LEG_POSES_H

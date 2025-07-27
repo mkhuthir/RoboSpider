@@ -45,16 +45,6 @@ void Leg::moveOut() {
   move(poseLegOut);
 }
 
-// Move leg in wave gait up
-void Leg::moveWaveGaitUp() {
-  move(poseLegWaveGaitUp);
-} 
-
-// Move leg in wave gait down
-void Leg::moveWaveGaitDown() {
-  move(poseLegWaveGaitDown);
-}
-
 // Get current coxa angle
 int32_t Leg::getCoxa() {
   int32_t angle = 0;
