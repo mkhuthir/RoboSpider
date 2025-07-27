@@ -213,6 +213,9 @@ void Console::processCommand(const String& command) {
         con.println("  g-idle    - Start idle gait");
         con.println("  h-up      - hexapod up");
         con.println("  h-down    - hexapod down");
+        con.println("  l-up      - leg up");
+        con.println("  l-down    - leg down");
+        con.println("  l-out     - leg out");
 
     } else if (command == "cls") {                      
         con.print("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
@@ -255,6 +258,15 @@ void Console::processCommand(const String& command) {
 
     } else if (command == "h-down") {
         hexapod->moveDown();
+
+    } else if (command == "l-up") {
+        hexapod->moveLegUp(1);
+
+    } else if (command == "l-down") {
+        hexapod->moveLegDown(1);
+
+    } else if (command == "l-out") {
+        hexapod->moveLegOut(1);
 
     } else {
         con.println("[Error] Unknown command: " + command);

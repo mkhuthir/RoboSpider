@@ -13,9 +13,14 @@
       Hexapod(); // Constructor
       void begin(Servo* servo);               // Initialize the hexapod
 
-      bool move(uint8_t *ids, uint8_t num_servos, int32_t *positions); // Move Hexapod
+      bool move(uint8_t *ids, uint8_t num_servos, int32_t *positions);  // Move Hexapod
       bool moveUp();                                                    // Move Hexapod Up
       bool moveDown();                                                  // Move Hexapod Down
+
+      bool moveLeg(uint8_t leg, int32_t *positions);                    // Move a specific leg
+      bool moveLegUp(uint8_t leg);                                      // Move a specific leg up
+      bool moveLegDown(uint8_t leg);                                    // Move a specific leg down
+      bool moveLegOut(uint8_t leg);                                     // Move a specific leg out
       
       void printStatus(Stream& stream);       // Print the status of all legs
   
