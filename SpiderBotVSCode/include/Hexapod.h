@@ -2,8 +2,7 @@
 #define HEXAPOD_H
 
   #include "Leg.h"
-
-  // Make HEXAPOD_LEGS, LEG_SERVOS, and HEXAPOD_SERVOS available globally
+  
   #define handler_index  0                                                // Index for sync write handler
   static constexpr uint8_t  HEXAPOD_LEGS   = 6;                           // Maximum number of legs
   static constexpr uint8_t  LEG_SERVOS     = 3;                           // Number of servos per leg

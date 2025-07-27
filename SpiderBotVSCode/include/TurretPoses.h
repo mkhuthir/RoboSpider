@@ -6,7 +6,7 @@
   #define TURRET_PAN_ID     19
   #define TURRET_TILT_ID    20
 
-  #define TURRET_VELOCITY   200   // Default velocity for turret servos
+  #define TURRET_VELOCITY   500   // Default velocity for turret servos
   #define TURRET_PAN_MIN    0     // Min angle for turret pan servo
   #define TURRET_PAN_MAX    1023  // Max angle for turret pan servo
   #define TURRET_TILT_MIN   0     // Min angle for turret tilt servo

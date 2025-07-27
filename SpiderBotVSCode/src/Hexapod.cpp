@@ -33,12 +33,12 @@ bool Hexapod::move(uint8_t *ids, uint8_t num_servos, int32_t *positions) {
 
 // Move Hexapod Up
 bool Hexapod::moveUp() {
-  move(hexapod_ids, HEXAPOD_SERVOS, poseStandUP);
+  move(hexapod_ids, HEXAPOD_SERVOS, poseHexapodStandUP);
 }
 
 // Move Hexapod Down
 bool Hexapod::moveDown() {
-  move(hexapod_ids, HEXAPOD_SERVOS, poseStandDown);
+  move(hexapod_ids, HEXAPOD_SERVOS, poseHexapodStandDown);
 }
 
 // Print the status of all legs

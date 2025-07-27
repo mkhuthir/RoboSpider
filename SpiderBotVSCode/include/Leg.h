@@ -4,16 +4,18 @@
   #include "Servo.h"
   #include "LegPoses.h"
 
+  #define handler_index  0                    // Index for sync write handler
+
   class Leg {
     public:
-      Leg(); // Constructor
-      void    init( uint8_t coxaID, 
+      Leg();                                  // Constructor
+      void    init( uint8_t coxaID,           // Initialize the leg servos
                     uint8_t femurID, 
                     uint8_t tibiaID, 
-                    Servo* servo);            // Initialize the leg servos
-      void    setLeg( int32_t coxaAngle, 
-                      int32_t femurAngle, 
-                      int32_t tibiaAngle);    // Set angles for the leg joints
+                    Servo* servo);            
+
+      void    move(int32_t *positions);       // Move the leg to the specified positions
+      
       int32_t getCoxa();                      // Get current coxa angle
       int32_t getFemur();                     // Get current femur angle
       int32_t getTibia();                     // Get current tibia angle

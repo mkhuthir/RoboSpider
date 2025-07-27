@@ -22,11 +22,12 @@ void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
   servo->init(tibia, TIBIA_VELOCITY);   // Initialize tibia servo with velocity
 }
 
-// Set angles for the leg joints
-void Leg::setLeg(int32_t coxaAngle, int32_t femurAngle, int32_t tibiaAngle) {
-  //servo->goalPosition(coxa, coxaAngle);      // Set coxa angle
-  //servo->goalPosition(femur, femurAngle);    // Set femur angle
-  //servo->goalPosition(tibia, tibiaAngle);    // Set tibia angle
+// Move the leg to the specified positions
+void Leg::move(int32_t *positions) {
+  const uint8_t num_positions   = 1;
+  uint8_t ids[3]      = {coxa, femur, tibia};   // Array of servo IDs
+  uint8_t num_servos  = 3;                      // Number of servos in the leg
+  servo->syncWrite(handler_index, ids, num_servos, positions, num_positions);
 }
 
 int32_t Leg::getCoxa() {
