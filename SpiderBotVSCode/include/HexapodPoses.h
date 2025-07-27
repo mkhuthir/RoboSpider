@@ -1,10 +1,7 @@
 #ifndef HEXAPOD_POSES_H
 #define HEXAPOD_POSES_H
-
-
+        
     // Hexapod Poses
-    #define HEXAPOD_SERVOS    18    // Total number of servos in hexapod 
-
     uint8_t hexapod_ids[HEXAPOD_SERVOS] = {                 // Servo IDs for all legs
                                             1, 2, 3,          
                                             4, 5, 6,

@@ -32,11 +32,23 @@
   // ------------------------
   // Servos & Sensors IDs
   // ------------------------
+  
+  // LEG SERVOS
+  #define COXA_VELOCITY   200   // Default velocity for coxa servo
+  #define COXA_MIN        0     // Min angle for COXA servo
+  #define COXA_MAX        1023  // Max angle for COXA servo
+
+  #define FEMUR_VELOCITY  200   // Default velocity for femur servo
+  #define FEMUR_MIN       0     // Min angle for FEMUR servo
+  #define FEMUR_MAX       1023  // Max angle for FEMUR servo
+
+  #define TIBIA_VELOCITY  200   // Default velocity for tibia servo
+  #define TIBIA_MIN       0     // Min angle for TIBIA servo
+  #define TIBIA_MAX       1023  // Max angle for TIBIA servo
 
   // Turret servos
-  #define TURRET_PAN_ID         19
-  #define TURRET_TILT_ID        20
-
+  #define TURRET_PAN_ID     19
+  #define TURRET_TILT_ID    20
 
   #define TURRET_VELOCITY   200   // Default velocity for turret servos
   #define TURRET_PAN_MIN    0     // Min angle for turret pan servo
@@ -55,18 +67,7 @@
   #define TURRET_TILT_DOWN  100   // Down position for turret tilt servo
   #define TURRET_TILT_UP    512   // Up position for turret tilt servo
 
-  // LEG SERVOS
-  #define COXA_VELOCITY     200   // Default velocity for coxa servo
-  #define COXA_MIN          0     // Min angle for COXA servo
-  #define COXA_MAX          1023  // Max angle for COXA servo
 
-  #define FEMUR_VELOCITY    200   // Default velocity for femur servo
-  #define FEMUR_MIN         0     // Min angle for FEMUR servo
-  #define FEMUR_MAX         1023  // Max angle for FEMUR servo
-
-  #define TIBIA_VELOCITY    200   // Default velocity for tibia servo
-  #define TIBIA_MIN         0     // Min angle for TIBIA servo
-  #define TIBIA_MAX         1023  // Max angle for TIBIA servo
 
 
   // AX-S1 Sensor

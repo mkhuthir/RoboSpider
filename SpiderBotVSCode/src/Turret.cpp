@@ -1,10 +1,9 @@
 #include "Turret.h"
-#include "Config.h"             // Include configuration header
 
 Turret::Turret(){
-  turret_ids[0] = 19;  // Set pan servo ID
-  turret_ids[1] = 20; // Set tilt servo ID
-  servo   = nullptr;   // Dynamixel controller not initialized
+  turret_ids[0] = TURRET_PAN_ID;  // Set pan servo ID
+  turret_ids[1] = TURRET_TILT_ID; // Set tilt servo ID
+  servo         = nullptr;        // Dynamixel controller not initialized
 }
 
 // Initialize the turret servos

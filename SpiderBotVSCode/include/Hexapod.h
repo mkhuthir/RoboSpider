@@ -2,6 +2,13 @@
 #define HEXAPOD_H
 
   #include "Leg.h"
+  
+  // Make HEXAPOD_LEGS, LEG_SERVOS, and HEXAPOD_SERVOS available globally
+  static constexpr uint8_t  HEXAPOD_LEGS   = 6;                           // Maximum number of legs
+  static constexpr uint8_t  LEG_SERVOS     = 3;                           // Number of servos per leg
+  static constexpr uint8_t  HEXAPOD_SERVOS = HEXAPOD_LEGS * LEG_SERVOS;   // Maximum number of servos
+  
+  static constexpr uint8_t  handler_index  = 0;                           // Index for sync write handler
 
   class Hexapod {
     public:
@@ -15,11 +22,6 @@
       void printStatus(Stream& stream);       // Print the status of all legs
   
     private:
-      static constexpr uint8_t  handler_index  = 0;                           // Index for sync write handler
-      static constexpr uint8_t  HEXAPOD_LEGS   = 6;                           // Maximum number of legs
-      static constexpr uint8_t  LEG_SERVOS     = 3;                           // Number of servos per leg
-      static constexpr uint8_t  HEXAPOD_SERVOS = HEXAPOD_LEGS * LEG_SERVOS;   // Maximum number of servos
-
       Leg                       legs[HEXAPOD_LEGS];                           // Array of legs
       Servo*                    servo;                                        // Dynamixel controller instance
   };
