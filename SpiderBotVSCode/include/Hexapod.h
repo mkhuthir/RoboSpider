@@ -7,9 +7,10 @@
     public:
       Hexapod(); // Constructor
       void begin(Servo* servo);               // Initialize the hexapod
-      
-      bool moveUp();                          // Move Hexapod Up
-      bool moveDown();                        // Move Hexapod Down
+
+      bool move(uint8_t *ids, uint8_t num_servos, int32_t *positions); // Move Hexapod
+      bool moveUp();                                                    // Move Hexapod Up
+      bool moveDown();                                                  // Move Hexapod Down
       
       void printStatus(Stream& stream);       // Print the status of all legs
   

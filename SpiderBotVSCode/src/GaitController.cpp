@@ -26,24 +26,24 @@ void GaitController::setGait(GaitType newGait) {
     currentPhase    = 0;
     lastUpdate      = millis();
     #ifdef DEBUG
-    Serial.print("Gait set to: ");
-    switch (gaitType) {
-        case GAIT_IDLE:
-            Serial.println("Idle");
-            break;
-        case GAIT_WAVE:
-            Serial.println("Wave");
-            break;
-        case GAIT_RIPPLE:
-            Serial.println("Ripple");
-            break;
-        case GAIT_TRIPOD:
-            Serial.println("Tripod");
-            break;
-        default:
-            Serial.println("Unknown");
-            break;
-    }
+        Serial.print("Gait set to: ");
+        switch (gaitType) {
+            case GAIT_IDLE:
+                Serial.println("Idle");
+                break;
+            case GAIT_WAVE:
+                Serial.println("Wave");
+                break;
+            case GAIT_RIPPLE:
+                Serial.println("Ripple");
+                break;
+            case GAIT_TRIPOD:
+                Serial.println("Tripod");
+                break;
+            default:
+                Serial.println("Unknown");
+                break;
+        }
     #endif // DEBUG
 }
 
@@ -64,23 +64,26 @@ unsigned long GaitController::getStepInterval() const {
 
 // Update the gait controller, called periodically
 void GaitController::update() {
-    if (gaitType == GAIT_IDLE) return;
+    if (gaitType == GAIT_IDLE) return;              // Do nothing if in idle gait
 
     unsigned long now = millis();
-    if (now - lastUpdate < stepInterval) return;
+    if (now - lastUpdate < stepInterval) return;    // Check if enough time has passed since the last update
 
     lastUpdate = now;
     switch (gaitType) {
-        case GAIT_WAVE:
+        case GAIT_WAVE:             // Perform wave gait
             doWaveGait();
             break;
-        case GAIT_RIPPLE:
+        case GAIT_RIPPLE:           // Perform ripple gait
             doRippleGait();
             break;
-        case GAIT_TRIPOD:
+        case GAIT_TRIPOD:           // Perform tripod gait
             doTripodGait();
             break;
-        default:
+        default:                    // If an unknown gait type is set, do nothing               
+            #ifdef DEBUG
+                    Serial.println("Unknown gait type, no action taken.");
+            #endif // DEBUG
             break;
     }
 }
