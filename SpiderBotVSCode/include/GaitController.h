@@ -26,9 +26,8 @@
         private:
             Hexapod*        hexapod;                                    // Pointer to the Hexapod instance
             GaitType        gaitType;                                   // Current gait type
-            unsigned long   lastUpdate;                                 // Last update time
             int             currentPhase;                               // Current phase of the gait
-            unsigned long   stepInterval;                               // Interval between steps
+            int             currentStep;                                // Current step in the gait sequence
 
             void            doWaveGait();                               // Perform the wave gait
             void            doRippleGait();                             // Perform the ripple gait

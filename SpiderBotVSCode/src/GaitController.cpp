@@ -8,25 +8,25 @@
 GaitController::GaitController() {
     hexapod         = nullptr;
     gaitType        = GAIT_IDLE;
-    lastUpdate      = 0;
     currentPhase    = 0;
-    stepInterval    = 1000;  // Default 1000ms between steps
+    currentStep     = 0;
 }
 
 // Initialize the GaitController with a Hexapod instance
 void GaitController::begin(Hexapod* hexapod){
     this->hexapod   = hexapod;
     gaitType        = GAIT_IDLE;    // Start with idle gait
-    lastUpdate      = millis();     // Initialize last update time
     currentPhase    = 0;
-    stepInterval    = 1000;          // Default 1000ms between steps
+    currentStep     = 0;            // Reset current step
 }
 
 // Set the current gait type    
 void GaitController::setGait(GaitType newGait) {
-    gaitType        = newGait;
-    currentPhase    = 0;
-    lastUpdate      = millis();
+    gaitType        = newGait;      // Set the new gait type
+    currentPhase    = 0;            // Reset current phase for the new gait
+    currentStep     = 0;            // Reset current step for the new gait
+    hexapod->moveUp();              // Reset hexapod position when changing gait
+
     #ifdef DEBUG
         Serial.print("Gait set to: ");
         switch (gaitType) {
@@ -54,24 +54,10 @@ GaitType GaitController::getGait() const {
     return gaitType;
 }
 
-// Set the step interval for the gait
-void GaitController::setStepInterval(unsigned long interval) {
-    stepInterval    = interval;
-}
-
-// Get the current step interval
-unsigned long GaitController::getStepInterval() const {
-    return stepInterval;
-}
-
 // Update the gait controller, called periodically
 void GaitController::update() {
     if (gaitType == GAIT_IDLE) return;              // Do nothing if in idle gait
 
-    unsigned long now = millis();
-    if (now - lastUpdate < stepInterval) return;    // Check if enough time has passed since the last update
-
-    lastUpdate = now;
     switch (gaitType) {
         case GAIT_WAVE:             // Perform wave gait
             doWaveGait();
@@ -111,8 +97,8 @@ void GaitController::printStatus(Stream& stream) {
             stream.print("Unknown");
             break;
     }
-    stream.print(" | Interval: ");
-    stream.print(stepInterval);
+    stream.print(" | Step: ");
+    stream.print(currentStep);
     stream.print(" | Phase: ");
     stream.println(currentPhase);
 }
@@ -121,14 +107,23 @@ void GaitController::printStatus(Stream& stream) {
 // In wave gait, one leg swings at a time
 // This creates a smooth wave-like motion across the hexapod
 void GaitController::doWaveGait() {
+
     // One leg swings at a time
-    hexapod->legs[currentPhase].move(poseLegWaveGaitUp[currentPhase]);
+    switch(currentStep) {
+        case 0:
+            hexapod->legs[currentPhase].move(poseLegWaveGaitUp[currentPhase]);
+            break;
+        case 1:
+            hexapod->legs[currentPhase].move(poseLegWaveGaitDown[currentPhase]);
+            currentPhase    = (currentPhase + 1) % 6;  // Move to the next leg
+            break;
+    }
+    
     delay(500);  // Delay to simulate step time
-    hexapod->legs[currentPhase].move(poseLegWaveGaitDown[currentPhase]);
-    currentPhase = (currentPhase + 1) % 6;
-    if (currentPhase == 0) {
-        delay(500);  
-        hexapod->moveUp();
+    currentStep     = (currentStep  + 1) % 2;  // Toggle between up and down poses
+
+    if (currentPhase == 0) {    // Reset hexapod position after a full cycle
+        hexapod->moveUp();      
     }
 }
 
