@@ -14,7 +14,7 @@ Hexapod::Hexapod(){
 // Initialize the hexapod
 void Hexapod::begin(Servo* servo) {
   this->servo=servo;
-  legs[0].init(1,  2,  3,  servo);
+  legs[0].init(1,  2,  3,  servo);                  // Initialize each leg with servo IDs
   legs[1].init(4,  5,  6,  servo);
   legs[2].init(7,  8,  9,  servo);
   legs[3].init(10, 11, 12, servo);
