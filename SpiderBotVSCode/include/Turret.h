@@ -3,6 +3,7 @@
 
   #include "Servo.h"
   #include "Config.h"
+  #include "TurretPoses.h"
 
   class Turret {
     public:

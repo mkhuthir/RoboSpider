@@ -2,6 +2,7 @@
 #define HEXAPOD_H
 
   #include "Leg.h"
+  #include "HexapodPoses.h"
   
   // Make HEXAPOD_LEGS, LEG_SERVOS, and HEXAPOD_SERVOS available globally
   static constexpr uint8_t  HEXAPOD_LEGS   = 6;                           // Maximum number of legs

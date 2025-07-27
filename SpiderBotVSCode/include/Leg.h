@@ -2,6 +2,7 @@
 #define LEG_H
 
   #include "Servo.h"
+  #include "LegPoses.h"
 
   class Leg {
     public:

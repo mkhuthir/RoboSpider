@@ -12,9 +12,9 @@ void Turret::begin(uint8_t pan, uint8_t tilt, Servo* servo) {
   turret_ids[1] = tilt; // Set tilt servo ID
   this->servo = servo;  // Set the servo pointer
 
-  servo->init(pan, TURRET_VELOCITY);                  // Initialize pan servo with default velocity
-  servo->init(tilt, TURRET_VELOCITY);                 // Initialize tilt servo with default velocity
-  moveHome();                                           // Move turret to home position
+  servo->init(pan,  TURRET_VELOCITY);   // Initialize pan servo with default velocity
+  servo->init(tilt, TURRET_VELOCITY);   // Initialize tilt servo with default velocity
+  moveHome();                           // Move turret to home position
 
 }
 
