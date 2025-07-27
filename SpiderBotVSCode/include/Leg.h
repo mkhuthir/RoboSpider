@@ -19,6 +19,9 @@
       void    moveDown();                     // Move leg down
       void    moveOut();                      // Move leg out
 
+      void    moveWaveGaitUp();               // Move leg in wave gait up
+      void    moveWaveGaitDown();             // Move leg in wave gait down
+
       int32_t getCoxa();                      // Get current coxa angle
       int32_t getFemur();                     // Get current femur angle
       int32_t getTibia();                     // Get current tibia angle

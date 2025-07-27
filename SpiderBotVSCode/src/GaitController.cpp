@@ -8,7 +8,7 @@ GaitController::GaitController() {
     gaitType        = GAIT_IDLE;
     lastUpdate      = 0;
     currentPhase    = 0;
-    stepInterval    = 6000;  // Default 6000ms between steps
+    stepInterval    = 1000;  // Default 1000ms between steps
 }
 
 // Initialize the GaitController with a Hexapod instance
@@ -17,7 +17,7 @@ void GaitController::begin(Hexapod* hexapod){
     gaitType        = GAIT_IDLE;    // Start with idle gait
     lastUpdate      = millis();     // Initialize last update time
     currentPhase    = 0;
-    stepInterval    = 6000;          // Default 6000ms between steps
+    stepInterval    = 1000;          // Default 1000ms between steps
 }
 
 // Set the current gait type    
@@ -120,8 +120,9 @@ void GaitController::printStatus(Stream& stream) {
 // This creates a smooth wave-like motion across the hexapod
 void GaitController::doWaveGait() {
     // One leg swings at a time
-    //hexapod->moveLeg(currentPhase, COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);  // swing phase
-    //hexapod->moveLeg(currentPhase, COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);  // stance phase
+    hexapod->legs[currentPhase].moveWaveGaitUp();
+    delay(500);  // Delay to simulate step time
+    hexapod->legs[currentPhase].moveWaveGaitDown();
     currentPhase = (currentPhase + 1) % 6;
 }
 

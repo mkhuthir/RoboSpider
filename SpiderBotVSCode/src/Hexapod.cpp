@@ -41,41 +41,6 @@ bool Hexapod::moveDown() {
   move(hexapod_ids, HEXAPOD_SERVOS, poseHexapodStandDown);
 }
 
-// Move a specific leg
-bool Hexapod::moveLeg(uint8_t legIndex, int32_t *positions) {
-  if (legIndex < 0 || legIndex >= HEXAPOD_LEGS || positions == nullptr) {
-    return false;
-  }
-  legs[legIndex].move(positions);
-  return true;
-}
-
-// Move a specific leg up
-bool Hexapod::moveLegUp(uint8_t legIndex) {
-  if (legIndex < 0 || legIndex >= HEXAPOD_LEGS) {
-    return false;
-  }
-  legs[legIndex].moveUp();
-  return true;
-}
-
-// Move a specific leg down
-bool Hexapod::moveLegDown(uint8_t legIndex) {
-  if (legIndex < 0 || legIndex >= HEXAPOD_LEGS) {
-    return false;
-  }
-  legs[legIndex].moveDown();
-  return true;
-}
-
-// Move a specific leg out
-bool Hexapod::moveLegOut(uint8_t legIndex) {
-  if (legIndex < 0 || legIndex >= HEXAPOD_LEGS) {
-    return false;
-  }
-  legs[legIndex].moveOut();
-  return true;
-}
 
 // Print the status of all legs
 void Hexapod::printStatus(Stream& stream) {

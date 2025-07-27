@@ -260,13 +260,13 @@ void Console::processCommand(const String& command) {
         hexapod->moveDown();
 
     } else if (command == "l-up") {
-        hexapod->moveLegUp(0);
+        hexapod->legs[0].moveUp();
 
     } else if (command == "l-down") {
-        hexapod->moveLegDown(0);
+        hexapod->legs[0].moveDown();
 
     } else if (command == "l-out") {
-        hexapod->moveLegOut(0);
+        hexapod->legs[0].moveOut();
 
     } else {
         con.println("[Error] Unknown command: " + command);
