@@ -21,8 +21,8 @@ void Turret::begin(uint8_t pan, uint8_t tilt, Servo* servo) {
 // Rotate the turret to specified angles
 void Turret::move(int32_t panAngle, int32_t tiltAngle) {
   const uint8_t num_positions   = 1;                                                  // Number of positions to write
-  int32_t positions[num_servos] = {panAngle, tiltAngle};                              // Target positions for pan and tilt
-  servo->syncWrite(handler_index, turret_ids, num_servos, positions, num_positions);  // Write target positions to servos
+  int32_t positions[TURRET_SERVOS] = {panAngle, tiltAngle};                              // Target positions for pan and tilt
+  servo->syncWrite(handler_index, turret_ids, TURRET_SERVOS, positions, num_positions);  // Write target positions to servos
 }
 
 // Rotate the turret to home position

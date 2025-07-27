@@ -1,6 +1,9 @@
 #ifndef TURRET_POSES_H
 #define TURRET_POSES_H
 
+  #define handler_index  0                           // Index for sync write handler
+  static constexpr uint8_t TURRET_SERVOS      = 2;   // Number of servos to control
+
    // Turret servos
   #define TURRET_PAN_ID     19
   #define TURRET_TILT_ID    20
