@@ -1,6 +1,8 @@
 #include "GaitController.h"
 #include "Hexapod.h"
 #include "Config.h"             // Include configuration header
+#include "GaitPoses.h"        // Include gait poses header
+
 
 // Constructor for GaitController class
 GaitController::GaitController() {
@@ -124,6 +126,10 @@ void GaitController::doWaveGait() {
     delay(500);  // Delay to simulate step time
     hexapod->legs[currentPhase].move(poseLegWaveGaitDown[currentPhase]);
     currentPhase = (currentPhase + 1) % 6;
+    if (currentPhase == 0) {
+        delay(500);  
+        hexapod->moveUp();
+    }
 }
 
 // Perform the ripple gait

@@ -3,6 +3,8 @@
 
     #include "Hexapod.h"
 
+
+
     enum GaitType {
         GAIT_IDLE,
         GAIT_WAVE,
