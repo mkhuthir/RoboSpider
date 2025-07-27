@@ -1,4 +1,5 @@
 #include "Turret.h"
+#include "TurretPoses.h"
 
 Turret::Turret(){
   turret_ids[0] = TURRET_PAN_ID;  // Set pan servo ID

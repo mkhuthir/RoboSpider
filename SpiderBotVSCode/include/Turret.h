@@ -2,8 +2,9 @@
 #define TURRET_H
 
   #include "Servo.h"
-  #include "Config.h"
-  #include "TurretPoses.h"
+  
+  #define handler_index  0                           // Index for sync write handler
+  static constexpr uint8_t TURRET_SERVOS      = 2;   // Number of servos to control
 
   class Turret {
     public:
@@ -20,7 +21,6 @@
 
     private:
       Servo*  servo;                                                    // Pointer to the servo instance
-      uint8_t turret_ids[TURRET_SERVOS] = {TURRET_PAN_ID, TURRET_TILT_ID}; // Servo IDs for pan and tilt
   };
 
 #endif // TURRET_H
