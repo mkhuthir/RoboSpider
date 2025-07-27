@@ -16,35 +16,34 @@ void Turret::begin(Servo* servo) {
 }
 
 // Rotate the turret to specified angles
-void Turret::move(int32_t panAngle, int32_t tiltAngle) {
+void Turret::move(int32_t *positions) {
   const uint8_t num_positions   = 1;                                                  // Number of positions to write
-  int32_t positions[TURRET_SERVOS] = {panAngle, tiltAngle};                              // Target positions for pan and tilt
   servo->syncWrite(handler_index, turret_ids, TURRET_SERVOS, positions, num_positions);  // Write target positions to servos
 }
 
 // Rotate the turret to home position
 void Turret::moveHome() {
-  move(TURRET_PAN_HOME, TURRET_TILT_HOME);    // Reset turret to home position
+  move(poseTurretHome);    // Reset turret to home position
 }
 
 // Rotate turret to the right
 void Turret::moveRight() {
-  move(TURRET_PAN_RIGHT, TURRET_TILT_RIGHT); // Rotate turret to the right
+  move(poseTurretRight); // Rotate turret to the right
 } 
 
 // Rotate turret to the left
 void Turret::moveLeft() {
-  move(TURRET_PAN_LEFT, TURRET_TILT_LEFT);  // Rotate turret to the left
+  move(poseTurretLeft);  // Rotate turret to the left
 }
 
 // Rotate turret up
 void Turret::moveUp() {
-  move(TURRET_PAN_UP, TURRET_TILT_UP);  // Rotate turret up
+  move(poseTurretUp);  // Rotate turret up
 }
 
 // Rotate turret down
 void Turret::moveDown() {
-  move(TURRET_PAN_DOWN, TURRET_TILT_DOWN); // Rotate turret down
+  move(poseTurretDown); // Rotate turret down
 } 
 
 // Print current turret angles to Serial

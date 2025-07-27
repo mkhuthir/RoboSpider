@@ -8,19 +8,19 @@
 
   class Turret {
     public:
-      Turret();                                         // Constructor
-      void begin(Servo* servo);                         // Initialize the turret servos
+      Turret();                         // Constructor
+      void begin(Servo* servo);         // Initialize the turret servos
 
-      void move(int32_t panAngle, int32_t tiltAngle);   // Rotate the turret to specified angles
-      void moveHome();                                  // Rotate the turret to home position
-      void moveRight();                                 // Rotate turret to the right
-      void moveLeft();                                  // Rotate turret to the left
-      void moveUp();                                    // Rotate turret up
-      void moveDown();                                  // Rotate turret down
-      void printStatus(Stream& stream);                 // Print current turret angles to Serial
+      void move(int32_t *positions);    // Rotate the turret to specified angles
+      void moveHome();                  // Rotate the turret to home position
+      void moveRight();                 // Rotate turret to the right
+      void moveLeft();                  // Rotate turret to the left
+      void moveUp();                    // Rotate turret up
+      void moveDown();                  // Rotate turret down
+      void printStatus(Stream& stream); // Print current turret angles to Serial
 
     private:
-      Servo*  servo;                                    // Pointer to the servo instance
+      Servo*  servo;                    // Pointer to the servo instance
   };
 
 #endif // TURRET_H
