@@ -1,7 +1,6 @@
 #ifndef TURRET_POSES_H
 #define TURRET_POSES_H
 
-  uint8_t turret_ids[TURRET_SERVOS] = {TURRET_PAN_ID, TURRET_TILT_ID}; // Servo IDs for pan and tilt
 
    // Turret servos
   #define TURRET_PAN_ID     19
@@ -23,6 +22,8 @@
   #define TURRET_TILT_RIGHT 204   // Right position for turret tilt servo
   #define TURRET_TILT_DOWN  100   // Down position for turret tilt servo
   #define TURRET_TILT_UP    512   // Up position for turret tilt servo
+
+  uint8_t turret_ids[TURRET_SERVOS] = {TURRET_PAN_ID, TURRET_TILT_ID}; // Servo IDs for pan and tilt
 
 
 #endif // TURRET_POSES_H
