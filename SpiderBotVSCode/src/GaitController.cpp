@@ -108,10 +108,10 @@ void GaitController::printStatus(Stream& stream) {
 void GaitController::doWaveGait() {
 
     // If the current leg or the previous leg is moving, skip update
-    if (hexapod->legs[currentPhase].isMoving() || hexapod->legs[(currentPhase - 1) % HEXAPOD_LEGS].isMoving()) {
-        return;  
-    }
-
+    //if (hexapod->legs[currentPhase].isMoving() || hexapod->legs[(currentPhase - 1) % HEXAPOD_LEGS].isMoving()) {
+    //    return;  
+    //}
+    delay(500); // Add a small delay to allow leg movement to complete
     // One leg swings at a time
     switch(currentStep) {
         case 0:                                                                 // Move the current leg up
@@ -123,7 +123,8 @@ void GaitController::doWaveGait() {
             break;
     }
     currentStep     = (currentStep  + 1) % 2;                                   // Toggle between up and down poses
-    if (currentPhase == 0) {                                                    // Reset hexapod position after a full cycle
+    if (currentPhase == 0) {    
+        delay(500);                                                // Reset hexapod position after a full cycle
         hexapod->moveUp();      
     }
 }
