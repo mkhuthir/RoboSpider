@@ -8,13 +8,14 @@ void Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitCo
     
     if (&con == &Serial) {
         Serial.begin(baud);
-        #ifdef DEBUG
-            while (!Serial);        // Wait for Serial if using USB
-            con.println("Ready. Type a command or help.");
-            con.print("\033[4 q");  // Set initial cursor to underline (insert mode)
-            con.print(shell);
-        #endif // DEBUG
-    } 
+        while (!Serial);                                    // Wait for Serial if using USB
+    }
+    
+    con.println("Ready. Type '?' for commands.");    // Print initial message
+    con.print(shell);                                   // Print shell prompt
+    con.print("\033[4 q");                              // Set initial cursor to underline (insert mode)
+
+   
     
     this->hexapod   = hexapod;      // Store the hexapod instance
     this->turret    = turret;       // Store the turret instance
