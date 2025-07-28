@@ -58,4 +58,5 @@ void Turret::printStatus(Stream& stream) {
   stream.print(panPosition);
   stream.print(" | Tilt: ");
   stream.println(tiltPosition);
+
 }

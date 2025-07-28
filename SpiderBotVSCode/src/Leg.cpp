@@ -48,12 +48,19 @@ void Leg::moveOut() {
 // Check if any servo in the leg is currently moving
 bool Leg::isMoving() {
   
-  int32_t coxaVel = 0, femurVel = 0, tibiaVel = 0;
-  servo->getPresentVelocityData(coxa, &coxaVel);
-  servo->getPresentVelocityData(femur, &femurVel);
-  servo->getPresentVelocityData(tibia, &tibiaVel);
-  
-  return (coxaVel != 0 || femurVel != 0 || tibiaVel != 0);
+  uint32_t coxaVel = 0, femurVel = 0, tibiaVel = 0;
+  servo->readRegister(coxa,  0x46, 1, &coxaVel);
+  servo->readRegister(femur, 0x46, 1, &femurVel);
+  servo->readRegister(tibia, 0x46, 1, &tibiaVel);
+  //#ifdef DEBUG
+    Serial.print("Leg moving status - Coxa: ");
+    Serial.print(coxaVel);
+    Serial.print(" | Femur: ");
+    Serial.print(femurVel);
+    Serial.print(" | Tibia: ");
+    Serial.println(tibiaVel);
+  //#endif // DEBUG
+  return (coxaVel == 1 || femurVel == 1 || tibiaVel == 1);
 }
 
 // Get current coxa angle

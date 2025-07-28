@@ -21,6 +21,12 @@
 
             bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
 
+            bool                writeRegister(uint8_t id, uint16_t address, uint16_t length, uint8_t* data);
+            bool                writeRegister(uint8_t id, const char *item_name, int32_t data);
+            bool                readRegister(uint8_t id, uint16_t address, uint16_t length, uint32_t *data);
+            bool                readRegister(uint8_t id, const char *item_name, int32_t *data);
+
+
             bool                addSyncWriteHandler(uint16_t address, uint16_t length);
             bool                addSyncWriteHandler(uint8_t id, const char *item_name);
             bool                syncWrite(uint8_t index, int32_t *data);

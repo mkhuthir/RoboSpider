@@ -187,6 +187,108 @@ bool Servo::ping(uint8_t dxl_id) {
     return result;
 }
 
+// Write a register to a servo with address and length
+bool Servo::writeRegister(uint8_t id, uint16_t address, uint16_t length, uint8_t* data) {
+    result = dxl.writeRegister(id, address, length, data, &log);
+    if (!result)  // If writing register fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to write register for id: ");
+        Serial.println(id);
+    }
+    else
+    {
+        #ifdef DEBUG
+            Serial.print("Register written successfully for id: ");
+            Serial.println(id);
+        #endif // DEBUG
+    }
+    return result;
+}
+
+// Write a register to a servo with item name
+bool Servo::writeRegister(uint8_t id, const char *item_name, int32_t data) {
+    result = dxl.writeRegister(id, item_name, data, &log);
+    if (!result)  // If writing register fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to write register for id: ");
+        Serial.println(id);
+        Serial.print(" with item name: ");
+        Serial.println(item_name);
+        Serial.print(" with data: ");
+        Serial.println(data);
+    }
+    else
+    {
+        #ifdef DEBUG
+            Serial.print("Register written successfully for id: ");
+            Serial.println(id);
+            Serial.print(" with item name: ");
+            Serial.println(item_name);
+            Serial.print(" with data: ");
+            Serial.println(data);
+        #endif // DEBUG
+    }
+    return result;
+}
+
+// Read a register from a servo with address and length
+bool Servo::readRegister(uint8_t id, uint16_t address, uint16_t length, uint32_t *data) {
+    result = dxl.readRegister(id, address, length, data, &log);
+    if (!result)  // If reading register fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to read register for id: ");
+        Serial.println(id);
+        Serial.print(" with address: ");
+        Serial.println(address);
+        Serial.print(" and length: ");
+        Serial.println(length);
+        Serial.print(" with data: ");
+        Serial.println(*data);
+    }
+    else
+    {
+        #ifdef DEBUG
+            Serial.print("Register read successfully for id: ");
+            Serial.println(id);
+            Serial.print(" with address: ");
+            Serial.println(address);
+            Serial.print(" and length: ");
+            Serial.println(length);
+            Serial.print(" with data: ");
+            Serial.println(*data);
+        #endif // DEBUG
+    }
+    return result;
+}
+
+// Read a register from a servo with item name
+bool Servo::readRegister(uint8_t id, const char *item_name, int32_t *data) {
+    result = dxl.readRegister(id, item_name, data, &log);
+    if (!result)  // If reading register fails
+    {
+        Serial.println(log);
+        Serial.print("Failed to read register for id: ");
+        Serial.println(id);
+        Serial.print(" with item name: ");
+        Serial.println(item_name);
+        Serial.print(" with data: ");
+        Serial.println(*data);
+    }
+    else
+    {
+        #ifdef DEBUG
+            Serial.print("Register read successfully for id: ");
+            Serial.println(id);
+            Serial.print(" with item name: ");
+            Serial.println(item_name);
+        #endif // DEBUG
+    }
+    return result;
+}
+
 // Add a sync write handler with address and length
 bool Servo::addSyncWriteHandler(uint16_t address, uint16_t length) {
     result = dxl.addSyncWriteHandler(address, length, &log);
