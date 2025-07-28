@@ -49,9 +49,9 @@ void Leg::moveOut() {
 bool Leg::isMoving() {
   
   uint32_t coxaVel = 0, femurVel = 0, tibiaVel = 0;
-  servo->readRegister(coxa,  0x46, 1, &coxaVel);
-  servo->readRegister(femur, 0x46, 1, &femurVel);
-  servo->readRegister(tibia, 0x46, 1, &tibiaVel);
+  //servo->readRegister(coxa,  43, 1, &coxaVel);
+  //servo->readRegister(femur, 43, 1, &femurVel);
+  //servo->readRegister(tibia, 43, 1, &tibiaVel);
   //#ifdef DEBUG
     Serial.print("Leg moving status - Coxa: ");
     Serial.print(coxaVel);
