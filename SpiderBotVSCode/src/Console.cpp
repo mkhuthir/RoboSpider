@@ -214,9 +214,11 @@ void Console::processCommand(const String& command) {
         con.println("  g-idle    - Start idle gait");
         con.println("  h-up      - hexapod up");
         con.println("  h-down    - hexapod down");
-        con.println("  l-up      - leg up");
-        con.println("  l-down    - leg down");
-        con.println("  l-out     - leg out");
+        con.println("  l-pointup - leg up");
+        con.println("  l-pointdown- leg down");
+        con.println("  l-pointout- leg out");
+        con.println("  l-standup- leg stand up");
+        con.println("  l-standdown- leg stand down");
 
     } else if (command == "cls") {                      
         con.print("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
@@ -260,14 +262,20 @@ void Console::processCommand(const String& command) {
     } else if (command == "h-down") {
         hexapod->moveDown();
 
-    } else if (command == "l-up") {
-        hexapod->legs[0].moveUp();
+    } else if (command == "l-pointup") {
+        hexapod->legs[0].movePointUp();
 
-    } else if (command == "l-down") {
-        hexapod->legs[0].moveDown();
+    } else if (command == "l-pointdown") {
+        hexapod->legs[0].movePointDown();
 
-    } else if (command == "l-out") {
-        hexapod->legs[0].moveOut();
+    } else if (command == "l-pointout") {
+        hexapod->legs[0].movePointOut();
+
+    } else if (command == "l-standup") {
+        hexapod->legs[0].moveStandUp();
+
+    } else if (command == "l-standdown") {
+        hexapod->legs[0].moveStandDown();
 
     } else {
         con.println("[Error] Unknown command: " + command);

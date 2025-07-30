@@ -10,9 +10,11 @@
   #define TIBIA_MIN     0     // Min angle for TIBIA servo
   #define TIBIA_MAX     1023  // Max angle for TIBIA servo
 
-  int32_t poseLegUp[LEG_SERVOS]   = {512, 819, 512};  // Leg pose for up position
-  int32_t poseLegDown[LEG_SERVOS] = {512, 204, 512};  // Leg pose for down position
-  int32_t poseLegOut[LEG_SERVOS]  = {512, 512, 512};  // Leg pose for out position
+  int32_t poseLegPointUp[LEG_SERVOS]   = {512, 819, 512};  // Leg pose for pointing up
+  int32_t poseLegPointDown[LEG_SERVOS] = {512, 204, 512};  // Leg pose for pointing down
+  int32_t poseLegPointOut[LEG_SERVOS]  = {512, 512, 512};  // Leg pose for pointing out
+  int32_t poseLegStandUp[LEG_SERVOS]   = {512, 358, 665};  // Leg pose for standing up
+  int32_t poseLegStandDown[LEG_SERVOS] = {512, 665, 972};  // Leg pose for standing down
 
   
 #endif // LEG_POSES_H

@@ -32,18 +32,18 @@ void Leg::move(int32_t *positions) {
 }
 
 // Move leg up
-void Leg::moveUp() {
-  move(poseLegUp);
+void Leg::movePointUp() {
+  move(poseLegPointUp);
 }
 
 // Move leg down
-void Leg::moveDown() {
-  move(poseLegDown);
+void Leg::movePointDown() {
+  move(poseLegPointDown);
 }
 
 // Move leg out
-void Leg::moveOut() {
-  move(poseLegOut);
+void Leg::movePointOut() {
+  move(poseLegPointOut);
 }
 
 // Check if any servo in the leg is currently moving
@@ -55,6 +55,16 @@ bool Leg::isMoving() {
     }
   }
   return false;
+}
+
+// Move leg to stand up position
+void Leg::moveStandUp() {
+  move(poseLegStandUp);
+}
+
+// Move leg to stand down position
+void Leg::moveStandDown() {
+  move(poseLegStandDown);
 }
 
 // Get current coxa angle

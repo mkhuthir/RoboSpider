@@ -3,9 +3,9 @@
 
   #include "Servo.h"
   
-  #define handler_index   0                    // Index for sync write handler
-  #define LEG_SERVOS      uint8_t(3)           // Number of servos per leg
-  #define HEXAPOD_LEGS   uint8_t(6)                         // Maximum number of legs
+  #define handler_index   0                   // Index for sync write handler
+  #define LEG_SERVOS      uint8_t(3)          // Number of servos per leg
+  #define HEXAPOD_LEGS    uint8_t(6)          // Maximum number of legs
 
   class Leg {
     public:
@@ -16,9 +16,13 @@
                     Servo* servo);            
 
       void    move(int32_t *positions);       // Move the leg to the specified positions
-      void    moveUp();                       // Move leg up
-      void    moveDown();                     // Move leg down
-      void    moveOut();                      // Move leg out
+
+      void    movePointUp();                  // Move leg up
+      void    movePointDown();                // Move leg down
+      void    movePointOut();                 // Move leg out
+      void    moveStandUp();                  // Move leg to stand up position
+      void    moveStandDown();                // Move leg to stand down position
+
       bool    isMoving();                     // Check if any servo in the leg is currently moving 
  
       int32_t getCoxa();                      // Get current coxa angle
