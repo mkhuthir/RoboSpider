@@ -5,29 +5,30 @@
 
 // Default constructor for Leg class
 Leg::Leg(){
-  coxa  = 0;
-  femur = 0;
-  tibia = 0;
+  // Initialize leg IDs to zero
+  legIDs[Coxa]  = 0;
+  legIDs[Femur] = 0;
+  legIDs[Tibia] = 0;
   servo = nullptr;
 }
 
 // Initialize the leg servos
 void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
-  coxa      = coxaID;
-  femur     = femurID;
-  tibia     = tibiaID;
+  legIDs[Coxa]  = coxaID;   // Set coxa ID
+  legIDs[Femur] = femurID;  // Set femur ID
+  legIDs[Tibia] = tibiaID;  // Set tibia ID
+
   this->servo = servo;  // Set the servo pointer
 
-  servo->init(coxa , LEG_VELOCITY );   // Initialize coxa servo with velocity
-  servo->init(femur, LEG_VELOCITY);   // Initialize femur servo with velocity
-  servo->init(tibia, LEG_VELOCITY);   // Initialize tibia servo with velocity
+  servo->init(legIDs[Coxa] , LEG_VELOCITY);   // Initialize coxa servo with velocity
+  servo->init(legIDs[Femur], LEG_VELOCITY);   // Initialize femur servo with velocity
+  servo->init(legIDs[Tibia], LEG_VELOCITY);   // Initialize tibia servo with velocity
 }
 
 // Move the leg to the specified positions
 void Leg::move(int32_t *positions) {
   const uint8_t num_positions   = 1;
-  uint8_t ids[3]      = {coxa, femur, tibia};   // Array of servo IDs
-  servo->syncWrite(handler_index, ids, LEG_SERVOS, positions, num_positions);
+  servo->syncWrite(handler_index, legIDs, LEG_SERVOS, positions, num_positions);
 }
 
 // Move leg up
@@ -47,40 +48,33 @@ void Leg::moveOut() {
 
 // Check if any servo in the leg is currently moving
 bool Leg::isMoving() {
-  
-  uint32_t coxaVel = 0, femurVel = 0, tibiaVel = 0;
-  //servo->readRegister(coxa,  43, 1, &coxaVel);
-  //servo->readRegister(femur, 43, 1, &femurVel);
-  //servo->readRegister(tibia, 43, 1, &tibiaVel);
-  //#ifdef DEBUG
-    Serial.print("Leg moving status - Coxa: ");
-    Serial.print(coxaVel);
-    Serial.print(" | Femur: ");
-    Serial.print(femurVel);
-    Serial.print(" | Tibia: ");
-    Serial.println(tibiaVel);
-  //#endif // DEBUG
-  return (coxaVel == 1 || femurVel == 1 || tibiaVel == 1);
+  uint8_t moving = 0;
+  for (int i = 0; i < LEG_SERVOS; ++i) {
+    if (servo->isMoving(legIDs[i])) {
+      return true;  // If any servo is moving, return true
+    }
+  }
+  return false;
 }
 
 // Get current coxa angle
 int32_t Leg::getCoxa() {
   int32_t angle = 0;
-  servo->getPresentPositionData(coxa, &angle);
+  servo->getPresentPositionData(legIDs[Coxa], &angle);
   return angle;
 }
 
 // Get current femur angle
 int32_t Leg::getFemur() {
   int32_t angle = 0;
-  servo->getPresentPositionData(femur, &angle);
+  servo->getPresentPositionData(legIDs[Femur], &angle);
   return angle;
 }
 
 // Get current tibia angle
 int32_t Leg::getTibia() {
   int32_t angle = 0;
-  servo->getPresentPositionData(tibia, &angle);
+  servo->getPresentPositionData(legIDs[Tibia], &angle);
   return angle;
 }
 

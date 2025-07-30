@@ -41,6 +41,15 @@ bool Hexapod::moveDown() {
   move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandDown);
 }
 
+// Check if any leg is currently moving
+bool Hexapod::isMoving() {
+  for (int i = 0; i < HEXAPOD_LEGS; ++i) {
+    if (legs[i].isMoving()) {
+      return true;  // If any leg is moving, return true
+    }
+  }
+  return false;  // If no legs are moving, return false
+}
 
 // Print the status of all legs
 void Hexapod::printStatus(Stream& stream) {

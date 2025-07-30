@@ -718,6 +718,13 @@ bool Servo::init(uint8_t dxl_id, int32_t velocity) {
     return result;
 }
 
+// Check if a servo is currently moving
+bool Servo::isMoving(uint8_t id) {
+  int32_t isMoving = 0;
+  readRegister(id, "Moving", &isMoving);
+  return isMoving;
+}
+
 // Print the status of a servo for debugging
 bool Servo::printStatus(uint8_t id,Stream& stream) {
     stream.println("\nServo Status:");

@@ -28,7 +28,11 @@
 
     private:
       Servo* servo;                           // Pointer to the servo instance
-      uint8_t coxa, femur, tibia;             // Servo IDs for the leg joints
+      uint8_t legIDs[LEG_SERVOS]={0,0,0};     // Servo IDs for the leg joints
+
+      enum LegJoint { Coxa = 0,               // Enum for leg joints
+                      Femur = 1, 
+                      Tibia = 2 };
   };
 
 #endif // LEG_H

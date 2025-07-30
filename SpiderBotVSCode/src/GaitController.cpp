@@ -56,19 +56,19 @@ GaitType GaitController::getGait() const {
 
 // Update the gait controller, called periodically
 void GaitController::update() {
-    if (gaitType == GAIT_IDLE) return;              // Do nothing if in idle gait
+    if (gaitType == GAIT_IDLE) return;  // Do nothing if in idle gait
 
     switch (gaitType) {
-        case GAIT_WAVE:             // Perform wave gait
+        case GAIT_WAVE:                 // Perform wave gait
             doWaveGait();
             break;
-        case GAIT_RIPPLE:           // Perform ripple gait
+        case GAIT_RIPPLE:               // Perform ripple gait
             doRippleGait();
             break;
-        case GAIT_TRIPOD:           // Perform tripod gait
+        case GAIT_TRIPOD:               // Perform tripod gait
             doTripodGait();
             break;
-        default:                    // If an unknown gait type is set, do nothing               
+        default:                        // If an unknown gait type is set, do nothing               
             #ifdef DEBUG
                     Serial.println("Unknown gait type, no action taken.");
             #endif // DEBUG
@@ -107,48 +107,49 @@ void GaitController::printStatus(Stream& stream) {
 // In wave gait, one leg swings at a time
 void GaitController::doWaveGait() {
 
-    // If the current leg or the previous leg is moving, skip update
-    if (hexapod->legs[currentPhase].isMoving() || hexapod->legs[(currentPhase - 1) % HEXAPOD_LEGS].isMoving()) {
-        return;
-    }
-    delay(500); // Add a small delay to allow leg movement to complete
-    // One leg swings at a time
-    switch(currentStep) {
-        case 0:                                                                 // Move the current leg up
-            hexapod->legs[currentPhase].move(poseLegWaveGaitUp[currentPhase]);
-            break;
-        case 1:                                                                 // Move the current leg down
-            hexapod->legs[currentPhase].move(poseLegWaveGaitDown[currentPhase]);
-            currentPhase    = (currentPhase + 1) % (HEXAPOD_LEGS+1);            //
-            break;
-    }
-    
-    currentStep     = (currentStep  + 1) % 2;                                   // Toggle between up and down poses
+    if(hexapod->isMoving()) return;                                                 // If hexapod is already moving, do nothing
 
-    if (currentPhase == (HEXAPOD_LEGS)) {
-        delay(500);
-        currentPhase = 0;                                                        // Reset hexapod position after a full cycle
-        hexapod->moveUp();
+    if (currentPhase == (HEXAPOD_LEGS)) {                                           // if end of the wave gait cycle
+        hexapod->moveUp();                                                          // Move hexapod to standing position
+        currentPhase = 0;                                                           // Reset phase for the next cycle                                     
+        currentStep  = 0;                                                           // Reset step for the next cycle
+
+    } else {                                                                        // If not at the end of the wave gait cycle
+        switch(currentStep) {
+            case 0:                                                                 // If current step is 0, move the current leg up
+                hexapod->legs[currentPhase].move(poseGaitLegUp[currentPhase]);
+                break;
+            case 1:                                                                 // If current step is 1, move the current leg down
+                hexapod->legs[currentPhase].move(poseGaitLegDown[currentPhase]);
+                currentPhase    = (currentPhase + 1) % (HEXAPOD_LEGS+1);            // Increment phase with wrap-around
+                break;
+        }   
+        currentStep     = (currentStep  + 1) % 2;                                   // Toggle between up and down poses
     }
 }
+
 
 // Perform the ripple gait
 // In ripple gait, two legs swing with a phase offset
 void GaitController::doRippleGait() {
-    // Two legs with phase offset
-    int swingLegs[2] = {
-        currentPhase,
-        (currentPhase + 3) % 6
-    };
 
-    for (int i = 0; i < 2; ++i) {
-        //hexapod->moveLeg(swingLegs[i], COXA_UP_DEG, FEMUR_UP_DEG, TIBIA_UP_DEG);
+    if(hexapod->isMoving()) return;                                                 // If hexapod is already moving, do nothing
+    if (currentPhase == HEXAPOD_LEGS/2) {                                           // If end of the ripple gait cycle
+        hexapod->moveUp();                                                          // Move hexapod to standing position
+        currentPhase = 0;                                                           // Reset phase for the next cycle
+        currentStep  = 0;                                                           // Reset step for the next cycle
+    } else {                                                                        // If not at the end of the ripple gait cycle
+        switch(currentStep) {
+            case 0:                                                                 // If current step is 0, move the two legs up
+                
+                break;
+            case 1:                                                                 // If current step is 1, move the two legs down
+                
+                currentPhase    = (currentPhase + 1) % (HEXAPOD_LEGS/2);                            // Increment phase with wrap-around
+                break;
+        }
+        currentStep     = (currentStep + 1) % 2;                                    // Toggle between up and down poses
     }
-    for (int i = 0; i < 2; ++i) {
-        //hexapod->moveLeg(swingLegs[i], COXA_HOME_DEG, FEMUR_HOME_DEG, TIBIA_HOME_DEG);
-    }
-
-    currentPhase = (currentPhase + 1) % 3;
 }
 
 // Perform the tripod gait
