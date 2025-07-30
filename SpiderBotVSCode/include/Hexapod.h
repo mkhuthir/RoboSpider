@@ -18,9 +18,9 @@
       bool moveDown();                                                  // Move Hexapod Down
       bool isMoving();                                                  // Check if any leg is currently moving
       
-      void printStatus(Stream& stream);       // Print the status of all legs
+      void printStatus(Stream& stream);                                 // Print the status of all legs
       
-      Leg  legs[HEXAPOD_LEGS];                           // Array of legs
+      Leg  legs[HEXAPOD_LEGS];                                          // Array of legs
   
     private:
       
