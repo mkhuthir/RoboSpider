@@ -6,9 +6,9 @@
 // Default constructor for Leg class
 Leg::Leg(){
   // Initialize leg IDs to zero
-  legIDs[Coxa]  = 0;
-  legIDs[Femur] = 0;
-  legIDs[Tibia] = 0;
+  legIDs[0] = 0;
+  legIDs[1] = 0;
+  legIDs[2] = 0;
   servo = nullptr;
 }
 
