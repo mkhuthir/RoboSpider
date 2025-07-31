@@ -22,7 +22,7 @@ void Hexapod::begin(Servo* servo) {
   legs[5].init(16, 17, 18, servo);
                                 
   servo->addSyncWriteHandler(1, "Goal_Position");   // Add sync write handler
-  moveUp();                                         // Move Hexapod to standing position
+  moveStandUp();                                    // Move Hexapod to standing position
 
 }
 // Move Hexapod
@@ -32,12 +32,12 @@ bool Hexapod::move(uint8_t *ids, uint8_t num_servos, int32_t *positions) {
 }
 
 // Move Hexapod Up
-bool Hexapod::moveUp() {
+bool Hexapod::moveStandUp() {
   move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandUP);
 }
 
 // Move Hexapod Down
-bool Hexapod::moveDown() {
+bool Hexapod::moveStandDown() {
   move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandDown);
 }
 

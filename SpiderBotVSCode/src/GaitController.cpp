@@ -25,7 +25,7 @@ void GaitController::setGait(GaitType newGait) {
     gaitType        = newGait;      // Set the new gait type
     currentPhase    = 0;            // Reset current phase for the new gait
     currentStep     = 0;            // Reset current step for the new gait
-    hexapod->moveUp();              // Reset hexapod position when changing gait
+    hexapod->moveStandUp();              // Reset hexapod position when changing gait
 
     #ifdef DEBUG
         Serial.print("Gait set to: ");
@@ -110,7 +110,7 @@ void GaitController::doWaveGait() {
     if(hexapod->isMoving()) return;                                                 // If hexapod is already moving, do nothing
 
     if (currentPhase == (HEXAPOD_LEGS)) {                                           // if end of the wave gait cycle
-        hexapod->moveUp();                                                          // Move hexapod to standing position
+        hexapod->moveStandUp();                                                          // Move hexapod to standing position
         currentPhase = 0;                                                           // Reset phase for the next cycle                                     
         currentStep  = 0;                                                           // Reset step for the next cycle
 
@@ -135,7 +135,7 @@ void GaitController::doRippleGait() {
 
     if(hexapod->isMoving()) return;                                                 // If hexapod is already moving, do nothing
     if (currentPhase == HEXAPOD_LEGS/2) {                                           // If end of the ripple gait cycle
-        hexapod->moveUp();                                                          // Move hexapod to standing position
+        hexapod->moveStandUp();                                                          // Move hexapod to standing position
         currentPhase = 0;                                                           // Reset phase for the next cycle
         currentStep  = 0;                                                           // Reset step for the next cycle
     } else {                                                                        // If not at the end of the ripple gait cycle
@@ -159,7 +159,7 @@ void GaitController::doTripodGait() {
 
     if(hexapod->isMoving()) return;                                                 // If hexapod is already moving, do nothing
     if (currentPhase == HEXAPOD_LEGS/3) {                                           // If end of the tripod gait cycle
-        hexapod->moveUp();                                                          // Move hexapod to standing position
+        hexapod->moveStandUp();                                                          // Move hexapod to standing position
         currentPhase = 0;                                                           // Reset phase for the next cycle
         currentStep  = 0;                                                           // Reset step for the next cycle
     } else {                                                                        // If not at the end of the tripod gait cycle

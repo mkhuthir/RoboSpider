@@ -200,25 +200,25 @@ void Console::processCommand(const String& command) {
     
     if (command == "help" || command == "h" || command == "?") {
         con.println("Available commands:");
-        con.println("  help/h/?  - Show this help message");
-        con.println("  cls       - Clear the terminal screen");
-        con.println("  status    - Show current status of the system");
-        con.println("  t-up      - Turret up");
-        con.println("  t-down    - Turret down");
-        con.println("  t-left    - Turret left");
-        con.println("  t-right   - Turret right");
-        con.println("  t-home    - Turret home position");
-        con.println("  g-wave    - Start wave gait");
-        con.println("  g-ripple  - Start ripple gait");
-        con.println("  g-tripod  - Start tripod gait");
-        con.println("  g-idle    - Start idle gait");
-        con.println("  h-up      - hexapod up");
-        con.println("  h-down    - hexapod down");
-        con.println("  l-pointup - leg up");
-        con.println("  l-pointdown- leg down");
-        con.println("  l-pointout- leg out");
-        con.println("  l-standup- leg stand up");
-        con.println("  l-standdown- leg stand down");
+        con.println("  help/h/? - Show this help message");
+        con.println("  cls      - Clear the terminal screen");
+        con.println("  status   - Show current status of the system");
+        con.println("  tu       - Turret up");
+        con.println("  td       - Turret down");
+        con.println("  tl       - Turret left");
+        con.println("  tr       - Turret right");
+        con.println("  th       - Turret home");
+        con.println("  gw       - wave gait");
+        con.println("  gr       - ripple gait");
+        con.println("  gt       - tripod gait");
+        con.println("  gi       - idle gait");
+        con.println("  hsu      - hexapod standup");
+        con.println("  hsd      - hexapod standdown");
+        con.println("  lpu      - leg up");
+        con.println("  lpd      - leg down");
+        con.println("  lpo      - leg out");
+        con.println("  lsu      - leg standup");
+        con.println("  lsd      - leg standdown");
 
     } else if (command == "cls") {                      
         con.print("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
@@ -229,52 +229,52 @@ void Console::processCommand(const String& command) {
         turret->printStatus(con);
         gc->printStatus(con);
 
-    } else if (command == "t-up") {
+    } else if (command == "tu") {
         turret->moveUp();
 
-    } else if (command == "t-down") {
+    } else if (command == "td") {
         turret->moveDown();
 
-    } else if (command == "t-left") {
+    } else if (command == "tl") {
         turret->moveLeft();
 
-    } else if (command == "t-right") {
+    } else if (command == "tr") {
         turret->moveRight();
-        
-    } else if (command == "t-home") {
+
+    } else if (command == "th") {
         turret->moveHome();
 
-    } else if (command == "g-wave") {
+    } else if (command == "gw") {
         gc->setGait(GAIT_WAVE);
 
-    } else if (command == "g-ripple") {
+    } else if (command == "gr") {
         gc->setGait(GAIT_RIPPLE);
 
-    } else if (command == "g-tripod") {
+    } else if (command == "gt") {
         gc->setGait(GAIT_TRIPOD);
 
-    } else if (command == "g-idle") {
+    } else if (command == "gi") {
         gc->setGait(GAIT_IDLE);
 
-    } else if (command == "h-up") {
-        hexapod->moveUp();
+    } else if (command == "hsu") {
+        hexapod->moveStandUp();
 
-    } else if (command == "h-down") {
-        hexapod->moveDown();
+    } else if (command == "hsd") {
+        hexapod->moveStandDown();
 
-    } else if (command == "l-pointup") {
+    } else if (command == "lpu") {
         hexapod->legs[0].movePointUp();
 
-    } else if (command == "l-pointdown") {
+    } else if (command == "lpd") {
         hexapod->legs[0].movePointDown();
 
-    } else if (command == "l-pointout") {
+    } else if (command == "lpo") {
         hexapod->legs[0].movePointOut();
 
-    } else if (command == "l-standup") {
+    } else if (command == "lsu") {
         hexapod->legs[0].moveStandUp();
 
-    } else if (command == "l-standdown") {
+    } else if (command == "lsd") {
         hexapod->legs[0].moveStandDown();
 
     } else {
