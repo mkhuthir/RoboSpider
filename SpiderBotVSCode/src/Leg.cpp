@@ -31,6 +31,17 @@ void Leg::move(int32_t *positions) {
   servo->syncWrite(handler_index, legIDs, LEG_SERVOS, positions, num_positions);
 }
 
+// Check if any servo in the leg is currently moving
+bool Leg::isMoving() {
+  uint8_t moving = 0;
+  for (int i = 0; i < LEG_SERVOS; ++i) {
+    if (servo->isMoving(legIDs[i])) {
+      return true;  // If any servo is moving, return true
+    }
+  }
+  return false;
+}
+
 // Move leg up
 void Leg::movePointUp() {
   move(poseLegPointUp);
@@ -44,17 +55,6 @@ void Leg::movePointDown() {
 // Move leg out
 void Leg::movePointOut() {
   move(poseLegPointOut);
-}
-
-// Check if any servo in the leg is currently moving
-bool Leg::isMoving() {
-  uint8_t moving = 0;
-  for (int i = 0; i < LEG_SERVOS; ++i) {
-    if (servo->isMoving(legIDs[i])) {
-      return true;  // If any servo is moving, return true
-    }
-  }
-  return false;
 }
 
 // Move leg to stand up position

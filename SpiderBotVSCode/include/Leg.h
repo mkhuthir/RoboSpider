@@ -16,14 +16,13 @@
                     Servo* servo);            
 
       void    move(int32_t *positions);       // Move the leg to the specified positions
+      bool    isMoving();                     // Check if any servo in the leg is currently moving 
 
       void    movePointUp();                  // Move leg up
       void    movePointDown();                // Move leg down
       void    movePointOut();                 // Move leg out
       void    moveStandUp();                  // Move leg to stand up position
       void    moveStandDown();                // Move leg to stand down position
-
-      bool    isMoving();                     // Check if any servo in the leg is currently moving 
  
       int32_t getCoxa();                      // Get current coxa angle
       int32_t getFemur();                     // Get current femur angle
@@ -34,7 +33,7 @@
       Servo* servo;                           // Pointer to the servo instance
       uint8_t legIDs[LEG_SERVOS]={0,0,0};     // Servo IDs for the leg joints
 
-      enum LegJoint { Coxa = 0,               // Enum for leg joints
+      enum LegJoint { Coxa  = 0,               // Enum for leg joints
                       Femur = 1, 
                       Tibia = 2 };
   };
