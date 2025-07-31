@@ -31,16 +31,6 @@ bool Hexapod::move(uint8_t *ids, uint8_t num_servos, int32_t *positions) {
   servo->syncWrite(handler_index, ids, num_servos, positions, num_positions);
 }
 
-// Move Hexapod Up
-bool Hexapod::moveStandUp() {
-  move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandUP);
-}
-
-// Move Hexapod Down
-bool Hexapod::moveStandDown() {
-  move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandDown);
-}
-
 // Check if any leg is currently moving
 bool Hexapod::isMoving() {
   for (int i = 0; i < HEXAPOD_LEGS; ++i) {
@@ -49,6 +39,16 @@ bool Hexapod::isMoving() {
     }
   }
   return false;  // If no legs are moving, return false
+}
+
+// Move Hexapod Up
+bool Hexapod::moveStandUp() {
+  move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandUP);
+}
+
+// Move Hexapod Down
+bool Hexapod::moveStandDown() {
+  move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandDown);
 }
 
 // Print the status of all legs
