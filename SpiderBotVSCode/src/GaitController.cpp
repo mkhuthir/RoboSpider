@@ -117,10 +117,10 @@ void GaitController::doWaveGait() {
     } else {                                                                        // If not at the end of the wave gait cycle
         switch(currentStep) {
             case 0:                                                                 // If current step is 0, move the current leg up
-                hexapod->legs[currentPhase].move(poseWaveGaitLegUp[currentPhase]);
+                hexapod->move(poseWaveGaitIDs[currentPhase], LEG_SERVOS, poseWaveGaitLegUp[currentPhase]);
                 break;
             case 1:                                                                 // If current step is 1, move the current leg down
-                hexapod->legs[currentPhase].move(poseWaveGaitLegDown[currentPhase]);
+                hexapod->move(poseWaveGaitIDs[currentPhase], LEG_SERVOS, poseWaveGaitLegDown[currentPhase]);
                 currentPhase    = (currentPhase + 1) % (HEXAPOD_LEGS+1);            // Increment phase with wrap-around
                 break;
         }   

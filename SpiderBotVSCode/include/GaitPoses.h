@@ -6,6 +6,7 @@
     #define D 100                       // Coxa movement offset for all gaits
 
     // Wave Gait Poses
+    uint8_t poseWaveGaitIDs[HEXAPOD_LEGS][LEG_SERVOS]     = {{1    , 2  , 3  }, {4    , 5  , 6  }, {7    , 8  , 9  }, {10   , 11 , 12 }, {13   , 14 , 15 }, {16   , 17 , 18 }};
     int32_t poseWaveGaitLegUp[HEXAPOD_LEGS][LEG_SERVOS]   = {{665  , 665, 972}, {358  , 665, 972}, {512  , 665, 972}, {512  , 665, 972}, {358  , 665, 972}, {665  , 665, 972}}; 
     int32_t poseWaveGaitLegDown[HEXAPOD_LEGS][LEG_SERVOS] = {{665-D, 358, 665}, {358+D, 358, 665}, {512-D, 358, 665}, {512+D, 358, 665}, {358-D, 358, 665}, {665+D, 358, 665}}; 
 
