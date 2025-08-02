@@ -54,98 +54,205 @@ void Console::update() {
 
 // Process the command entered by the user
 void Console::processCommand(const String& command) {
+    // Trim whitespace and convert to lowercase for consistent handling
+    String cmd = command;
+    cmd.trim();
+    cmd.toLowerCase();
+    
+    // Skip empty commands
+    if (cmd.length() == 0) {
+        return;
+    }
 
-    commandHistory.addCommand(command);                     // Add command to history
+    commandHistory.addCommand(command);                     // Add original command to history
     
     #ifdef DEBUG
         con.print("[Console] Received: ");
-        con.println(command);
+        con.println(cmd);
     #endif // DEBUG
     
-    if (command == "help" || command == "h" || command == "?") {
-        con.println("Available commands:");
-        con.println("  help/h/? - Show this help message");
-        con.println("  cls      - Clear the terminal screen");
-        con.println("  status   - Show current status of the system");
-        con.println("  tu       - Turret up");
-        con.println("  td       - Turret down");
-        con.println("  tl       - Turret left");
-        con.println("  tr       - Turret right");
-        con.println("  th       - Turret home");
-        con.println("  gw       - wave gait");
-        con.println("  gr       - ripple gait");
-        con.println("  gt       - tripod gait");
-        con.println("  gi       - idle gait");
-        con.println("  hsu      - hexapod standup");
-        con.println("  hsd      - hexapod standdown");
-        con.println("  lpu      - leg up");
-        con.println("  lpd      - leg down");
-        con.println("  lpo      - leg out");
-        con.println("  lsu      - leg standup");
-        con.println("  lsd      - leg standdown");
-
-    } else if (command == "cls") {                      
-        con.print("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
-
-    } else if (command == "status") {
-        mc->printStatus(con);
-        hexapod->printStatus(con);
-        turret->printStatus(con);
-        gc->printStatus(con);
-
-    } else if (command == "tu") {
-        turret->moveUp();
-
-    } else if (command == "td") {
-        turret->moveDown();
-
-    } else if (command == "tl") {
-        turret->moveLeft();
-
-    } else if (command == "tr") {
-        turret->moveRight();
-
-    } else if (command == "th") {
-        turret->moveHome();
-
-    } else if (command == "gw") {
-        gc->setGait(GAIT_WAVE);
-
-    } else if (command == "gr") {
-        gc->setGait(GAIT_RIPPLE);
-
-    } else if (command == "gt") {
-        gc->setGait(GAIT_TRIPOD);
-
-    } else if (command == "gi") {
-        gc->setGait(GAIT_IDLE);
-
-    } else if (command == "hsu") {
-        hexapod->moveStandUp();
-
-    } else if (command == "hsd") {
-        hexapod->moveStandDown();
-
-    } else if (command == "lpu") {
-        hexapod->legs[0].movePointUp();
-
-    } else if (command == "lpd") {
-        hexapod->legs[0].movePointDown();
-
-    } else if (command == "lpo") {
-        hexapod->legs[0].movePointOut();
-
-    } else if (command == "lsu") {
-        hexapod->legs[0].moveStandUp();
-
-    } else if (command == "lsd") {
-        hexapod->legs[0].moveStandDown();
-
+    // Parse command and arguments
+    String mainCmd;
+    String args;
+    int spaceIndex = cmd.indexOf(' ');
+    if (spaceIndex != -1) {
+        mainCmd = cmd.substring(0, spaceIndex);
+        args = cmd.substring(spaceIndex + 1);
+        args.trim();
     } else {
+        mainCmd = cmd;
+    }
+
+    // Execute command using organized command handlers
+    if (!executeSystemCommand(mainCmd, args) &&
+        !executeTurretCommand(mainCmd, args) &&
+        !executeGaitCommand(mainCmd, args) &&
+        !executeHexapodCommand(mainCmd, args) &&
+        !executeLegCommand(mainCmd, args)) {
+        
+        // Unknown command
         con.println("[Error] Unknown command: " + command);
         con.println("Type 'help', 'h' or '?' for a list of commands.");
-
     }
+}
+
+// System commands (help, cls, status)
+bool Console::executeSystemCommand(const String& cmd, const String& args) {
+    if (cmd == "help" || cmd == "h" || cmd == "?") {
+        printHelp();
+        return true;
+    } else if (cmd == "cls" || cmd == "clear") {
+        con.print("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
+        return true;
+    } else if (cmd == "status") {
+        printSystemStatus();
+        return true;
+    }
+    return false;
+}
+
+// Turret control commands
+bool Console::executeTurretCommand(const String& cmd, const String& args) {
+    if (cmd == "tu") {
+        turret->moveUp();
+        con.println("[Info] Turret moving up");
+        return true;
+    } else if (cmd == "td") {
+        turret->moveDown();
+        con.println("[Info] Turret moving down");
+        return true;
+    } else if (cmd == "tl") {
+        turret->moveLeft();
+        con.println("[Info] Turret moving left");
+        return true;
+    } else if (cmd == "tr") {
+        turret->moveRight();
+        con.println("[Info] Turret moving right");
+        return true;
+    } else if (cmd == "th") {
+        turret->moveHome();
+        con.println("[Info] Turret moving to home position");
+        return true;
+    }
+    return false;
+}
+
+// Gait control commands
+bool Console::executeGaitCommand(const String& cmd, const String& args) {
+    if (cmd == "gw") {
+        gc->setGait(GAIT_WAVE);
+        con.println("[Info] Gait set to WAVE");
+        return true;
+    } else if (cmd == "gr") {
+        gc->setGait(GAIT_RIPPLE);
+        con.println("[Info] Gait set to RIPPLE");
+        return true;
+    } else if (cmd == "gt") {
+        gc->setGait(GAIT_TRIPOD);
+        con.println("[Info] Gait set to TRIPOD");
+        return true;
+    } else if (cmd == "gi") {
+        gc->setGait(GAIT_IDLE);
+        con.println("[Info] Gait set to IDLE");
+        return true;
+    }
+    return false;
+}
+
+// Hexapod control commands
+bool Console::executeHexapodCommand(const String& cmd, const String& args) {
+    if (cmd == "hsu") {
+        hexapod->moveStandUp();
+        con.println("[Info] Hexapod standing up");
+        return true;
+    } else if (cmd == "hsd") {
+        hexapod->moveStandDown();
+        con.println("[Info] Hexapod standing down");
+        return true;
+    }
+    return false;
+}
+
+// Leg control commands (operates on leg 0 by default, could be extended for specific legs)
+bool Console::executeLegCommand(const String& cmd, const String& args) {
+    int legIndex = 0; // Default to leg 0
+    
+    // Parse leg number from arguments if provided
+    if (args.length() > 0) {
+        int parsedLeg = args.toInt();
+        if (parsedLeg >= 0 && parsedLeg < 6) { // Assuming 6 legs (0-5)
+            legIndex = parsedLeg;
+        }
+    }
+    
+    if (cmd == "lpu") {
+        hexapod->legs[legIndex].movePointUp();
+        con.println("[Info] Leg " + String(legIndex) + " point moving up");
+        return true;
+    } else if (cmd == "lpd") {
+        hexapod->legs[legIndex].movePointDown();
+        con.println("[Info] Leg " + String(legIndex) + " point moving down");
+        return true;
+    } else if (cmd == "lpo") {
+        hexapod->legs[legIndex].movePointOut();
+        con.println("[Info] Leg " + String(legIndex) + " point moving out");
+        return true;
+    } else if (cmd == "lsu") {
+        hexapod->legs[legIndex].moveStandUp();
+        con.println("[Info] Leg " + String(legIndex) + " standing up");
+        return true;
+    } else if (cmd == "lsd") {
+        hexapod->legs[legIndex].moveStandDown();
+        con.println("[Info] Leg " + String(legIndex) + " standing down");
+        return true;
+    }
+    return false;
+}
+
+// Print comprehensive help information
+void Console::printHelp() {
+    con.println("SpiderBot Console - Available Commands:");
+    con.println("");
+    con.println("System Commands:");
+    con.println("  help/h/?         - Show this help message");
+    con.println("  cls/clear        - Clear the terminal screen");
+    con.println("  status           - Show current status of all systems");
+    con.println("");
+    con.println("Turret Commands:");
+    con.println("  tu               - Move turret up");
+    con.println("  td               - Move turret down");
+    con.println("  tl               - Move turret left");
+    con.println("  tr               - Move turret right");
+    con.println("  th               - Move turret to home position");
+    con.println("");
+    con.println("Gait Commands:");
+    con.println("  gw               - Set wave gait");
+    con.println("  gr               - Set ripple gait");
+    con.println("  gt               - Set tripod gait");
+    con.println("  gi               - Set idle gait");
+    con.println("");
+    con.println("Hexapod Commands:");
+    con.println("  hsu              - Hexapod stand up");
+    con.println("  hsd              - Hexapod stand down");
+    con.println("");
+    con.println("Leg Commands (add leg number 0-5 as argument, default=0):");
+    con.println("  lpu [n]          - Move leg point up");
+    con.println("  lpd [n]          - Move leg point down");
+    con.println("  lpo [n]          - Move leg point out");
+    con.println("  lsu [n]          - Move leg to stand up position");
+    con.println("  lsd [n]          - Move leg to stand down position");
+    con.println("");
+    con.println("Examples: 'lpu 2' moves leg 2 point up, 'status' shows system info");
+}
+
+// Print system status information
+void Console::printSystemStatus() {
+    con.println("=== SpiderBot System Status ===");
+    if (mc) mc->printStatus(con);
+    if (hexapod) hexapod->printStatus(con);
+    if (turret) turret->printStatus(con);
+    if (gc) gc->printStatus(con);
+    con.println("==============================");
 }
 
 // Handle all input control operations (escape sequences, backspace, newlines, etc.)

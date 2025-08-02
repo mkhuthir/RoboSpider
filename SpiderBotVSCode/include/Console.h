@@ -41,6 +41,17 @@
         void handleInputControl(char c);                        // Handle all input control operations
         void handlePrintableChar(char c);                       // Handle printable character input and display
         
+        // Command execution methods - organized by category
+        bool executeSystemCommand(const String& cmd, const String& args);   // System commands (help, cls, status)
+        bool executeTurretCommand(const String& cmd, const String& args);   // Turret control commands
+        bool executeGaitCommand(const String& cmd, const String& args);     // Gait control commands
+        bool executeHexapodCommand(const String& cmd, const String& args);  // Hexapod control commands
+        bool executeLegCommand(const String& cmd, const String& args);      // Leg control commands
+        
+        // Helper methods for command processing
+        void printHelp();                                       // Print comprehensive help information
+        void printSystemStatus();                               // Print system status information
+        
         // Escape sequence handlers
         void handleEscapeSequence();                            // Main escape sequence handler
         void handleCSISequence();                               // Control Sequence Introducer (ESC[)
