@@ -14,12 +14,13 @@
     public:
         Console();                                              // Constructor with default stream
         bool begin( Stream&             stream,                 // Initialize the console with a stream
-                    unsigned long       baud,                   // Baud rate for serial communication 
+                    unsigned long       baud,                   // Baud rate for serial communication
+                    Servo*              servo   = nullptr,      // Pointer to Servo instance
                     Hexapod*            hexapod = nullptr,      // Pointer to Hexapod instance
                     Turret*             turret  = nullptr,      // Pointer to Turret instance
+                    AXS1Sensor*         sensor  = nullptr,      // Pointer to AXS1Sensor instance
                     GaitController*     gc      = nullptr,      // Pointer to GaitController instance
-                    Microcontroller*    mc      = nullptr,      // Pointer to Microcontroller instance
-                    AXS1Sensor*         sensor  = nullptr       // Pointer to AXS1Sensor instance
+                    Microcontroller*    mc      = nullptr       // Pointer to Microcontroller instance
         );
 
         void update();                                          // Call in loop()
@@ -33,9 +34,11 @@
         bool                insertMode      = true;             // Insert mode flag (true=insert, false=overwrite)
         CommandHistory      commandHistory;                     // Command history management
         
-        // Pointers to instances of Hexapod, Turret, GaitController, and Microcontroller        
+        // Pointers to instances of Hexapod, Turret, GaitController, and Microcontroller
+        Servo*              servo;                              // Pointer to Servo instance for Dynamixel control        
         Hexapod*            hexapod;                            // Pointer to hexapod instance
         Turret*             turret;                             // Pointer to turret instance  
+        AXS1Sensor*         sensor;                             // Pointer to AXS1Sensor instance (can be nullptr)
         GaitController*     gc;                                 // Pointer to GaitController instance
         Microcontroller*    mc;                                 // Pointer to Microcontroller instance
         AXS1Sensor*         sensor;                             // Pointer to AXS1Sensor instance

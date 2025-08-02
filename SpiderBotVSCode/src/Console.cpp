@@ -10,11 +10,12 @@ Console::Console(){
 // Initialize the console with a baud rate and instances of Hexapod, Turret, GaitController, and Microcontroller
 bool Console::begin(Stream& stream,
                     unsigned long baud,
+                    Servo* servo,
                     Hexapod* hexapod,
                     Turret* turret,
+                    AXS1Sensor* sensor,
                     GaitController* gc,
-                    Microcontroller* mc,
-                    AXS1Sensor* sensor) {
+                    Microcontroller* mc) {
 
     con = stream;                                       // Set the console stream
 
@@ -23,15 +24,16 @@ bool Console::begin(Stream& stream,
         while (!Serial);                                // Wait for Serial if using USB
     }
 
-    if (hexapod == nullptr || turret == nullptr || gc == nullptr || mc == nullptr) {
+    if (servo == nullptr || hexapod == nullptr || turret == nullptr || sensor == nullptr || gc == nullptr || mc == nullptr) {
         con.println("[Error] One or more components are not initialized.");
         return false;  // Return false if any component is not initialized
     } else {
+        this->servo     = servo;        // Store the Servo instance
         this->hexapod   = hexapod;      // Store the hexapod instance
         this->turret    = turret;       // Store the turret instance
+        this->sensor    = sensor;       // Store the AXS1Sensor instance (can be nullptr)
         this->gc        = gc;           // Store the GaitController instance
         this->mc        = mc;           // Store the Microcontroller instance
-        this->sensor    = sensor;       // Store the AXS1Sensor instance (can be nullptr)
     }
 
     con.print("\033[2J\033[H");         // Clear the console screen and move cursor to home position
