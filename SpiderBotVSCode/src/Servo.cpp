@@ -9,22 +9,33 @@ Servo::Servo(){
 
 //initialize the DynamixelWorkbench instance
 bool Servo::begin(const char* device_name, uint32_t baudrate) {
-    result = dxl.init(device_name, baudrate, &log);
-    if (!result)  // If initialization fails
-    {
+    if (!dxl.init(device_name, baudrate, &log)) {
+
         Serial.println(log);
         Serial.println("Failed to initilize DynamixelWorkbench!");
-    }
-    else
-    {
+        return false;  // Return false to indicate failure
+    } else {
+
         #ifdef DEBUG
             Serial.print("Initilized DynamixelWorkbench at baudrate: ");
             Serial.print(baudrate);
             Serial.println(" bps.");
         #endif // DEBUG
     }
-    setPacketHandler(PROTOCOL_VERSION);         // Set the packet handler with the protocol version
-    return result;
+
+    if (!setPacketHandler(PROTOCOL_VERSION))         // Set the packet handler with the protocol version
+    {
+        Serial.println("Failed to set packet handler!");
+        return false;  // Return false to indicate failure
+    } else {
+        
+        #ifdef DEBUG
+            Serial.print("Packet handler set with protocol version: ");
+            Serial.println(PROTOCOL_VERSION);
+        #endif // DEBUG
+    }
+
+    return true;  // Return true to indicate successful initialization
 }
 
 // Set the port handler with the device name

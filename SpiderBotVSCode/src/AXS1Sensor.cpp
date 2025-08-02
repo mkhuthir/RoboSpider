@@ -10,6 +10,7 @@ AXS1Sensor::AXS1Sensor(){
 bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
     this->servo = servo;
     id  =   sensor_id;
+    return true;
 }
 
 bool AXS1Sensor::ping() {
