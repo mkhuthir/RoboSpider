@@ -106,10 +106,12 @@ void GaitController::doWaveGait() {
 void GaitController::doRippleGait() {
 
     if(hexapod->isMoving()) return;                                                 // If hexapod is already moving, do nothing
+    
     if (currentPhase == HEXAPOD_LEGS/2) {                                           // If end of the ripple gait cycle
         hexapod->moveStandUp();                                                     // Move hexapod to standing position
         currentPhase = 0;                                                           // Reset phase for the next cycle
         currentStep  = 0;                                                           // Reset step for the next cycle
+
     } else {                                                                        // If not at the end of the ripple gait cycle
         switch(currentStep) {
             case 0:                                                                 // If current step is 0, move the two legs up
@@ -118,7 +120,7 @@ void GaitController::doRippleGait() {
 
             case 1:                                                                 // If current step is 1, move the two legs down
                 hexapod->move(poseRippleGaitIDs[currentPhase], LEG_SERVOS*2, poseRippleGaitLegDown[currentPhase]);
-                currentPhase    = (currentPhase + 1) % (HEXAPOD_LEGS/2);            // Increment phase with wrap-around
+                currentPhase    = (currentPhase + 1) % (HEXAPOD_LEGS/2+1);            // Increment phase with wrap-around
                 break;
         }
         currentStep     = (currentStep + 1) % 2;                                    // Toggle between up and down poses
@@ -129,10 +131,12 @@ void GaitController::doRippleGait() {
 void GaitController::doTripodGait() {
 
     if(hexapod->isMoving()) return;                                                 // If hexapod is already moving, do nothing
+
     if (currentPhase == HEXAPOD_LEGS/3) {                                           // If end of the tripod gait cycle
         hexapod->moveStandUp();                                                     // Move hexapod to standing position
         currentPhase = 0;                                                           // Reset phase for the next cycle
         currentStep  = 0;                                                           // Reset step for the next cycle
+
     } else {                                                                        // If not at the end of the tripod gait cycle
         switch(currentStep) {
             case 0:                                                                 // If current step is 0, move the two legs up
@@ -141,7 +145,7 @@ void GaitController::doTripodGait() {
 
             case 1:                                                                 // If current step is 1, move the two legs down
                 hexapod->move(poseTripodGaitIDs[currentPhase], LEG_SERVOS*3, poseTripodGaitLegDown[currentPhase]);
-                currentPhase    = (currentPhase + 1) % (HEXAPOD_LEGS/3);            // Increment phase with wrap-around
+                currentPhase    = (currentPhase + 1) % (HEXAPOD_LEGS/3+1);            // Increment phase with wrap-around
                 break;
         }
         currentStep     = (currentStep + 1) % 2;                                    // Toggle between up and down poses
