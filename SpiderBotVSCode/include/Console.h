@@ -38,6 +38,38 @@
         Microcontroller*    mc;                                 // Pointer to Microcontroller instance
 
         void processCommand(const String& command);
+        void handleInputControl(char c);                        // Handle all input control operations
+        void handlePrintableChar(char c);                       // Handle printable character input and display
+        
+        // Escape sequence handlers
+        void handleEscapeSequence();                            // Main escape sequence handler
+        void handleCSISequence();                               // Control Sequence Introducer (ESC[)
+        void handleSSSequence();                                // Single Shift sequence (ESC-O)
+        void handleExtendedKey(char keyCode);                   // Extended keys ending with '~'
+        
+        // Arrow key handlers
+        void handleArrowUp();                                   // Up arrow - command history previous
+        void handleArrowDown();                                 // Down arrow - command history next
+        void handleArrowRight();                                // Right arrow - move cursor right
+        void handleArrowLeft();                                 // Left arrow - move cursor left
+        
+        // Navigation key handlers
+        void handleHome();                                      // Home key - move to beginning
+        void handleEnd();                                       // End key - move to end
+        
+        // Edit key handlers
+        void handleInsertKey();                                 // Insert key - toggle insert/overwrite
+        void handleDeleteKey();                                 // Delete key - delete character at cursor
+        void handleBackspace();                                 // Backspace - delete character before cursor
+        
+        // Control key handlers
+        void handleClearScreen();                               // Ctrl-L - clear screen
+        void handleNewline();                                   // Enter - process command
+        
+        // Helper methods
+        void clearAndRedrawLine(const String& newContent);     // Clear line and redraw with new content
+        void refreshLineFromCursor();                           // Refresh display from cursor position
+        void resetInputState();                                 // Reset input state after command
     };
 
 #endif
