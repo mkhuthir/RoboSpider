@@ -41,7 +41,7 @@
         AXS1Sensor*         sensor;                             // Pointer to AXS1Sensor instance (can be nullptr)
         GaitController*     gc;                                 // Pointer to GaitController instance
         Microcontroller*    mc;                                 // Pointer to Microcontroller instance
-        AXS1Sensor*         sensor;                             // Pointer to AXS1Sensor instance
+        
 
         void processCommand(const String& command);
         void handleInputControl(char c);                        // Handle all input control operations

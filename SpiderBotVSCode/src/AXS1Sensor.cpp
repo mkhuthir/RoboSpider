@@ -9,6 +9,9 @@ AXS1Sensor::AXS1Sensor(){
 
 // Begin method to initialize the sensor with a Servo instance and sensor ID
 bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
+    if (servo == nullptr) {
+        return false;               // Return false if servo is not initialized
+    }
     this->servo = servo;
     id  =   sensor_id;
     return true;
