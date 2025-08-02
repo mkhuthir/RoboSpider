@@ -9,7 +9,7 @@
   class Turret {
     public:
       Turret();                         // Constructor
-      void begin(Servo* servo);         // Initialize the turret servos
+      bool begin(Servo* servo);         // Initialize the turret servos
 
       void move(int32_t *positions);    // Rotate the turret to specified angles
       void moveHome();                  // Rotate the turret to home position

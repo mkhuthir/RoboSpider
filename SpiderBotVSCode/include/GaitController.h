@@ -13,7 +13,7 @@
     class GaitController {
         public:
             GaitController();                                           // Constructor
-            void            begin(Hexapod* hexapod);                     // Initialize with Hexapod
+            bool            begin(Hexapod* hexapod);                     // Initialize with Hexapod
             
             void            setGait(GaitType newGait);                  // Set the current gait type
             GaitType        getGait() const;                            // Get the current gait type

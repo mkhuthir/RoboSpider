@@ -13,11 +13,12 @@ GaitController::GaitController() {
 }
 
 // Initialize the GaitController with a Hexapod instance
-void GaitController::begin(Hexapod* hexapod){
+bool GaitController::begin(Hexapod* hexapod){
     this->hexapod   = hexapod;
     gaitType        = GAIT_IDLE;    // Start with idle gait
     currentPhase    = 0;
     currentStep     = 0;            // Reset current step
+    return true;
 }
 
 // Set the current gait type    

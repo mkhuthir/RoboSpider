@@ -8,11 +8,20 @@ Turret::Turret(){
 }
 
 // Initialize the turret servos
-void Turret::begin(Servo* servo) {
+bool Turret::begin(Servo* servo) {
+  
   this->servo = servo;  // Set the servo pointer
-  servo->init(turret_ids[0], TURRET_VELOCITY);   // Initialize pan servo with default velocity
-  servo->init(turret_ids[1], TURRET_VELOCITY);   // Initialize tilt servo with default velocity
+  
+  if (!servo->init(turret_ids[0], TURRET_VELOCITY)) {   // Initialize pan servo with default velocity
+    return false;
+  }
+
+  if (!servo->init(turret_ids[1], TURRET_VELOCITY)) {   // Initialize tilt servo with default velocity
+    return false;
+  }
+
   moveHome();                           // Move turret to home position
+  return true;                          // Return true if initialization is successful
 }
 
 // Rotate the turret to specified angles

@@ -5,12 +5,16 @@
 // Constructor for Remotecontroller
 Remotecontroller::Remotecontroller() {}
 
-void Remotecontroller::begin(int serial_port, Hexapod* hexapod, Turret* turret, GaitController* gc, Microcontroller* mc) {
+bool Remotecontroller::begin(int serial_port, Hexapod* hexapod, Turret* turret, GaitController* gc, Microcontroller* mc) {
+    
     rc.begin(serial_port);      // Initialize the remote controller with the specified serial port
-    this->hexapod   = hexapod;   // Store the hexapod instance
+
+    this->hexapod   = hexapod;  // Store the hexapod instance
     this->turret    = turret;   // Store the turret instance
     this->gc        = gc;       // Store the GaitController instance
     this->mc        = mc;       // Store the Microcontroller instance
+
+    return true;                // Return true if initialization is successful
 
 }
 

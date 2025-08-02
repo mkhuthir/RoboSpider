@@ -10,7 +10,7 @@
     class Remotecontroller {
         public:
             Remotecontroller();
-            void begin( int                 serial_port, 
+            bool begin( int                 serial_port, 
                         Hexapod*            hexapod, 
                         Turret*             turret, 
                         GaitController*     gc, 

@@ -11,7 +11,7 @@
   class Hexapod {
     public:
       Hexapod(); // Constructor
-      void begin(Servo* servo);               // Initialize the hexapod
+      bool begin(Servo* servo);               // Initialize the hexapod
 
       bool move(uint8_t *ids, uint8_t num_servos, int32_t *positions);  // Move Hexapod
       bool isMoving();                                                  // Check if any leg is currently moving
