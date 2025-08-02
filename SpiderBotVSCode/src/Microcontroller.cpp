@@ -9,23 +9,32 @@ Microcontroller::Microcontroller() {}
 
 // Initialize the microcontroller
 bool Microcontroller::begin() {
+
     // Initialization code for the microcontroller
     int leds[] = {LED_BUILTIN, BDPIN_LED_USER_1, BDPIN_LED_USER_2, BDPIN_LED_USER_3, BDPIN_LED_USER_4, BDPIN_LED_STATUS}; // User control LEDs
     for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
         ledOn(leds[i]);  // Turn on all user control LEDs
     }
 
-    playMelody();                 // Play a melody using the buzzer
+    // Check Battery connection and voltage
+    if (!checkBattery()) {
+        Serial.println("Battery check failed!");    // Print error message if battery check fails
+        return false;                               // Return false if battery check fails
+    }
+
+    // Play a melody using the buzzer
+    playMelody();        
     #ifdef DEBUG
         Serial.println("Dynamixel Controller initialized successfully.");
         Serial.print("Dynamixel Controller Battery Voltage: ");
-        Serial.println(batteryVoltage());
+        Serial.println(getBatteryVoltage());
     #endif // DEBUG
     
+    // Turn off all user control LEDs after initialization
     for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
-        ledOff(leds[i]); // Turn off all user control LEDs
+        ledOff(leds[i]);
     }
-    return true;  // Return true to indicate successful initialization
+    return true;         // Return true as the initialization is successful
 }
 
 // Update the microcontroller state
@@ -81,12 +90,6 @@ bool Microcontroller::ledOff(uint8_t LED_id) {
     return true;                        // Return true as the operation is successful
 }
 
-// Get the battery voltage from the ADC pin on OpenCR1.0 board
-float Microcontroller::batteryVoltage() {
-    int adc_value = analogRead(BDPIN_BAT_PWR_ADC);          // Read the ADC value from the battery power pin
-    return (map(adc_value, 0, 1023, 0, 330*57/10)/100.0);   // Convert ADC value to voltage (assuming 3300mV reference and 57:10 voltage divider)
-}
-
 // Play a melody using OpenCR1.0 Buzzer
 bool Microcontroller::playMelody() {
 
@@ -108,11 +111,26 @@ bool Microcontroller::playMelody() {
     return true;
 }
 
+// Get the battery voltage from the ADC pin on OpenCR1.0 board
+float Microcontroller::getBatteryVoltage() {
+    int adc_value = analogRead(BDPIN_BAT_PWR_ADC);          // Read the ADC value from the battery power pin
+    return (map(adc_value, 0, 1023, 0, 330*57/10)/100.0);   // Convert ADC value to voltage (assuming 3300mV reference and 57:10 voltage divider)
+}
+
+// Check the battery status by reading the battery voltage
+bool Microcontroller::checkBattery() {
+    float voltage = getBatteryVoltage();                     // Get the battery voltage
+    if (voltage < 6.0) {                                     // Check if the voltage is below the threshold
+        Serial.println("Battery voltage is low!");           // Print warning message
+    }
+    return voltage >= 6.0;                                   // Return true if battery voltage is sufficient
+}   
+
 // Print the current status of the microcontroller to the given stream
 void Microcontroller::printStatus(Stream& stream) {
     stream.println("\nMicrocontroller Status:");
     stream.print("Battery Voltage: ");
-    stream.print(batteryVoltage());
+    stream.print(getBatteryVoltage());
     stream.println(" V");
     stream.print("LEDs: User1:");
     stream.print(digitalRead(BDPIN_LED_USER_1) == LOW ? "On" : "Off");

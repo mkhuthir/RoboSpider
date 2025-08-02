@@ -13,7 +13,7 @@
     class Console {
     public:
         Console(Stream& stream = DEBUG_SERIAL);     // Constructor with default stream
-        void begin( unsigned long       baud = DEBUG_BAUD_RATE, 
+        bool begin( unsigned long       baud = DEBUG_BAUD_RATE, 
                     Hexapod*            hexapod = nullptr, 
                     Turret*             turret = nullptr, 
                     GaitController*     gc = nullptr, 

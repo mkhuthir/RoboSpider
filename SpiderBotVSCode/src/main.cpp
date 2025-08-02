@@ -26,17 +26,26 @@ AXS1Sensor          axs1;
 GaitController      gc;     
 Remotecontroller    rc;     
 
+bool                errorFlag = false;  // Global error flag to indicate if an error has occurred
+
 // Setup function to initialize the robot components
 void setup() {
 
-    con.begin(DEBUG_BAUD_RATE, &hexapod, &turret, &gc, &mc);    // Initialize the console for debugging
-    mc.begin();                                                 // Initialize the microcontroller (OpenCR1.0 board)
-    servo.begin(DXL_SERIAL, DXL_BAUD_RATE);                     // Initialize Dynamixel controller with specified serial port and baud rate
-    hexapod.begin(&servo);                                      // Initialize the hexapod
-    turret.begin(&servo);                                       // Initialize the turret
-    axs1.begin(&servo, AXS1_SENSOR_ID);                         // Initialize the AX-S1 sensor
-    gc.begin(&hexapod);                                         // Initialize the gait controller with the hexapod instance
-    rc.begin(RC100_SERIAL,&hexapod,&turret,&gc,&mc);            // Initialize the remote controller with the turret instance
+    errorFlag = !con.begin(DEBUG_BAUD_RATE, &hexapod, &turret, &gc, &mc);       // Initialize the console for debugging
+    if (!errorFlag) { errorFlag = !mc.begin(); }                                // Initialize the microcontroller if no error has occurred
+    if (!errorFlag) { errorFlag = !servo.begin(DXL_SERIAL, DXL_BAUD_RATE); }    // Initialize Dynamixel controller with specified serial port and baud rate
+    if (!errorFlag) { hexapod.begin(&servo); }                                  // Initialize the hexapod
+    if (!errorFlag) { turret.begin(&servo); }                                   // Initialize the turret
+    if (!errorFlag) { axs1.begin(&servo, AXS1_SENSOR_ID); }                     // Initialize the AX-S1 sensor
+    if (!errorFlag) { gc.begin(&hexapod); }                                     // Initialize the gait controller with the hexapod instance
+    if (!errorFlag) { rc.begin(RC100_SERIAL,&hexapod,&turret,&gc,&mc); }        // Initialize the remote controller with the turret instance
+
+    if (errorFlag) {
+        Serial.println("Initialization failed!");                               // Print error message if initialization fails
+        while (1);                                                              // Stop execution
+    } else {
+        Serial.println("Initialization successful!");                          // Print success message if initialization is successful
+    }
 }
 
 // Loop function to handle remote controller input and control the robot

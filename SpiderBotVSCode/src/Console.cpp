@@ -4,8 +4,8 @@
 Console::Console(Stream& stream) : con(stream), inputBuffer(""), shell("$") {}
 
 // Initialize the console with a baud rate and instances of Hexapod, Turret, GaitController, and Microcontroller
-void Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitController* gc, Microcontroller* mc) {
-    
+bool Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitController* gc, Microcontroller* mc) {
+
     if (&con == &Serial) {
         Serial.begin(baud);
         while (!Serial);                                    // Wait for Serial if using USB
@@ -21,6 +21,10 @@ void Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitCo
     this->turret    = turret;       // Store the turret instance
     this->gc        = gc;           // Store the GaitController instance
     this->mc        = mc;           // Store the Microcontroller instance
+    
+    commandHistory.resetToEnd();    // Reset command history to end
+
+    return true;
 }
 
 // Update the console, reading input and processing commands
