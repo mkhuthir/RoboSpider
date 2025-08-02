@@ -1,7 +1,7 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef MAIN_H
+#define MAIN_H
 
-  // Config.h - Configuration file for SpiderBot project
+  // Main.h - Main header file for SpiderBot project
 
   // Define DEBUG to enable debug output
   //#define DEBUG 
@@ -22,6 +22,5 @@
   #define DXL_BAUD_RATE         1000000   // Default baud rate for Dynamixel servos
   #define DEBUG_BAUD_RATE       115200    // Baud rate for debugging output
   #define RC100_BAUD_RATE       115200    // Baud rate for RC controller communication
- 
 
-#endif  // CONFIG_H
+#endif  // MAIN_H

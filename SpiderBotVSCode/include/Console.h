@@ -2,8 +2,7 @@
 #define CONSOLE_H
 
     #include <Arduino.h>
-    #include "Config.h"  // Include configuration header
-
+    
     #include "Turret.h"             // Include Turret class for managing the sensor turret
     #include "GaitController.h"     // Include GaitController for movement control
     #include "Hexapod.h"            // Include Hexapod class for managing the hexapod robot
