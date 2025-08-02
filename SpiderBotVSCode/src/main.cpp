@@ -31,7 +31,8 @@ bool                errorFlag = false;  // Global error flag to indicate if an e
 // Setup function to initialize the robot components
 void setup() {
 
-    errorFlag = !con.begin(DEBUG_BAUD_RATE, &hexapod, &turret, &gc, &mc);               // Initialize the console for debugging
+    errorFlag = !con.begin(DEBUG_SERIAL, DEBUG_BAUD_RATE, &hexapod, &turret, &gc, &mc); // Initialize the console for debugging
+    
     if (!errorFlag) { errorFlag = !mc.begin(); }                                        // Initialize the microcontroller if no error has occurred
     if (!errorFlag) { errorFlag = !servo.begin(DXL_SERIAL, DXL_BAUD_RATE); }            // Initialize Dynamixel controller with specified serial port and baud rate
     if (!errorFlag) { errorFlag = !hexapod.begin(&servo); }                             // Initialize the hexapod

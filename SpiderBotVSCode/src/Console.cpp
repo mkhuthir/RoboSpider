@@ -1,26 +1,40 @@
 #include "Console.h"
 
 // Constructor for Console class
-Console::Console(Stream& stream) : con(stream), inputBuffer(""), shell("$") {}
+Console::Console(){
+    shell = "$";
+    cursorPos = 0;
+    insertMode = true;
+}
 
 // Initialize the console with a baud rate and instances of Hexapod, Turret, GaitController, and Microcontroller
-bool Console::begin(unsigned long baud, Hexapod* hexapod, Turret* turret, GaitController* gc, Microcontroller* mc) {
+bool Console::begin(Stream& stream,
+                    unsigned long baud,
+                    Hexapod* hexapod,
+                    Turret* turret,
+                    GaitController* gc,
+                    Microcontroller* mc) {
+
+    con = stream;                                       // Set the console stream
 
     if (&con == &Serial) {
         Serial.begin(baud);
-        while (!Serial);                                    // Wait for Serial if using USB
+        while (!Serial);                                // Wait for Serial if using USB
     }
-    
-    con.println("Ready. Type '?' for commands.");    // Print initial message
+
+    if (hexapod == nullptr || turret == nullptr || gc == nullptr || mc == nullptr) {
+        con.println("[Error] One or more components are not initialized.");
+        return false;  // Return false if any component is not initialized
+    } else {
+        this->hexapod   = hexapod;      // Store the hexapod instance
+        this->turret    = turret;       // Store the turret instance
+        this->gc        = gc;           // Store the GaitController instance
+        this->mc        = mc;           // Store the Microcontroller instance
+    }    
+
+    con.println("Ready. Type '?' for commands.");       // Print initial message
     con.print(shell);                                   // Print shell prompt
     con.print("\033[4 q");                              // Set initial cursor to underline (insert mode)
-
-   
-    
-    this->hexapod   = hexapod;      // Store the hexapod instance
-    this->turret    = turret;       // Store the turret instance
-    this->gc        = gc;           // Store the GaitController instance
-    this->mc        = mc;           // Store the Microcontroller instance
     
     commandHistory.resetToEnd();    // Reset command history to end
 

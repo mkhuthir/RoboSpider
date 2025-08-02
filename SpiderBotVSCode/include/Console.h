@@ -11,24 +11,27 @@
  
     class Console {
     public:
-        Console(Stream& stream = DEBUG_SERIAL);     // Constructor with default stream
-        bool begin( unsigned long       baud = DEBUG_BAUD_RATE, 
-                    Hexapod*            hexapod = nullptr, 
-                    Turret*             turret = nullptr, 
-                    GaitController*     gc = nullptr, 
-                    Microcontroller*    mc = nullptr);
+        Console();                                              // Constructor with default stream
+        bool begin( Stream&             stream,                 // Initialize the console with a stream
+                    unsigned long       baud,                   // Baud rate for serial communication 
+                    Hexapod*            hexapod = nullptr,      // Pointer to Hexapod instance
+                    Turret*             turret  = nullptr,      // Pointer to Turret instance
+                    GaitController*     gc      = nullptr,      // Pointer to GaitController instance
+                    Microcontroller*    mc      = nullptr       // Pointer to Microcontroller instance
+        );
 
-        void update();                              // Call in loop()
+        void update();                                          // Call in loop()
 
     private:
-        Stream&             con;                                // Reference to the stream (Serial, etc.)
-        String              inputBuffer;                        // Buffer to store the input command
-        String              shell;                              // Shell prompt string
-        int                 cursorPos = 0;                      // Current cursor position in input buffer
-        bool                insertMode = true;                  // Insert mode flag (true=insert, false=overwrite)
+        Stream&             con             = Serial;           // Reference to the stream (Serial, etc.)
+
+        String              inputBuffer     = "";               // Buffer to store the input command
+        String              shell           = "$";              // Shell prompt string
+        int                 cursorPos       = 0;                // Current cursor position in input buffer
+        bool                insertMode      = true;             // Insert mode flag (true=insert, false=overwrite)
         CommandHistory      commandHistory;                     // Command history management
         
-        // Component instances
+        // Pointers to instances of Hexapod, Turret, GaitController, and Microcontroller        
         Hexapod*            hexapod;                            // Pointer to hexapod instance
         Turret*             turret;                             // Pointer to turret instance  
         GaitController*     gc;                                 // Pointer to GaitController instance
