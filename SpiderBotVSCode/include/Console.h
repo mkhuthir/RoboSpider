@@ -15,6 +15,7 @@
         Console();                                              // Constructor with default stream
         bool begin( Stream&             stream,                 // Initialize the console with a stream
                     unsigned long       baud,                   // Baud rate for serial communication
+                    
                     Servo*              servo   = nullptr,      // Pointer to Servo instance
                     Hexapod*            hexapod = nullptr,      // Pointer to Hexapod instance
                     Turret*             turret  = nullptr,      // Pointer to Turret instance
