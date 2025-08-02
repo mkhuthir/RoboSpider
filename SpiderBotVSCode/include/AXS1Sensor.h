@@ -1,41 +1,43 @@
 #ifndef AXS1_SENSOR_H
 #define AXS1_SENSOR_H
 
-    // Hardcoded Sensor ID for AX-S1
+    // Sensor ID for AX-S1
     #define AXS1_SENSOR_ID                      100
+
     // EEPROM Area (Section 4.6 https://emanual.robotis.com/docs/en/parts/sensor/ax-s1/)
-    #define AXS1_Model_Number_L                 0
-    #define AXS1_Model_Number_H                 1
-    #define AXS1_Firmware_Version               2
-    #define AXS1_ID                             3
-    #define AXS1_Baud_Rate                      4
-    #define AXS1_Return_Delay_Time              5
-    #define AXS1_Status_Return_Level            16
+    #define AXS1_Model_Number_L                 0   // access=R  , initial value=13(0x0D)
+    #define AXS1_Model_Number_H                 1   // access=R  , initial value=0(0x00)
+    #define AXS1_Firmware_Version               2   // access=R
+    #define AXS1_ID                             3   // access=RW , initial value=100(0x64)
+    #define AXS1_Baud_Rate                      4   // access=RW , initial value=1(0x01)
+    #define AXS1_Return_Delay_Time              5   // access=RW , initial value=250(0xFA)
+    #define AXS1_Status_Return_Level            16  // access=RW , initial value=2(0x02)
+
     // RAM Area (Section 4.7 https://emanual.robotis.com/docs/en/parts/sensor/ax-s1/)
-    #define AXS1_Left_Distance_Data             26
-    #define AXS1_Center_Distance_Data           27
-    #define AXS1_Right_Distance_Data            28
-    #define AXS1_Light_Left_Data                29
-    #define AXS1_Light_Center_Data              30
-    #define AXS1_Light_Right_Data               31
-    #define AXS1_IR_Obstacle_Detected           32
-    #define AXS1_Light_Detected                 33
-    #define AXS1_Sound_Data                     35
-    #define AXS1_Sound_Data_Max_Hold            36
-    #define AXS1_Sound_Detected_Count           37
-    #define AXS1_Sound_Detected_Time_L          38
-    #define AXS1_Sound_Detected_Time_H          39
-    #define AXS1_Buzzer_Data_0                  40
-    #define AXS1_Buzzer_Data_1                  41
-    #define AXS1_Registered                     44
-    #define AXS1_IR_Remocon_Arrived             46
-    #define AXS1_Lock                           47
-    #define AXS1_Remocon_RX_Data_0              48
-    #define AXS1_Remocon_RX_Data_1              49
-    #define AXS1_Remocon_TX_Data_0              50
-    #define AXS1_Remocon_TX_Data_1              51
-    #define AXS1_IR_Obstacle_Detect_Compare     52
-    #define AXS1_Light_Detect_Compare           53
+    #define AXS1_Left_Distance_Data             26  // access=R
+    #define AXS1_Center_Distance_Data           27  // access=R
+    #define AXS1_Right_Distance_Data            28  // access=R
+    #define AXS1_Light_Left_Data                29  // access=R
+    #define AXS1_Light_Center_Data              30  // access=R
+    #define AXS1_Light_Right_Data               31  // access=R
+    #define AXS1_IR_Obstacle_Detected           32  // access=R
+    #define AXS1_Light_Detected                 33  // access=R
+    #define AXS1_Sound_Data                     35  // access=R
+    #define AXS1_Sound_Data_Max_Hold            36  // access=RW
+    #define AXS1_Sound_Detected_Count           37  // access=RW
+    #define AXS1_Sound_Detected_Time_L          38  // access=RW
+    #define AXS1_Sound_Detected_Time_H          39  // access=RW
+    #define AXS1_Buzzer_Data_0                  40  // access=RW
+    #define AXS1_Buzzer_Data_1                  41  // access=RW
+    #define AXS1_Registered                     44  // access=RW , initial value=0(0x00)
+    #define AXS1_IR_Remocon_Arrived             46  // access=R  , initial value=0(0x00)
+    #define AXS1_Lock                           47  // access=RW , initial value=0(0x00)
+    #define AXS1_Remocon_RX_Data_0              48  // access=R
+    #define AXS1_Remocon_RX_Data_1              49  // access=R
+    #define AXS1_Remocon_TX_Data_0              50  // access=RW
+    #define AXS1_Remocon_TX_Data_1              51  // access=RW
+    #define AXS1_IR_Obstacle_Detect_Compare     52  // access=RW
+    #define AXS1_Light_Detect_Compare           53  // access=RW
 
     #include "Servo.h"
 
