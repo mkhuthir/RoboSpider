@@ -13,7 +13,8 @@ bool Console::begin(Stream& stream,
                     Hexapod* hexapod,
                     Turret* turret,
                     GaitController* gc,
-                    Microcontroller* mc) {
+                    Microcontroller* mc,
+                    AXS1Sensor* sensor) {
 
     con = stream;                                       // Set the console stream
 
@@ -30,6 +31,7 @@ bool Console::begin(Stream& stream,
         this->turret    = turret;       // Store the turret instance
         this->gc        = gc;           // Store the GaitController instance
         this->mc        = mc;           // Store the Microcontroller instance
+        this->sensor    = sensor;       // Store the AXS1Sensor instance (can be nullptr)
     }
 
     con.print("\033[2J\033[H");         // Clear the console screen and move cursor to home position
@@ -88,7 +90,8 @@ void Console::processCommand(const String& command) {
         !executeTurretCommand(mainCmd, args) &&
         !executeGaitCommand(mainCmd, args) &&
         !executeHexapodCommand(mainCmd, args) &&
-        !executeLegCommand(mainCmd, args)) {
+        !executeLegCommand(mainCmd, args) &&
+        !executeSensorCommand(mainCmd, args)) {
         
         // Unknown command
         con.println("[Error] Unknown command: " + command);
@@ -209,6 +212,69 @@ bool Console::executeLegCommand(const String& cmd, const String& args) {
     return false;
 }
 
+// AXS1 Sensor commands
+bool Console::executeSensorCommand(const String& cmd, const String& args) {
+    // Check if sensor is available
+    if (sensor == nullptr) {
+        con.println("[Error] AXS1 Sensor not initialized");
+        return false;
+    }
+    
+    if (cmd == "sp") {
+        bool result = sensor->ping();
+        con.println("[Info] Sensor ping: " + String(result ? "SUCCESS" : "FAILED"));
+        return true;
+    } else if (cmd == "sir") {
+        con.println("[Info] IR Sensors - Left: " + String(sensor->getIRLeft()) + 
+                   ", Center: " + String(sensor->getIRCenter()) + 
+                   ", Right: " + String(sensor->getIRRight()));
+        return true;
+    } else if (cmd == "sli") {
+        con.println("[Info] Light Sensors - Left: " + String(sensor->getLightLeft()) + 
+                   ", Center: " + String(sensor->getLightCenter()) + 
+                   ", Right: " + String(sensor->getLightRight()));
+        return true;
+    } else if (cmd == "sso") {
+        con.println("[Info] Sound - Level: " + String(sensor->getSoundLevel()) + 
+                   ", Count: " + String(sensor->getSoundCount()));
+        return true;
+    } else if (cmd == "sve") {
+        con.println("[Info] Voltage: " + String(sensor->getVoltage(), 2) + "V");
+        return true;
+    } else if (cmd == "ste") {
+        con.println("[Info] Temperature: " + String(sensor->getTemperature(), 1) + "°C");
+        return true;
+    } else if (cmd == "sbu") {
+        // Parse buzzer arguments: note and duration
+        int note = 60;      // Default note (middle C)
+        int duration = 100; // Default duration (100ms)
+        
+        if (args.length() > 0) {
+            int spaceIndex = args.indexOf(' ');
+            if (spaceIndex != -1) {
+                note = args.substring(0, spaceIndex).toInt();
+                duration = args.substring(spaceIndex + 1).toInt();
+            } else {
+                note = args.toInt();
+            }
+        }
+        
+        // Validate ranges
+        if (note < 32 || note > 127) note = 60;
+        if (duration < 1 || duration > 255) duration = 100;
+        
+        bool result = sensor->setBuzzer(note, duration);
+        con.println("[Info] Buzzer " + String(result ? "activated" : "failed") + 
+                   " - Note: " + String(note) + ", Duration: " + String(duration) + "ms");
+        return true;
+    } else if (cmd == "sup") {
+        bool result = sensor->update();
+        con.println("[Info] Sensor update: " + String(result ? "SUCCESS" : "FAILED"));
+        return true;
+    }
+    return false;
+}
+
 // Print comprehensive help information
 void Console::printHelp() {
     con.println("SpiderBot Console - Available Commands:");
@@ -242,7 +308,17 @@ void Console::printHelp() {
     con.println("  lsu [n]          - Move leg to stand up position");
     con.println("  lsd [n]          - Move leg to stand down position");
     con.println("");
-    con.println("Examples: 'lpu 2' moves leg 2 point up, 'status' shows system info");
+    con.println("Sensor Commands (AXS1):");
+    con.println("  sp               - Ping sensor (connectivity test)");
+    con.println("  sir              - Read IR sensors (left, center, right)");
+    con.println("  sli              - Read light sensors (left, center, right)");
+    con.println("  sso              - Read sound level and count");
+    con.println("  sve              - Read voltage");
+    con.println("  ste              - Read temperature");
+    con.println("  sbu [note] [dur] - Play buzzer (note 32-127, duration 1-255ms)");
+    con.println("  sup              - Update sensor readings");
+    con.println("");
+    con.println("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note");
 }
 
 // Print system status information
@@ -252,6 +328,16 @@ void Console::printSystemStatus() {
     if (hexapod) hexapod->printStatus(con);
     if (turret) turret->printStatus(con);
     if (gc) gc->printStatus(con);
+    if (sensor) {
+        con.println("AXS1 Sensor Status:");
+        con.println("  Voltage: " + String(sensor->getVoltage(), 2) + "V");
+        con.println("  Temperature: " + String(sensor->getTemperature(), 1) + "°C");
+        con.println("  IR (L/C/R): " + String(sensor->getIRLeft()) + "/" + 
+                   String(sensor->getIRCenter()) + "/" + String(sensor->getIRRight()));
+        con.println("  Light (L/C/R): " + String(sensor->getLightLeft()) + "/" + 
+                   String(sensor->getLightCenter()) + "/" + String(sensor->getLightRight()));
+        con.println("  Sound Level: " + String(sensor->getSoundLevel()));
+    }
     con.println("==============================");
 }
 

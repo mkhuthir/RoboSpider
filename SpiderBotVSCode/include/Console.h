@@ -8,6 +8,7 @@
     #include "Hexapod.h"            // Include Hexapod class for managing the hexapod robot
     #include "Microcontroller.h"    // Include Microcontroller class for managing the microcontroller
     #include "CommandHistory.h"     // Include CommandHistory class for command history management
+    #include "AXS1Sensor.h"         // Include AXS1Sensor class for sensor management
  
     class Console {
     public:
@@ -17,7 +18,8 @@
                     Hexapod*            hexapod = nullptr,      // Pointer to Hexapod instance
                     Turret*             turret  = nullptr,      // Pointer to Turret instance
                     GaitController*     gc      = nullptr,      // Pointer to GaitController instance
-                    Microcontroller*    mc      = nullptr       // Pointer to Microcontroller instance
+                    Microcontroller*    mc      = nullptr,      // Pointer to Microcontroller instance
+                    AXS1Sensor*         sensor  = nullptr       // Pointer to AXS1Sensor instance
         );
 
         void update();                                          // Call in loop()
@@ -36,6 +38,7 @@
         Turret*             turret;                             // Pointer to turret instance  
         GaitController*     gc;                                 // Pointer to GaitController instance
         Microcontroller*    mc;                                 // Pointer to Microcontroller instance
+        AXS1Sensor*         sensor;                             // Pointer to AXS1Sensor instance
 
         void processCommand(const String& command);
         void handleInputControl(char c);                        // Handle all input control operations
@@ -47,6 +50,7 @@
         bool executeGaitCommand(const String& cmd, const String& args);     // Gait control commands
         bool executeHexapodCommand(const String& cmd, const String& args);  // Hexapod control commands
         bool executeLegCommand(const String& cmd, const String& args);      // Leg control commands
+        bool executeSensorCommand(const String& cmd, const String& args);   // AXS1 Sensor commands
         
         // Helper methods for command processing
         void printHelp();                                       // Print comprehensive help information
