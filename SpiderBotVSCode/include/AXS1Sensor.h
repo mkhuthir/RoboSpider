@@ -1,7 +1,7 @@
 #ifndef AXS1_SENSOR_H
 #define AXS1_SENSOR_H
 
-    #define AX_S1 13
+    #define AXS1_SENSOR_ID        100
 
     #include "Servo.h"
 

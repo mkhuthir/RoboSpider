@@ -9,7 +9,7 @@
     #include "Hexapod.h"            // Include Hexapod class for managing the hexapod robot
     #include "Microcontroller.h"    // Include Microcontroller class for managing the microcontroller
     #include "CommandHistory.h"     // Include CommandHistory class for command history management
-
+ 
     class Console {
     public:
         Console(Stream& stream = DEBUG_SERIAL);     // Constructor with default stream

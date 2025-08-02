@@ -22,16 +22,6 @@
   #define DXL_BAUD_RATE         1000000   // Default baud rate for Dynamixel servos
   #define DEBUG_BAUD_RATE       115200    // Baud rate for debugging output
   #define RC100_BAUD_RATE       115200    // Baud rate for RC controller communication
-
-  // ------------------------
-  // Dynamixel PROTOCOL VERSION
-  // ------------------------
-
-  #define PROTOCOL_VERSION 1.0 // Protocol version for Dynamixel servos
-
-  // ------------------------
-  // AX-S1 Sensor
-  // ------------------------
-  #define AXS1_SENSOR_ID        100
+ 
 
 #endif  // CONFIG_H

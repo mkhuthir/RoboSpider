@@ -2,6 +2,9 @@
 #define SERVO_H
 
     #include <DynamixelWorkbench.h> // Include DynamixelWorkbench for managing servos
+    
+    #define PROTOCOL_VERSION 1.0    // Protocol version for Dynamixel servos
+
 
     class Servo {
         public:
