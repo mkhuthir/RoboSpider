@@ -1,6 +1,5 @@
-#include "Leg.h"
 #include "Servo.h"
-#include "Config.h"     // Include configuration header
+#include "Leg.h"
 #include "LegPoses.h"   // Include leg poses header
 
 // Default constructor for Leg class

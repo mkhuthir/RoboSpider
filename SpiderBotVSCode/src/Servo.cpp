@@ -1,5 +1,4 @@
 #include "Servo.h"
-#include "Config.h"             // Include configuration header for constants and settings
 
 // Constructor for Servo
 Servo::Servo(){

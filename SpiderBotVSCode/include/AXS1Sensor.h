@@ -10,6 +10,8 @@
         AXS1Sensor();
 
         bool begin(Servo* servo, uint8_t sensor_id);
+        bool update();
+        
         bool ping();
 
         bool setBuzzer(uint8_t note, uint8_t duration);
@@ -29,8 +31,8 @@
         float getTemperature();
 
     private:
-        Servo* servo;                       // Pointer to Servo instance
-        uint8_t id;                         // ID of the AX-S1 sensor
+        Servo*      servo;                     // Pointer to Servo instance
+        uint8_t     id = AXS1_SENSOR_ID;       // ID of the AX-S1 sensor
     };
 
 #endif // AXS1_SENSOR_H

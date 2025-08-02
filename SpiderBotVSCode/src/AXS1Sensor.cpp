@@ -1,15 +1,22 @@
+#include "Servo.h"                  // Include Servo class for managing Dynamixel servos
 #include "AXS1Sensor.h"
-#include "Servo.h"                     // Include Servo class for managing Dynamixel servos
-#include "Config.h"
 
+// Constructor for AXS1Sensor class
 AXS1Sensor::AXS1Sensor(){
-    servo   = nullptr;  // Initialize servo pointer to null
-    id      = 0;        // Initialize sensor ID to 0
+    servo   = nullptr;              // Initialize servo pointer to null
+    id      = AXS1_SENSOR_ID;       // Initialize sensor ID to AXS1_SENSOR_ID
 }
 
+// Begin method to initialize the sensor with a Servo instance and sensor ID
 bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
     this->servo = servo;
     id  =   sensor_id;
+    return true;
+}
+
+
+bool AXS1Sensor::update() {
+ 
     return true;
 }
 

@@ -1,6 +1,5 @@
-#include "Hexapod.h"
 #include "Servo.h"
-#include "Config.h"             // Include configuration header
+#include "Hexapod.h"
 #include "HexapodPoses.h"       // Include hexapod poses header
 
 // Constructor for Hexapod class

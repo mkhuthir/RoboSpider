@@ -1,7 +1,5 @@
 #include "Microcontroller.h"
 #include "pitches.h"            // Include pitches for melody notes
-#include <Arduino.h>            // Include Arduino core library
-#include "Config.h"             // Include configuration header
 
 
 // Constructor for Microcontroller

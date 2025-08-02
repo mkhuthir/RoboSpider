@@ -3,8 +3,6 @@
 // include necessary libraries and headers
 #include <Arduino.h>                    // Include Arduino core library
 
-#include "Config.h"                     // Include configuration header
-
 #include "Console.h"                    // Include Console class for managing serial console
 #include "Microcontroller.h"            // Include Microcontroller class for managing OpenCR1.0 board
 #include "Servo.h"                      // Include Servo class for managing Dynamixel servos
