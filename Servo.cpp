@@ -12,16 +12,12 @@ bool Servo::begin(const char* device_name, uint32_t baudrate) {
         LOG_ERR(log);
         return false;  
     } else {
-        LOG_INF("Initilized DynamixelWorkbench at baudrate: "+ String(baudrate)+ " bps");
+        LOG_INF("DynamixelWorkbench initialized successfully at baudrate: "+ String(baudrate)+ " bps");
     }
 
     if (!setPacketHandler(PROTOCOL_VERSION))
-    {
-        LOG_ERR("Failed to set packet handler!");
         return false;  
-    }
-
-    LOG_INF("Packet handler set with protocol version: " + String(PROTOCOL_VERSION));
+    
     return true;
 }
 

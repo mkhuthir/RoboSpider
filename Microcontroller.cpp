@@ -21,11 +21,8 @@ bool Microcontroller::begin() {
         LOG_ERR("Battery check failed!");    // Print error message if battery check fails
         return false;                               // Return false if battery check fails
     }
-
-    // Play a melody using the buzzer
-    playMelody();        
-    LOG_INF("Dynamixel Controller initialized successfully.");
-    LOG_INF("Dynamixel Controller Battery Voltage: " + String(getBatteryVoltage()));
+    LOG_INF("Microcontroller Battery Voltage: " + String(getBatteryVoltage()));    
+    LOG_INF("Microcontroller initialized successfully.");
 
     // Turn off all user control LEDs after initialization
     for (int i = 0; i < sizeof(leds)/sizeof(leds[0]); i++) {
@@ -143,7 +140,7 @@ bool Microcontroller::runConsoleCommands(const String& cmd, const String& args) 
         
     } else if (cmd == "mpm") {
         bool result = playMelody();
-        LOG_INF("Play melody: " + String(result ? "SUCCESS" : "FAILED"));
+        PRINTLN("Play melody: " + String(result ? "SUCCESS" : "FAILED"));
         return true;
         
     } else if (cmd == "mlon") {
@@ -169,7 +166,7 @@ bool Microcontroller::runConsoleCommands(const String& cmd, const String& args) 
         }
         
         bool result = ledOn(actualLedPin);
-        LOG_INF(ledName + " LED turned " + String(result ? "ON" : "FAILED"));
+        PRINTLN(ledName + " LED turned " + String(result ? "ON" : "FAILED"));
         return true;
         
     } else if (cmd == "mloff") {
@@ -195,7 +192,7 @@ bool Microcontroller::runConsoleCommands(const String& cmd, const String& args) 
         }
         
         bool result = ledOff(actualLedPin);
-        LOG_INF(ledName + " LED turned " + String(result ? "OFF" : "FAILED"));
+        PRINTLN(ledName + " LED turned " + String(result ? "OFF" : "FAILED"));
         return true;
 
     } else if (cmd == "ms") {

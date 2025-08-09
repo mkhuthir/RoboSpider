@@ -2,16 +2,16 @@
 #include <stdarg.h>  // For va_list, va_start, va_end
 
 // Static member initialization
-DebugLevel  Console::debugLevel     = DEBUG_WRN;    // Default to WARN level
+DebugLevel  Console::debugLevel     = DEBUG_INF;    // Default to WARN level
 bool        Console::colorEnabled   = true;         // Enable colors by default
-Stream*     Console::logStream      = &Serial;      // Default to Serial fo    println("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note, 'mlon 3' turns on user LED 3, 'srpos 1 1024' moves servo 1 to position 1024"); logging
+Stream*     Console::logStream      = &Serial;      // Default to Serial
 
 // Constructor for Console class
 Console::Console(){
     shell = "$";                // Default shell prompt
     cursorPos = 0;              // Start cursor at position 0
     insertMode = true;          // Default to insert mode
-    debugLevel = DEBUG_WRN;     // Default debug level
+    debugLevel = DEBUG_INF;     // Default debug level
     colorEnabled = true;        // Default to color enabled
     logStream = &Serial;        // Default log stream is Serial
 }
@@ -44,6 +44,7 @@ bool Console::begin(Stream& stream,
     PRINT("\033[2J\033[H");             // Clear the console screen and move cursor to home position
     PRINTLN("Type '?' for help.");      // Print help message
     PRINT(shell);                       // Print the shell prompt
+    LOG_INF("Console initialized successfully.");
     return true;
 }
 

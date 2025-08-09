@@ -23,8 +23,8 @@ bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
 
     resetSoundDataMaxHold();
     resetSoundDetectedCount();
-    
 
+    LOG_INF("AXS1Sensor initialized successfully. (ID: " + String(id) + ")");
     return true;
 }
 
@@ -39,7 +39,6 @@ bool AXS1Sensor::update() {
             LOG_ERR("Failed to read Remote Control RX data");
             return false;               
         }
-        LOG_INF("Remote Control RX Data: " + String(remoconRX));
         playTone(40, 1);
     }
 
@@ -48,7 +47,6 @@ bool AXS1Sensor::update() {
     }
 
     if (getSoundDetectedCount() == 3) {
-        LOG_INF("Sound detected");
         playMelody(21);
         resetSoundDataMaxHold();
         resetSoundDetectedCount();
@@ -202,7 +200,6 @@ int AXS1Sensor::getIRRight() {
 int AXS1Sensor::setObstacleCompare(uint8_t value) {
 
     if (servo->writeRegister(id, AXS1_IR_Obstacle_Detect_Compare, 1, &value)) {
-        LOG_INF("Obstacle Compare set to: " + String(value) + " for ID: " + String(id));
         return value;
     }
     LOG_ERR("Failed to set Obstacle Compare for ID: " + String(id));
@@ -231,7 +228,6 @@ int AXS1Sensor::ObstacleDetected() {
 int AXS1Sensor::setLightCompare(uint8_t value) {
 
     if (servo->writeRegister(id, AXS1_Light_Detect_Compare, 1, &value)) {
-        LOG_INF("Light Compare set to: " + String(value) + " for ID: " + String(id));
         return value;
     }
     LOG_ERR("Failed to set Light Compare for ID: " + String(id));
@@ -301,7 +297,6 @@ bool AXS1Sensor::resetSoundDataMaxHold() {
     uint8_t value = 0;
 
     if (servo->writeRegister(id, AXS1_Sound_Data_Max_Hold, 1, &value)) {
-        LOG_INF("Sound Data Max Hold reset for ID: " + String(id));
         return true;
     }
     LOG_ERR("Failed to reset Sound Data Max Hold for ID: " + String(id));
@@ -314,7 +309,6 @@ bool AXS1Sensor::resetSoundDetectedCount() {
     uint8_t value = 0;
 
     if (servo->writeRegister(id, AXS1_Sound_Detected_Count, 1, &value)) {
-        LOG_INF("Sound Detected Count reset for ID: " + String(id));
         return true;
     }
     LOG_ERR("Failed to reset Sound Detected Count for ID: " + String(id));
@@ -328,7 +322,6 @@ bool AXS1Sensor::resetSoundDetectedTime() {
 
     if (servo->writeRegister(id, AXS1_Sound_Detected_Time_L, 1, &value) &&
         servo->writeRegister(id, AXS1_Sound_Detected_Time_H, 1, &value)) {
-        LOG_INF("Sound Detected Time reset for ID: " + String(id));
         return true;
     }
     LOG_ERR("Failed to reset Sound Detected Time for ID: " + String(id));
@@ -353,9 +346,7 @@ bool AXS1Sensor::playTone(uint8_t note, uint8_t duration) {
         LOG_ERR("Failed to set Buzzer Note for ID: " + String(id));
         return false;
     }
-
-    LOG_INF("Buzzer set for ID: " + String(id) + " - Note: " + String(note) + ", Duration: " + String(duration));
-    return true;  // Return true to indicate success
+    return true;
 }
 
 // Play a melody on the sensor's buzzer
@@ -376,9 +367,7 @@ bool AXS1Sensor::playMelody(uint8_t melody) {
         LOG_ERR("Failed to set Buzzer Note for ID: " + String(id));
         return false;
     }
-
-    LOG_INF("Playing melody: " + String(melody));
-    return true;  // Return true to indicate success
+    return true;
 }
 
 // Start a continuous tone on the sensor's buzzer
@@ -399,9 +388,7 @@ bool AXS1Sensor::startTone(uint8_t note) {
         LOG_ERR("Failed to start tone for ID: " + String(id));
         return false;
     }
-
-    LOG_INF("Started tone for ID: " + String(id) + " - Note: " + String(note));
-    return true;  // Return true to indicate success
+    return true;
 }
 
 // Stop the continuous tone on the sensor's buzzer
@@ -413,9 +400,7 @@ bool AXS1Sensor::stopTone() {
         LOG_ERR("Failed to stop tone for ID: " + String(id));
         return false;
     }
-
-    LOG_INF("Stopped tone for ID: " + String(id));
-    return true;  // Return true to indicate success
+    return true;
 }
 
 // Check if the remote control data has arrived
@@ -466,7 +451,6 @@ bool AXS1Sensor::setRemoconTX(uint16_t value) {
 
     if (servo->writeRegister(id, AXS1_Remocon_TX_Data_0, 1, &value_l) &&
         servo->writeRegister(id, AXS1_Remocon_TX_Data_1, 1, &value_h)) {
-        LOG_INF("Remote Control TX value set to: " + String(value) +     " for ID: " + String(id));
         return true;
     }
     LOG_ERR("Failed to set Remote Control TX value for ID: " + String(id));

@@ -19,6 +19,7 @@ bool GaitController::begin(Hexapod* hexapod){
     gaitType        = GAIT_IDLE;    // Start with idle gait
     currentPhase    = 0;
     currentStep     = 0;            // Reset current step
+    LOG_INF("GaitController initialized successfully.");
     return true;
 }
 

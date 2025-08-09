@@ -24,6 +24,8 @@ void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
   servo->init(legIDs[Coxa] , LEG_VELOCITY);   // Initialize coxa servo with velocity
   servo->init(legIDs[Femur], LEG_VELOCITY);   // Initialize femur servo with velocity
   servo->init(legIDs[Tibia], LEG_VELOCITY);   // Initialize tibia servo with velocity
+
+  LOG_INF("Leg initialized successfully. (Servo IDs: " + String(legIDs[Coxa]) + ", " + String(legIDs[Femur]) + ", " + String(legIDs[Tibia]) + ")");
 }
 
 // Move the leg to the specified positions

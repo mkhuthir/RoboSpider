@@ -51,6 +51,8 @@ void setup() {
     if (errorFlag) {
         LOG_ERR("Initialization failed!");                                              // Print error message if initialization fails
         //while (1);                                                                    // Stop execution
+    } else {
+        LOG_INF("All modules initialized successfully.");
     }
 }
 

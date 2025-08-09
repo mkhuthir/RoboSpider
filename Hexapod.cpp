@@ -25,10 +25,12 @@ bool Hexapod::begin(Servo* servo) {
   legs[5].init(16, 17, 18, servo);
 
   if (!servo->addSyncWriteHandler(1, "Goal_Position")) {   // Add sync write handler
+    LOG_ERR("Failed to add sync write handler for Goal_Position");
     return false;
   }
 
   moveStandUp();                                    // Move Hexapod to standing position
+  LOG_INF("Hexapod initialized successfully.");
   return true;                                      // Initialization successful
 }
 // Move Hexapod

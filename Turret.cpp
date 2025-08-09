@@ -24,7 +24,7 @@ bool Turret::begin(Servo* servo) {
   }
 
   moveHome();                           // Move turret to home position
-  LOG_INF("Turret initialized successfully");
+  LOG_INF("Turret initialized successfully. (Servo IDs: " + String(turret_ids[0]) + ", " + String(turret_ids[1]) + ")");
   return true;                          // Return true if initialization is successful
 }
 
@@ -49,31 +49,26 @@ void Turret::move(int32_t *positions) {
 // Rotate the turret to home position
 void Turret::moveHome() {
   move(poseTurretHome);    // Reset turret to home position
-  LOG_INF("Turret moved to home position");
 }
 
 // Rotate turret to the right
 void Turret::moveRight() {
   move(poseTurretRight); // Rotate turret to the right
-  LOG_INF("Turret moved right");
 } 
 
 // Rotate turret to the left
 void Turret::moveLeft() {
   move(poseTurretLeft);  // Rotate turret to the left
-  LOG_INF("Turret moved left");
 }
 
 // Rotate turret up
 void Turret::moveUp() {
   move(poseTurretUp);  // Rotate turret up
-  LOG_INF("Turret moved up");
 }
 
 // Rotate turret down
 void Turret::moveDown() {
   move(poseTurretDown); // Rotate turret down
-  LOG_INF("Turret moved down");
 } 
 
 // Print current turret angles to Serial
@@ -116,27 +111,22 @@ void Turret::printConsoleHelp() {
 bool Turret::runConsoleCommands(const String& cmd, const String& args) {
     if (cmd == "tu") {
         moveUp();
-        LOG_INF("Turret moving up");
         return true;
 
     } else if (cmd == "td") {
         moveDown();
-        LOG_INF("Turret moving down");
         return true;
 
     } else if (cmd == "tl") {
         moveLeft();
-        LOG_INF("Turret moving left");
         return true;
 
     } else if (cmd == "tr") {
         moveRight();
-        LOG_INF("Turret moving right");
         return true;
 
     } else if (cmd == "th") {
         moveHome();
-        LOG_INF("Turret moving to home position");
         return true;
 
     } else if (cmd == "ts") {

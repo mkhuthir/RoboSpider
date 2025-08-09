@@ -14,7 +14,8 @@ bool Remotecontroller::begin(int serial_port, Hexapod* hexapod, Turret* turret, 
     this->turret    = turret;   // Store the turret instance
     this->gc        = gc;       // Store the GaitController instance
     this->mc        = mc;       // Store the Microcontroller instance
-
+    
+    LOG_INF("Remotecontroller initialized successfully");
     return true;                // Return true if initialization is successful
 
 }
