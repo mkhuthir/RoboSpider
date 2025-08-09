@@ -1,6 +1,4 @@
 #include "Console.h"
-#include <stdarg.h>  // For va_list, va_start, va_end
-#include <EEPROM.h>
 
 // Static members initialization
 Stream*     Console::logStream       = &Serial;      // Default to Serial for logging
@@ -13,9 +11,6 @@ Console::Console(){
     cursorPos       = 0;                    // Start cursor at position 0
     insertMode      = true;                 // Default to insert mode
     logStream       = &Serial;              // Default log stream is Serial
-
-    debugLevel      = (DebugLevel)EEPROM.read(EEPROM_ADDR_DEBUG_LEVEL); // Read debug level from EEPROM
-    colorEnabled    = EEPROM.read(EEPROM_ADDR_COLOR_ENABLED) != 0;      // Read color enabled flag from EEPROM
 }
 
 // Initialize the console with a baud rate and instances of components
@@ -65,15 +60,12 @@ void Console::update() {
 // Static method to set debug level
 void Console::setDebugLevel(DebugLevel level) {
     debugLevel = level;
-    EEPROM.write(EEPROM_ADDR_DEBUG_LEVEL, (uint8_t)debugLevel);
     println("Debug level set to: " + String(level));
 }
 
 // Static method to enable/disable colors
 void Console::setColorEnabled(bool enabled) {
     colorEnabled = enabled;
-    EEPROM.write(EEPROM_ADDR_COLOR_ENABLED, colorEnabled ? 1 : 0);
-
     println("Color output " + String(enabled ? "enabled" : "disabled"));
 }
 
