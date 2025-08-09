@@ -59,7 +59,6 @@
         static void println(float value);                       // Print float value with newline
         static void print(int value);                           // Print int value  
         static void println(int value);                         // Print int value with newline
-        static void printf(const char* format, ...);            // Formatted print (like sprintf)
         static void printError(const String& message);          // Print error message (red)
         static void printWarning(const String& message);        // Print warning message (yellow)
         static void printInfo(const String& message);           // Print info message (green)
@@ -68,7 +67,6 @@
         // Global macros for printing messages
         #define PRINT(msg)      Console::print(msg)             // Normal print without debug level or color
         #define PRINTLN(msg)    Console::println(msg)           // Print with newline
-        #define PRINTF(fmt, ...)Console::printf(fmt, __VA_ARGS__)// Formatted print
         #define LOG_ERR(msg)    Console::printError(msg)        // Error logging with red color
         #define LOG_WRN(msg)    Console::printWarning(msg)      // Warning logging with yellow color
         #define LOG_INF(msg)    Console::printInfo(msg)         // Info logging with green color

@@ -51,9 +51,6 @@ void setup() {
     if (errorFlag) {
         LOG_ERR("Initialization failed!");                                              // Print error message if initialization fails
         //while (1);                                                                    // Stop execution
-    } else {
-        PRINTLN("Initialization successful!");                                          // Print success message if initialization is successful
-        PRINTLN("Type '?' for help.");                                                  // Prompt user to type '?' for available commands
     }
 }
 

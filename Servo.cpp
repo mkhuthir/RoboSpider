@@ -544,7 +544,7 @@ bool Servo::isMoving(uint8_t id) {
 // Print the status of a servo for debugging
 bool Servo::printStatus(uint8_t id) {
 
-    PRINTLN("\nServo Status   :");
+    PRINTLN("\nServo Status:");
     PRINTLN("Servo ID         : " + String(id));                         // Print the ID of the servo
     PRINTLN("Model Number     : " + String(getModelNumber(id)));
     PRINTLN("Model Name       : " + String(getModelName(id)));

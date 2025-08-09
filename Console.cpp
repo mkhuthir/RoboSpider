@@ -42,7 +42,8 @@ bool Console::begin(Stream& stream,
 
     commandHistory.resetToEnd();        // Reset command history to end
     PRINT("\033[2J\033[H");             // Clear the console screen and move cursor to home position
-    PRINT(shell);                       // Print initial message
+    PRINTLN("Type '?' for help.");      // Print help message
+    PRINT(shell);                       // Print the shell prompt
     return true;
 }
 
@@ -91,26 +92,6 @@ void Console::println(const String& message) {
     
     // Print message directly without debug level check, timestamp, or color formatting
     logStream->println(message);
-}
-
-// Static method to print formatted messages (like sprintf)
-void Console::printf(const char* format, ...) {
-    if (logStream == nullptr) {
-        printError("Log stream is not initialized.");
-        return;
-    }
-    
-    // Create buffer for formatted string (adjust size as needed)
-    char buffer[256];
-    
-    // Use variable argument list to format the string
-    va_list args;
-    va_start(args, format);
-    vsnprintf(buffer, sizeof(buffer), format, args);
-    va_end(args);
-    
-    // Print the formatted message
-    logStream->print(buffer);
 }
 
 // Static method to print error messages
