@@ -117,6 +117,10 @@ unsigned long Microcontroller::getUpTime() {
     return millis();
 }
 
+void Microcontroller::resetMicrocontroller() {
+    NVIC_SystemReset();
+}
+
 // Print the current status of the microcontroller to the given stream
 void Microcontroller::printStatus() {
     PRINTLN("\nMicrocontroller Status:\n\r");
@@ -201,6 +205,14 @@ bool Microcontroller::runConsoleCommands(const String& cmd, const String& args) 
         PRINTLN(ledName + " LED turned " + String(result ? "OFF" : "FAILED"));
         return true;
 
+    } else if (cmd == "mu") {
+        PRINTLN("Microcontroller Uptime: " + String(getUpTime()) + " ms");
+        return true;
+
+    } else if (cmd == "mr") {
+        resetMicrocontroller();
+        return true;
+
     } else if (cmd == "ms") {
         printStatus();
         return true;
@@ -221,6 +233,8 @@ void Microcontroller::printConsoleHelp() {
     PRINTLN("  mpm              - Play melody");
     PRINTLN("  mlon [0-5]       - Turn on LED (0=builtin, 1-4=user, 5=status)");
     PRINTLN("  mloff [0-5]      - Turn off LED (0=builtin, 1-4=user, 5=status)");
+    PRINTLN("  mu               - Show microcontroller uptime in milliseconds");
+    PRINTLN("  mr               - Reset the microcontroller");
     PRINTLN("  ms               - Show microcontroller status");
     PRINTLN("  m?               - Show this help");
     PRINTLN("");

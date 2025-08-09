@@ -14,7 +14,8 @@
             bool            playMelody();               // play a melody using the servos
             float           getBatteryVoltage();        // get the battery voltage
             bool            checkBattery();             // check the battery status
-            unsigned long   getUpTime();          // get the uptime of the microcontroller in milliseconds
+            unsigned long   getUpTime();                // get the uptime of the microcontroller in milliseconds
+            void            resetMicrocontroller();     // reset the microcontroller
             void            printStatus();              // print the current status to the given stream
             bool            runConsoleCommands(const String& cmd, const String& args);  // Process console commands for microcontroller control
             void            printConsoleHelp();                // Print microcontroller-specific help information
