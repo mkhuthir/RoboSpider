@@ -395,7 +395,7 @@ bool Servo::goalVelocity(uint8_t dxl_id, float velocity) {
 }
 
 // Get the present position data of a servo in value
-bool Servo::getPresentPositionData(uint8_t id, int32_t* data) {
+bool Servo::getPresentPosition(uint8_t id, int32_t* data) {
     
     if (!dxl.getPresentPositionData(id, data, &log))
     {        
@@ -421,7 +421,7 @@ bool Servo::getRadian(uint8_t id, float* radian) {
 }
 
 // Get the present velocity data of a servo in value
-bool Servo::getPresentVelocityData(uint8_t id, int32_t* data) {
+bool Servo::getPresentSpeed(uint8_t id, int32_t* data) {
     
     if (!dxl.getPresentVelocityData(id, data, &log))
     {
@@ -480,7 +480,7 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Model Name       : " + String(getModelName(id)));
 
     int32_t position = 0;
-    getPresentPositionData(id, &position);
+    getPresentPosition(id, &position);
     PRINTLN("Present Position : " + String(position));
 
     float radian = 0.0f;
@@ -488,7 +488,7 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Radian           : " + String(radian));
 
     int32_t velocity = 0;
-    getPresentVelocityData(id, &velocity);
+    getPresentSpeed(id, &velocity);
     PRINTLN("Present Velocity : " + String(velocity));
 
     float velocity_f = 0.0f;
@@ -667,7 +667,7 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
         }
         
         int32_t currentPos;
-        bool result = getPresentPositionData((uint8_t)servoId, &currentPos);
+        bool result = getPresentPosition((uint8_t)servoId, &currentPos);
         if (result) {
             PRINTLN("Servo ID " + String(servoId) + " current position: " + String(currentPos));
         } else {
@@ -685,7 +685,7 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
         }
 
         int32_t currentVel;
-        bool result = getPresentVelocityData((uint8_t)servoId, &currentVel);
+        bool result = getPresentSpeed((uint8_t)servoId, &currentVel);
         if (result) {
             PRINTLN("Servo ID " + String(servoId) + " current velocity: " + String(currentVel));
         } else {
