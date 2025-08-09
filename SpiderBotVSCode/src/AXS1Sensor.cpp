@@ -44,7 +44,6 @@ bool AXS1Sensor::update() {
     }
 
     if (ObstacleDetected()) {           // Check if obstacle is detected
-        LOG_ERR("Obstacle detected");
         playTone(30, 1);
     }
 
