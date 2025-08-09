@@ -10,6 +10,10 @@
     #include "CommandHistory.h"     // Include CommandHistory class for command history management
     #include "AXS1Sensor.h"         // Include AXS1Sensor class for sensor management
 
+    // EEPROM addresses for storing settings
+    #define EEPROM_ADDR_DEBUG_LEVEL     0
+    #define EEPROM_ADDR_COLOR_ENABLED   1
+
     // ANSI color codes for terminal output
     #define COLOR_RESET     "\033[0m"       // Reset color
     #define COLOR_RED       "\033[31m"      // Error messages
@@ -88,7 +92,7 @@
         static bool         colorEnabled;                       // Color output enabled flag
         static Stream*      logStream;                          // Stream for logging output
         
-        // Pointers to instances of Hexapod, Turret, GaitController, and Microcontroller
+        // Pointers to instances
         Servo*              servo;                              // Pointer to Servo instance for Dynamixel control
         Hexapod*            hexapod;                            // Pointer to hexapod instance
         Turret*             turret;                             // Pointer to turret instance  
@@ -96,10 +100,14 @@
         GaitController*     gc;                                 // Pointer to GaitController instance
         Microcontroller*    mc;                                 // Pointer to Microcontroller instance
 
+        // EEPROM management
+        static void saveSettingsToEEPROM();                     // Save settings to EEPROM
+        static void loadSettingsFromEEPROM();                   // Load settings from EEPROM
+
         // Input processing methods
-        void processInput(const String& input);                             // Process the input entered by the user
-        void handleInputControl(char c);                                    // Handle all input control operations
-        void handlePrintableChar(char c);                                   // Handle printable character input and display
+        void processInput(const String& input);                 // Process the input entered by the user
+        void handleInputControl(char c);                        // Handle all input control operations
+        void handlePrintableChar(char c);                       // Handle printable character input and display
         
         // Escape sequence handlers
         void handleEscapeSequence();                            // Main escape sequence handler
