@@ -187,12 +187,13 @@ bool Console::runConsoleCommands(const String& cmd, const String& args) {
         printConsoleHelp();
         return true;
     
-    } else if (cmd == "?a") {
+    } else if (cmd == "??") {
         printAllHelp();
         return true;
 
     } else if (cmd == "cls" || cmd == "clear") {
         PRINT("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
+        PRINT(shell);
         return true;
 
     } else if (cmd == "debug") {
@@ -278,7 +279,13 @@ void Console::printAllHelp() {
 void Console::printConsoleHelp() {
     println("Console Commands:");
     println("  ? / h            - Show this help message");
-    println("  ?a               - Show all available commands");
+    println("  ??               - Show all available commands");
+    println("  s?               - Show servo commands");
+    println("  h?               - Show hexapod commands");
+    println("  l?               - Show leg commands");
+    println("  a?               - Show AX-S1 Sensor commands");
+    println("  t?               - Show turret commands");
+    println("  g?               - Show gait controller commands");
     println("  cls / clear      - Clear the terminal screen");
     println("  debug [0-4]      - Set debug level (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
     println("  color [on/off]   - Enable/disable color output");
