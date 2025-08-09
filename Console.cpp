@@ -443,6 +443,7 @@ void Console::handleCSISequence() {
             
         default:
             // Ignore unknown sequences
+            LOG_WRN("Unknown escape sequence: ESC[" + String(c2) + "]");
             break;
     }
 }
@@ -473,6 +474,7 @@ void Console::handleSSSequence() {
             
         default:
             // Ignore unknown sequences
+            LOG_WRN("Unknown escape sequence: ESC[" + String(c2) + "]");
             break;
     }
 }
