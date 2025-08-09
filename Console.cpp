@@ -2,7 +2,7 @@
 #include <stdarg.h>  // For va_list, va_start, va_end
 
 // Static member initialization
-DebugLevel  Console::debugLevel     = DEBUG_WARN;   // Default to WARN level
+DebugLevel  Console::debugLevel     = DEBUG_WRN;    // Default to WARN level
 bool        Console::colorEnabled   = true;         // Enable colors by default
 Stream*     Console::logStream      = &Serial;      // Default to Serial fo    println("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note, 'mlon 3' turns on user LED 3, 'srpos 1 1024' moves servo 1 to position 1024"); logging
 
@@ -11,7 +11,7 @@ Console::Console(){
     shell = "$";                // Default shell prompt
     cursorPos = 0;              // Start cursor at position 0
     insertMode = true;          // Default to insert mode
-    debugLevel = DEBUG_WARN;    // Default debug level
+    debugLevel = DEBUG_WRN;     // Default debug level
     colorEnabled = true;        // Default to color enabled
     logStream = &Serial;        // Default log stream is Serial
 }
@@ -83,7 +83,7 @@ void Console::print(const String& message) {
     logStream->print(message);
 }
 
-// Static method to print normal messages (always printed, no debug level filtering)
+// Static method to print normal messages with newline (always printed, no debug level filtering)
 void Console::println(const String& message) {
     if (logStream == nullptr) {
         printError("Log stream is not initialized.");
@@ -94,35 +94,62 @@ void Console::println(const String& message) {
     logStream->println(message);
 }
 
+// Print float value
+void Console::print(float value) {
+    if (logStream) {
+        logStream->print(value);
+    }
+}
+
+// Print float value with newline
+void Console::println(float value) {
+    if (logStream) {
+        logStream->println(value);
+    }
+}
+
+// Print int value
+void Console::print(int value) {
+    if (logStream) {
+        logStream->print(value);
+    }
+}
+
+// Print int value with newline
+void Console::println(int value) {
+    if (logStream) {
+        logStream->println(value);
+    }
+}
+
 // Static method to print error messages
 void Console::printError(const String& message) {
-    printLog(DEBUG_ERROR, LOG_HEADER_ERROR, COLOR_RED, message);
+    printLog(DEBUG_ERR, LOG_HEADER_ERROR, COLOR_RED, message);
 }
 
 // Static method to print warning messages
 void Console::printWarning(const String& message) {
-    printLog(DEBUG_WARN, LOG_HEADER_WARNING, COLOR_YELLOW, message);
+    printLog(DEBUG_WRN, LOG_HEADER_WARNING, COLOR_YELLOW, message);
 }
 
 // Static method to print info messages
 void Console::printInfo(const String& message) {
-    printLog(DEBUG_INFO, LOG_HEADER_INFO, COLOR_WHITE, message);
+    printLog(DEBUG_INF, LOG_HEADER_INFO, COLOR_WHITE, message);
 }
 
 // Static method to print debug messages
 void Console::printDebug(const String& message) {
-    printLog(DEBUG_ALL, LOG_HEADER_DEBUG, COLOR_CYAN, message);
+    printLog(DEBUG_DBG, LOG_HEADER_DEBUG, COLOR_CYAN, message);
 }
 
 // Private helper method for formatted logging
 void Console::printLog(DebugLevel level, const String& prefix, const String& color, const String& message) {
-    // Check if we should print this message based on debug level
-    if (debugLevel < level || logStream == nullptr) {
+    
+    if (debugLevel < level || logStream == nullptr) {   // Check if we should print this message based on debug level
         return;
     }
-
-    // Build the formatted message
-    String timestamp = String(millis());
+    
+    String timestamp = String(millis());    // Build the formatted message
     String formattedMessage = "";
 
     if (colorEnabled) {
@@ -172,12 +199,12 @@ void Console::processInput(const String& input) {
         !runLegCommand(mainCmd, args) &&
         !sensor->runConsoleCommands(mainCmd, args) &&
         !servo->runConsoleCommands(mainCmd, args) &&
-        !mc->runConsoleCommands(mainCmd, args)
-    ) {
+        !mc->runConsoleCommands(mainCmd, args)) 
+        {
         
         // Unknown command
         LOG_ERR("Unknown command: " + input);
-        PRINTLN("Type '?' or 'h' for a list of commands.");
+        PRINTLN("Type '?' for help.");
     }
 }
 
@@ -200,15 +227,15 @@ bool Console::runConsoleCommands(const String& cmd, const String& args) {
         // Set debug level: debug 0-4
         if (args.length() > 0) {
             int level = args.toInt();
-            if (level >= DEBUG_NONE && level <= DEBUG_ALL) {
+            if (level >= DEBUG_NON && level <= DEBUG_INF) {
                 setDebugLevel((DebugLevel)level);
                 printInfo("Debug level set to: " + String(level));
             } else {
-                printError("Invalid debug level. Use 0-4 (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
+                printError("Invalid debug level. Use 0-4 (0=NON, 1=ERR, 2=WRN, 3=DBG, 4=INF)");
             }
 
         } else {
-            println("Current debug level: " + String(debugLevel));
+            println("Current debug level: " + String(debugLevel) + " (0=NON, 1=ERR, 2=WRN, 3=DBG, 4=INF)");
         }
         return true;
 
@@ -225,13 +252,14 @@ bool Console::runConsoleCommands(const String& cmd, const String& args) {
 
     } else if (cmd == "test") {
         // Test all log levels
+        println("Debug level: " + String(debugLevel) + " Color Output: " + String(colorEnabled ? "enabled" : "disabled"));
+        println("--------------------------------");
         println("This is a normal message");
         printError("This is an error message");
         printWarning("This is a warning message");
         printInfo("This is an info message");
         printDebug("This is a debug message");
-        println("Current debug level: " + String(debugLevel));
-        println("Color output is " + String(colorEnabled ? "enabled" : "disabled"));
+        
         return true;
 
     } 
@@ -286,10 +314,11 @@ void Console::printConsoleHelp() {
     println("  a?               - Show AX-S1 Sensor commands");
     println("  t?               - Show turret commands");
     println("  g?               - Show gait controller commands");
+    println("");
     println("  cls / clear      - Clear the terminal screen");
-    println("  debug [0-4]      - Set debug level (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
+    println("  debug [0-4]      - Set debug level 0=NON, 1=ERR, 2=WRN, 3=DBG, 4=INF");
     println("  color [on/off]   - Enable/disable color output");
-    println("  test             - Test all log message types");
+    println("  test             - Test enabled debug message types");
     println("");
 }
 
@@ -598,26 +627,3 @@ void Console::resetInputState() {
     print("\033[4 q");                                      // Reset to insert mode cursor
 }
 
-void Console::print(float value) {
-    if (logStream) {
-        logStream->print(value);
-    }
-}
-
-void Console::println(float value) {
-    if (logStream) {
-        logStream->println(value);
-    }
-}
-
-void Console::print(int value) {
-    if (logStream) {
-        logStream->print(value);
-    }
-}
-
-void Console::println(int value) {
-    if (logStream) {
-        logStream->println(value);
-    }
-}

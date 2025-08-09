@@ -23,13 +23,23 @@
     #define LOG_HEADER_INFO    "[INF]"      // Info log header
     #define LOG_HEADER_DEBUG   "[DBG]"      // Debug log header
 
+    // Global macros for printing messages
+    #define PRINT(msg)      Console::print(msg)             // Normal print without debug level or color
+    #define PRINTLN(msg)    Console::println(msg)           // Print with newline
+    
+    #define LOG_ERR(msg)    Console::printError(msg)        // Error logging with red color
+    #define LOG_WRN(msg)    Console::printWarning(msg)      // Warning logging with yellow color
+    #define LOG_INF(msg)    Console::printInfo(msg)         // Info logging with green color
+    #define LOG_DBG(msg)    Console::printDebug(msg)        // Debug logging with cyan color
+
     // Debug levels for logging system
     enum DebugLevel {
-        DEBUG_NONE  = 0,     // No debug output
-        DEBUG_ERROR = 1,     // Errors only
-        DEBUG_WARN  = 2,     // Warnings and errors
-        DEBUG_INFO  = 3,     // Info, warnings, and errors
-        DEBUG_ALL   = 4      // All messages including debug
+        DEBUG_NON = 0,     // No debug output
+        DEBUG_ERR = 1,     // Errors only
+        DEBUG_WRN = 2,     // Warnings and Errors
+        DEBUG_DBG = 3,     // Debug, Warning, and Error messages
+        DEBUG_INF = 4      // Info, Debug, Warnings, and Errors
+
     };
 
     class Console {
@@ -59,18 +69,11 @@
         static void println(float value);                       // Print float value with newline
         static void print(int value);                           // Print int value  
         static void println(int value);                         // Print int value with newline
+        
         static void printError(const String& message);          // Print error message (red)
         static void printWarning(const String& message);        // Print warning message (yellow)
         static void printInfo(const String& message);           // Print info message (green)
         static void printDebug(const String& message);          // Print debug message (cyan)
-
-        // Global macros for printing messages
-        #define PRINT(msg)      Console::print(msg)             // Normal print without debug level or color
-        #define PRINTLN(msg)    Console::println(msg)           // Print with newline
-        #define LOG_ERR(msg)    Console::printError(msg)        // Error logging with red color
-        #define LOG_WRN(msg)    Console::printWarning(msg)      // Warning logging with yellow color
-        #define LOG_INF(msg)    Console::printInfo(msg)         // Info logging with green color
-        #define LOG_DBG(msg)    Console::printDebug(msg)        // Debug logging with cyan color
 
     private:
         
