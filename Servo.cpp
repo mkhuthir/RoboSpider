@@ -10,9 +10,7 @@ bool Servo::begin(const char* device_name, uint32_t baudrate) {
     
     if (!dxl.init(device_name, baudrate, &log)) {
         LOG_ERR(log);
-        LOG_ERR("Failed to initilize DynamixelWorkbench!");
         return false;  
-
     } else {
         LOG_INF("Initilized DynamixelWorkbench at baudrate: "+ String(baudrate)+ " bps");
     }
@@ -33,7 +31,6 @@ bool Servo::setPortHandler(const char *device_name) {
     if (!dxl.setPortHandler(device_name, &log))
     {        
         LOG_ERR(log);
-        LOG_ERR("Failed to set port handler!");
         return false;  
     }       
     
@@ -47,7 +44,6 @@ bool Servo::setBaudrate(uint32_t baud_rate) {
     if (!dxl.setBaudrate(baud_rate, &log))
     {        
         LOG_ERR(log);
-        LOG_ERR("Failed to set baudrate!");
     }
 
     LOG_INF("Baudrate set to: "+ String(baud_rate));
@@ -60,7 +56,6 @@ bool Servo::setPacketHandler(float protocol_version) {
     if (!dxl.setPacketHandler(protocol_version, &log))
     {        
         LOG_ERR(log);
-        LOG_ERR("Failed to set packet handler!");
     }
 
     LOG_INF("Packet handler set with protocol version: " + String(protocol_version));
@@ -90,8 +85,6 @@ uint32_t Servo::getBaudrate(void) {
         LOG_ERR("Failed to get baudrate!");
         return 0;
     }
-
-    LOG_INF("Baudrate: " + String(baudrate));
     return baudrate;
 }
 
@@ -104,11 +97,8 @@ const char * Servo::getModelName(uint8_t id) {
     if (model_name == NULL)
     {   
         LOG_ERR(log);
-        LOG_ERR("Failed to get model name for id: " + String(id));
         return NULL;
     }
-
-    LOG_INF("Model Name for id: " + String(id) + " is " + model_name);
     return model_name;
 }
 
@@ -119,11 +109,8 @@ uint16_t Servo::getModelNumber(uint8_t id) {
     if (model_number == 0)
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to get model number for id: " + String(id));
         return 0;
     }
-
-    LOG_INF("Model Number for id: " + String(id) + " is " + String(model_number));
     return model_number;
 }
 
@@ -134,12 +121,9 @@ bool Servo::ping(uint8_t dxl_id) {
     if (!dxl.ping(dxl_id, &model_number, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to ping!");
         return false;
 
     }
-
-    LOG_INF("Succeeded to ping!" + String(dxl_id) + " model_number: " + String(model_number));
     return true;
 }
 
@@ -149,11 +133,9 @@ bool Servo::writeRegister(uint8_t id, uint16_t address, uint16_t length, uint8_t
     if (!dxl.writeRegister(id, address, length, data, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to write register for id: " + String(id));
+        LOG_ERR("id: " + String(id));
         return false;
     }
-
-    LOG_INF("Register written successfully for id: " + String(id));
     return true;
 }
 
@@ -163,11 +145,9 @@ bool Servo::writeRegister(uint8_t id, const char *item_name, int32_t data) {
     if (!dxl.writeRegister(id, item_name, data, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to write register for id: " + String(id) + " with item name: " + String(item_name) + " with data: " + String(data));
+        LOG_ERR("id: " + String(id) + " item name: " + String(item_name) + " data: " + String(data));
         return false;  
     }
-
-    LOG_INF("Register written successfully for id: " + String(id) + " with item name: " + String(item_name) + " with data: " + String(data));
     return true;
 }
 
@@ -177,11 +157,9 @@ bool Servo::readRegister(uint8_t id, uint16_t address, uint16_t length, uint32_t
     if (!dxl.readRegister(id, address, length, data, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to read register for id: " + String(id) + " with address: " + String(address) + " and length: " + String(length));
+        LOG_ERR("id: " + String(id) + " address: " + String(address) + " length: " + String(length));
         return false;  
     }
-
-    LOG_INF("Register read successfully for id: " + String(id) + " with address: " + String(address) + " and length: " + String(length) + " with data: " + String(*data));
     return true;
 }
 
@@ -191,11 +169,10 @@ bool Servo::readRegister(uint8_t id, const char *item_name, int32_t *data) {
     if (!dxl.readRegister(id, item_name, data, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to read register for id: " + String(id) + " with item name: " + String(item_name));
+        LOG_ERR("id: " + String(id) + " item name: " + String(item_name));
         return false;  
     }
 
-    LOG_INF("Register read successfully for id: " + String(id) + " with item name: " + String(item_name) + " with data: " + String(*data));
     return true;
 }
 
@@ -205,11 +182,9 @@ bool Servo::addSyncWriteHandler(uint16_t address, uint16_t length) {
     if (!dxl.addSyncWriteHandler(address, length, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to add sync write handler for address: " + String(address) + " and length: " + String(length));
+        LOG_ERR("address: " + String(address) + " length: " + String(length));
         return false;  
     }
-
-    LOG_INF("Sync write handler added for address: " + String(address) + " and length: " + String(length));
     return true;
     
 }
@@ -220,11 +195,9 @@ bool Servo::addSyncWriteHandler(uint8_t id, const char *item_name) {
     if (!dxl.addSyncWriteHandler(id, item_name, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to add sync write handler for id: " + String(id) + " and item name: " + String(item_name));
+        LOG_ERR("id: " + String(id) + " item name: " + String(item_name));
         return false;  
     }
-
-    LOG_INF("Sync write handler added for id: " + String(id) + " and item name: " + String(item_name));
     return true;
 
 }
@@ -235,11 +208,9 @@ bool Servo::syncWrite(uint8_t index, int32_t *data) {
     if (!dxl.syncWrite(index, data, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to sync write for index: " + String(index) + " with data: " + String(*data));
+        LOG_ERR("index: " + String(index) + " data: " + String(*data));
         return false;  
     }
-
-    LOG_INF("Sync write successful for index: " + String(index));
     return true;
 
 }
@@ -250,11 +221,9 @@ bool Servo::syncWrite(uint8_t index, uint8_t *id, uint8_t id_num, int32_t *data,
     if (!dxl.syncWrite(index, id, id_num, data, data_num_for_each_id, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to sync write for index: " + String(index));
+        LOG_ERR("index: " + String(index));
         return false;  
     }
-
-    LOG_INF("Sync write successful for index: " + String(index) + " with id_num: " + String(id_num));
     return true;
 
 }
@@ -265,11 +234,9 @@ bool Servo::torqueOn(uint8_t id) {
     if (!dxl.torqueOn(id, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to turn on torque for id: " + String(id));
+        LOG_ERR("id: " + String(id));
         return false;  
     }
-
-    LOG_INF("Torque turned on for id: " + String(id));
     return true;
 
 }
@@ -280,11 +247,9 @@ bool Servo::torqueOff(uint8_t id) {
     if (!dxl.torqueOff(id, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to turn off torque for id: " + String(id));
+        LOG_ERR("id: " + String(id));
         return false;  
     }
-    
-    LOG_INF("Torque turned off for id: " + String(id));
     return true;
     
 }
@@ -295,11 +260,9 @@ bool Servo::itemWrite(uint8_t id, const char *item_name, int32_t data) {
     if (!dxl.itemWrite(id, item_name, data, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to write item: " + String(item_name)+ " for id: " + String(id));
+        LOG_ERR("item: " + String(item_name)+ " id: " + String(id));
         return false;  
     }
-
-    LOG_INF("Item: " + String(item_name) + " written for id: " + String(id));
     return true;
     
 }
@@ -310,12 +273,10 @@ bool Servo::itemRead(uint8_t id, const char *item_name, int32_t *data) {
     if (!dxl.itemRead(id, item_name, data, &log))
     {        
         LOG_ERR(log);
-        LOG_ERR("Failed to read item: " + String(item_name)+ " for id: " + String(id) );
+        LOG_ERR("item: " + String(item_name)+ " id: " + String(id) );
         return false;  
         
     }
-          
-    LOG_INF("Item: " + String(item_name) + " read for id: " + String(id) + " with data: " + String(*data));
     return true;
 }
 
@@ -325,11 +286,9 @@ bool Servo::ledOn(uint8_t dxl_id) {
     if (!dxl.ledOn(dxl_id, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to turn on LED for id: " + String(dxl_id));
+        LOG_ERR("id: " + String(dxl_id));
         return false;  
     }
-
-    LOG_INF("LED turned on for id: " + String(dxl_id));
     return true;
 
 }
@@ -340,11 +299,9 @@ bool Servo::ledOff(uint8_t dxl_id) {
     if (!dxl.ledOff(dxl_id, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to turn off LED for id: " + String(dxl_id));
+        LOG_ERR("id: " + String(dxl_id));
         return false;  
     }
-
-    LOG_INF("LED turned off for id: " + String(dxl_id));
     return true;
     
 }
@@ -355,11 +312,9 @@ bool Servo::setNormalDirection(uint8_t id) {
     if (!dxl.setNormalDirection(id, &log))
     {        
         LOG_ERR(log);
-        LOG_ERR("Failed to set normal direction for id: " + String(id));
+        LOG_ERR("id: " + String(id));
         return false;  
     }
-
-    LOG_INF("Normal direction set for id: " + String(id));
     return true;
 
 }
@@ -370,11 +325,9 @@ bool Servo::setReverseDirection(uint8_t id) {
     if (!dxl.setReverseDirection(id, &log))
     {     
         LOG_ERR(log);
-        LOG_ERR("Failed to set reverse direction for id: " + String(id));
+        LOG_ERR("id: " + String(id));
         return false;  
     }
-
-    LOG_INF("Reverse direction set for id: " + String(id));
     return true;
 
 }
@@ -385,11 +338,9 @@ bool Servo::jointMode(uint8_t dxl_id) {
     if (!dxl.jointMode(dxl_id, 0, 0, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to set joint mode for id: " + String(dxl_id));
+        LOG_ERR("id: " + String(dxl_id));
         return false;  
     }
-
-    LOG_INF("Set joint mode for id: " + String(dxl_id));
     return true;
 
 }
@@ -401,11 +352,9 @@ bool Servo::goalPosition(uint8_t dxl_id, int32_t position) {
     if (!dxl.goalPosition(dxl_id, position, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to set goal position for id: " + String(dxl_id));
+        LOG_ERR("id: " + String(dxl_id));
         return false;  
     }
-
-    LOG_INF("Set goal position for id: " + String(dxl_id) + " to position: " + String(position));
     return true;
     
 }
@@ -416,11 +365,9 @@ bool Servo::goalPosition(uint8_t dxl_id, float radian) {
     if (!dxl.goalPosition(dxl_id, radian, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to set goal position for id: " + String(dxl_id));
+        LOG_ERR("id: " + String(dxl_id));
         return false;
     }
-
-    LOG_INF("Set goal position for id: " + String(dxl_id) + " to radian: " + String(radian));
     return true;
 
 }
@@ -431,11 +378,9 @@ bool Servo::goalVelocity(uint8_t dxl_id, int32_t velocity) {
     if (!dxl.goalVelocity(dxl_id, velocity, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to set goal velocity for id: " + String(dxl_id));
+        LOG_ERR("id: " + String(dxl_id));
         return false;
     }
-
-    LOG_INF("Set goal velocity for id: " + String(dxl_id) + " to velocity: " + String(velocity));
     return true;
     
 }
@@ -446,11 +391,9 @@ bool Servo::goalVelocity(uint8_t dxl_id, float velocity) {
     if (!dxl.goalVelocity(dxl_id, velocity, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to set goal velocity for id: " + String(dxl_id));
+        LOG_ERR("id: " + String(dxl_id));
         return false;  
     }
-
-    LOG_INF("Set goal velocity for id: " + String(dxl_id) + " to velocity: " + String(velocity));
     return true;
     
 }
@@ -461,11 +404,9 @@ bool Servo::getPresentPositionData(uint8_t id, int32_t* data) {
     if (!dxl.getPresentPositionData(id, data, &log))
     {        
         LOG_ERR(log);
-        LOG_ERR("Failed to get present position data for id: " + String(id));
+        LOG_ERR("id: " + String(id));
         return false;  
     }
-
-    LOG_INF("Present position data for id: " + String(id) + " is: " + String(*data));
     return true;
 
 }
@@ -476,11 +417,9 @@ bool Servo::getRadian(uint8_t id, float* radian) {
     if (!dxl.getRadian(id, radian, &log))
     {        
         LOG_ERR(log);
-        LOG_ERR("Failed to get radian for id: " + String(id));
+        LOG_ERR("id: " + String(id));
         return false;  
     }
-
-    LOG_INF("Radian for id: " + String(id) + " is: " + String(*radian));
     return true;
     
 }
@@ -491,11 +430,9 @@ bool Servo::getPresentVelocityData(uint8_t id, int32_t* data) {
     if (!dxl.getPresentVelocityData(id, data, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("Failed to get present velocity data for id: " + String(id));
+        LOG_ERR("id: " + String(id));
         return false;  
     }
-
-    LOG_INF("Present velocity data for id: " + String(id) + " is: " + String(*data));
     return true;
 }
 
@@ -505,11 +442,9 @@ bool Servo::getVelocity(uint8_t id, float* velocity) {
     if (!dxl.getVelocity(id, velocity, &log))
     {        
         LOG_ERR(log);
-        LOG_ERR("Failed to get velocity for id: " + String(id));
+        LOG_ERR("id: " + String(id));
         return false;  
     }
-
-    LOG_INF("Velocity for id: " + String(id) + " is: " + String(*velocity));
     return true;
 }
 
@@ -537,7 +472,6 @@ bool Servo::isMoving(uint8_t id) {
         LOG_ERR("Failed to read moving status for servo ID: " + String(id));
         return false;
     }
-    LOG_INF("Moving status for servo ID: " + String(id) + " is: " + (isMoving == 1 ? "Moving" : "Not Moving"));
     return isMoving;
 }
 
