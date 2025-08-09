@@ -88,9 +88,9 @@
         CommandHistory      commandHistory;                     // Command history management
 
         // Static members for global logging
+        static Stream*      logStream;                          // Stream for logging output
         static DebugLevel   debugLevel;                         // Current debug level
         static bool         colorEnabled;                       // Color output enabled flag
-        static Stream*      logStream;                          // Stream for logging output
         
         // Pointers to instances
         Servo*              servo;                              // Pointer to Servo instance for Dynamixel control
@@ -99,10 +99,6 @@
         AXS1Sensor*         sensor;                             // Pointer to AXS1Sensor instance (can be nullptr)
         GaitController*     gc;                                 // Pointer to GaitController instance
         Microcontroller*    mc;                                 // Pointer to Microcontroller instance
-
-        // EEPROM management
-        static void saveSettingsToEEPROM();                     // Save settings to EEPROM
-        static void loadSettingsFromEEPROM();                   // Load settings from EEPROM
 
         // Input processing methods
         void processInput(const String& input);                 // Process the input entered by the user

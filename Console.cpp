@@ -2,19 +2,20 @@
 #include <stdarg.h>  // For va_list, va_start, va_end
 #include <EEPROM.h>
 
-// Static member initialization
-DebugLevel  Console::debugLevel     = DEBUG_WRN;    // Default to WARN level
-bool        Console::colorEnabled   = true;         // Enable colors by default
-Stream*     Console::logStream      = &Serial;      // Default to Serial fo    println("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note, 'mlon 3' turns on user LED 3, 'srpos 1 1024' moves servo 1 to position 1024"); logging
+// Static members initialization
+Stream*     Console::logStream       = &Serial;      // Default to Serial for logging
+DebugLevel  Console::debugLevel      = DEBUG_INF;    // Default debug level
+bool        Console::colorEnabled    = true;         // Default color enabled
 
 // Constructor for Console class
 Console::Console(){
-    shell = "$";                // Default shell prompt
-    cursorPos = 0;              // Start cursor at position 0
-    insertMode = true;          // Default to insert mode
-    debugLevel = DEBUG_WRN;     // Default debug level
-    colorEnabled = true;        // Default to color enabled
-    logStream = &Serial;        // Default log stream is Serial
+    shell           = "$";                  // Default shell prompt
+    cursorPos       = 0;                    // Start cursor at position 0
+    insertMode      = true;                 // Default to insert mode
+    logStream       = &Serial;              // Default log stream is Serial
+
+    debugLevel      = (DebugLevel)EEPROM.read(EEPROM_ADDR_DEBUG_LEVEL); // Read debug level from EEPROM
+    colorEnabled    = EEPROM.read(EEPROM_ADDR_COLOR_ENABLED) != 0;      // Read color enabled flag from EEPROM
 }
 
 // Initialize the console with a baud rate and instances of components
@@ -61,27 +62,18 @@ void Console::update() {
     }
 }
 
-
-void Console::saveSettingsToEEPROM() {
-    EEPROM.write(EEPROM_ADDR_DEBUG_LEVEL, (uint8_t)debugLevel);
-    EEPROM.write(EEPROM_ADDR_COLOR_ENABLED, colorEnabled ? 1 : 0);
-}
-
-void Console::loadSettingsFromEEPROM() {
-    debugLevel = (DebugLevel)EEPROM.read(EEPROM_ADDR_DEBUG_LEVEL);
-    colorEnabled = EEPROM.read(EEPROM_ADDR_COLOR_ENABLED) != 0;
-}
-
-
 // Static method to set debug level
 void Console::setDebugLevel(DebugLevel level) {
     debugLevel = level;
+    EEPROM.write(EEPROM_ADDR_DEBUG_LEVEL, (uint8_t)debugLevel);
     println("Debug level set to: " + String(level));
 }
 
 // Static method to enable/disable colors
 void Console::setColorEnabled(bool enabled) {
     colorEnabled = enabled;
+    EEPROM.write(EEPROM_ADDR_COLOR_ENABLED, colorEnabled ? 1 : 0);
+
     println("Color output " + String(enabled ? "enabled" : "disabled"));
 }
 
