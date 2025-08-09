@@ -37,8 +37,8 @@
         DEBUG_NON = 0,     // No debug output
         DEBUG_ERR = 1,     // Errors only
         DEBUG_WRN = 2,     // Warnings and Errors
-        DEBUG_DBG = 3,     // Debug, Warning, and Error messages
-        DEBUG_INF = 4      // Info, Debug, Warnings, and Errors
+        DEBUG_INF = 3,     // Info, Warnings, and Errors
+        DEBUG_DBG = 4      // Debug, Info, Warnings, and Errors
 
     };
 

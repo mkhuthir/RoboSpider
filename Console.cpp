@@ -227,15 +227,15 @@ bool Console::runConsoleCommands(const String& cmd, const String& args) {
         // Set debug level: debug 0-4
         if (args.length() > 0) {
             int level = args.toInt();
-            if (level >= DEBUG_NON && level <= DEBUG_INF) {
+            if (level >= DEBUG_NON && level <= DEBUG_DBG) {
                 setDebugLevel((DebugLevel)level);
                 printInfo("Debug level set to: " + String(level));
             } else {
-                printError("Invalid debug level. Use 0-4 (0=NON, 1=ERR, 2=WRN, 3=DBG, 4=INF)");
+                printError("Invalid debug level. Use 0-4 (0=NON, 1=ERR, 2=WRN, 3=INF, 4=DBG)");
             }
 
         } else {
-            println("Current debug level: " + String(debugLevel) + " (0=NON, 1=ERR, 2=WRN, 3=DBG, 4=INF)");
+            println("Current debug level: " + String(debugLevel) + " (0=NON, 1=ERR, 2=WRN, 3=INF, 4=DBG)");
         }
         return true;
 
@@ -316,7 +316,7 @@ void Console::printConsoleHelp() {
     println("  g?               - Show gait controller commands");
     println("");
     println("  cls / clear      - Clear the terminal screen");
-    println("  debug [0-4]      - Set debug level 0=NON, 1=ERR, 2=WRN, 3=DBG, 4=INF");
+    println("  debug [0-4]      - Set debug level 0=NON, 1=ERR, 2=WRN, 3=INF, 4=DBG");
     println("  color [on/off]   - Enable/disable color output");
     println("  test             - Test enabled debug message types");
     println("");
