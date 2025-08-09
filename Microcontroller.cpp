@@ -112,18 +112,24 @@ bool Microcontroller::checkBattery() {
     return voltage >= 6.0;                                  // Return true if battery voltage is sufficient
 }   
 
+// Get the uptime of the microcontroller
+unsigned long Microcontroller::getUpTime() {
+    return millis();
+}
+
 // Print the current status of the microcontroller to the given stream
 void Microcontroller::printStatus() {
     PRINTLN("\nMicrocontroller Status:\n\r");
-    PRINTLN("Battery Voltage: "+String(getBatteryVoltage())+" V");
-    PRINTLN(String("Battery Status: ") + (checkBattery() ? "PASSED" : "FAILED"));
+    PRINTLN("Microcontroller Uptime: " + String(getUpTime()) + " ms");
+    PRINTLN("Battery Voltage       : " + String(getBatteryVoltage())+" V");
+    PRINTLN("Battery Status        : " + String(checkBattery() ? "PASSED" : "FAILED"));
     PRINT(String("LEDS -> Built-in:") + ((digitalRead(LED_BUILTIN) == HIGH) ? "On " : "Off"));
     PRINT(String(" | User1:") + ((digitalRead(BDPIN_LED_USER_1) == LOW) ? "On " : "Off"));
     PRINT(String(" | User2:") + ((digitalRead(BDPIN_LED_USER_2) == LOW) ? "On " : "Off"));
     PRINT(String(" | User3:") + ((digitalRead(BDPIN_LED_USER_3) == LOW) ? "On " : "Off"));
     PRINT(String(" | User4:") + ((digitalRead(BDPIN_LED_USER_4) == LOW) ? "On " : "Off"));
-    PRINT(String(" | Status:") + ((digitalRead(BDPIN_LED_STATUS) == LOW) ? "On " : "Off"));
-    PRINTLN("");
+    PRINTLN(String(" | Status:") + ((digitalRead(BDPIN_LED_STATUS) == LOW) ? "On " : "Off"));
+    
 }
 
 // Process console commands for microcontroller control
