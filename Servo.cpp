@@ -622,14 +622,17 @@ void Servo::printConsoleHelp() {
     PRINTLN("Servo Commands:");
     PRINTLN("  ss [id]         - Show servo status (default id=1)");
     PRINTLN("  sp [id]         - Ping servo (default id=1)");
+    PRINTLN("");
+    PRINTLN("  ssp [id] [pos]  - Set servo position (default id=1, pos=512)");
+    PRINTLN("  sss [id] [spd]  - Set servo speed (default id=1, spd=100)");
+    PRINTLN("  sgp [id]        - Get servo position (default id=1)");
+    PRINTLN("  sgs [id]        - Get servo speed (default id=1)");
+    PRINTLN("");
     PRINTLN("  ston [id]       - Enable servo torque (default id=1)");
     PRINTLN("  stoff [id]      - Disable servo torque (default id=1)");
     PRINTLN("  slon [id]       - Turn on servo LED (default id=1)");
     PRINTLN("  sloff [id]      - Turn off servo LED (default id=1)");
-    PRINTLN("  ssp [id] [pos]  - Set servo position (default id=1, pos=512)");
-    PRINTLN("  sss [id] [spd]  - Set servo speed (default id=1, spd=100)");
-    PRINTLN("  sgp [id]        - Get current servo position (default id=1)");
-    PRINTLN("  sgs [id]        - Get current servo speed (default id=1)");
+    PRINTLN("");
     PRINTLN("  s?              - Show this help message");
     PRINTLN("");
 }
