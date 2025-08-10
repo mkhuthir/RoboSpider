@@ -17,18 +17,19 @@
             float               getProtocolVersion(void);                                   // get the protocol version being used
             uint32_t            getBaudrate(void);                                          // get the current baudrate
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-            bool                writeRegister(uint8_t id, uint16_t address, uint16_t length, uint8_t* data);
-            bool                writeRegister(uint8_t id, const char *item_name, int32_t data);
             bool                readRegister(uint8_t id, uint16_t address, uint16_t length, uint32_t *data);
+            bool                writeRegister(uint8_t id, uint16_t address, uint16_t length, uint8_t* data);
+
             bool                readRegister(uint8_t id, const char *item_name, int32_t *data);
+            bool                writeRegister(uint8_t id, const char *item_name, int32_t data);
+
+            bool                itemRead(uint8_t id, const char *item_name, int32_t *data);
+            bool                itemWrite(uint8_t id, const char *item_name, int32_t data);
 
             bool                addSyncWriteHandler(uint16_t address, uint16_t length);
             bool                addSyncWriteHandler(uint8_t id, const char *item_name);
             bool                syncWrite(uint8_t index, int32_t *data);
             bool                syncWrite(uint8_t index, uint8_t *id, uint8_t id_num, int32_t *data, uint8_t data_num_for_each_id);
-
-            bool                itemWrite(uint8_t id, const char *item_name, int32_t data); // write an item to a servo
-            bool                itemRead(uint8_t id, const char *item_name, int32_t *data); // read an item from a servo
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
 
