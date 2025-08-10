@@ -245,10 +245,10 @@ uint16_t Servo::getModelNumber(uint8_t id) {
 }
 
 // Get the present position data of a servo in value
-bool Servo::getPosition(uint8_t id, int32_t* data) {
-    
-    if (!dxl.getPresentPositionData(id, data, &log))
-    {        
+bool Servo::getPosition(uint8_t id, int32_t* pos) {
+
+    if (!dxl.getPresentPositionData(id, pos, &log))
+    {
         LOG_ERR(log);
         LOG_ERR("id: " + String(id));
         return false;  
@@ -257,9 +257,9 @@ bool Servo::getPosition(uint8_t id, int32_t* data) {
 }
 
 // Get the present velocity data of a servo in value
-bool Servo::getSpeed(uint8_t id, int32_t* data) {
-    
-    if (!dxl.getPresentVelocityData(id, data, &log))
+bool Servo::getSpeed(uint8_t id, int32_t* speed) {
+
+    if (!dxl.getPresentVelocityData(id, speed, &log))
     {
         LOG_ERR(log);
         LOG_ERR("id: " + String(id));
@@ -269,7 +269,7 @@ bool Servo::getSpeed(uint8_t id, int32_t* data) {
 }
 
 // Get the present load data of a servo in value
-bool Servo::getLoad(uint8_t id, int32_t* data) {
+bool Servo::getLoad(uint8_t id, int32_t* load) {
 
     if (true)
     {
@@ -281,7 +281,7 @@ bool Servo::getLoad(uint8_t id, int32_t* data) {
 }
 
 // Get the present voltage data of a servo in value
-bool Servo::getVoltage(uint8_t id, int32_t* data) {
+bool Servo::getVoltage(uint8_t id, int32_t* voltage) {
 
     if (true)
     {
@@ -293,7 +293,7 @@ bool Servo::getVoltage(uint8_t id, int32_t* data) {
 }
 
 // Get the present temperature data of a servo in value
-bool Servo::getTemperature(uint8_t id, int32_t* data) {
+bool Servo::getTemperature(uint8_t id, int32_t* temperature) {
 
     if (true)
     {
