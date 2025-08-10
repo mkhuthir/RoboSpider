@@ -29,10 +29,6 @@
 
             bool                itemWrite(uint8_t id, const char *item_name, int32_t data); // write an item to a servo
             bool                itemRead(uint8_t id, const char *item_name, int32_t *data); // read an item from a servo
-
-            bool                setNormalDirection(uint8_t id);                             // set the servo direction to normal
-            bool                setReverseDirection(uint8_t id);                            // set the servo direction to reverse
-
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
 

@@ -302,32 +302,6 @@ bool Servo::ledOff(uint8_t dxl_id) {
     
 }
 
-// Set the normal direction for a servo
-bool Servo::setNormalDirection(uint8_t id) {
-    
-    if (!dxl.setNormalDirection(id, &log))
-    {        
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
-        return false;  
-    }
-    return true;
-
-}
-
-// Set the reverse direction for a servo
-bool Servo::setReverseDirection(uint8_t id) {
-    
-    if (!dxl.setReverseDirection(id, &log))
-    {     
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
-        return false;  
-    }
-    return true;
-
-}
-
 // Set a servo to joint mode
 bool Servo::setJointMode(uint8_t dxl_id) {
     
