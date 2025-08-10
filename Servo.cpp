@@ -454,15 +454,15 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
     } else if (cmd == "ssp") {
         if (arg2 < 0 || arg2 > 1023)                // Validate position (typical range for AX-12A is 0-1023)
             arg2 = 512;                             // Center position
-        setPosition((uint8_t)servoId, (int32_t)position);
-        PRINTLN("Servo ID " + String(servoId) + " position set to " + String(position));
+        setPosition((uint8_t)servoId, (int32_t)arg2);
+        PRINTLN("Servo ID " + String(servoId) + " position set to " + String(arg2));
         return true;
 
     } else if (cmd == "sss") {
         if (arg2 < 0 || arg2 > 1023)                // Validate speed (typical range is 0-1023)
             arg2 = 100;                             // default speed
-        setSpeed((uint8_t)servoId, (int32_t)speed);
-        PRINTLN("Servo ID " + String(servoId) + " speed set to " + String(speed));
+        setSpeed((uint8_t)servoId, (int32_t)arg2);
+        PRINTLN("Servo ID " + String(servoId) + " speed set to " + String(arg2));
         return true;
         
     } else if (cmd == "ston") {
