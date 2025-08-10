@@ -384,227 +384,106 @@ bool Servo::init(uint8_t dxl_id, int32_t speed) {
 
 // Process console commands for servo control
 bool Servo::runConsoleCommands(const String& cmd, const String& args) {
+    
+    int servoId = 1;                                // Default to servo ID 1
+    int arg2    = 0;                                // Default to 0
+
+    if (args.length() > 0) {
+        int spaceIndex = args.indexOf(' ');
+        if (spaceIndex != -1) {
+            servoId = args.substring(0, spaceIndex).toInt();
+            arg2    = args.substring(spaceIndex + 1).toInt();
+        } else {
+            servoId = args.toInt();
+        }
+        
+        if (servoId < 1 || servoId > 253)           // Validate servo ID
+            servoId = 1;                            // Reset to default ID
+    }
+
     if (cmd == "ss") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) { // Valid Dynamixel ID range
-                servoId = parsedId;
-            }
-        }
-              
-        if (!printStatus(servoId)) {
-            LOG_ERR("Failed to get status for servo ID " + String(servoId));
-            return false;  // Return false if status retrieval fails
-        }
+        printStatus(servoId);
         return true;
 
     } else if (cmd == "sp") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
-        
-        bool result = ping((uint8_t)servoId);
-        PRINTLN("Servo ID " + String(servoId) + " ping: " + String(result ? "SUCCESS" : "FAILED"));
+        PRINTLN("Servo ID " + String(servoId) + " ping: " + String(ping((uint8_t)servoId) ? "SUCCESS" : "FAILED"));
         return true;
 
     } else if (cmd == "sgp") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
-        
         int32_t currentPos;
-        bool result = getPosition((uint8_t)servoId, &currentPos);
-        if (result) {
-            PRINTLN("Servo ID " + String(servoId) + " current position: " + String(currentPos));
-        } else {
-            LOG_ERR("Failed to read position from servo ID " + String(servoId));
-        }
+        getPosition((uint8_t)servoId, &currentPos);
+        PRINTLN("Servo ID " + String(servoId) + " current position: " + String(currentPos));
         return true;
         
     } else if (cmd == "sgs") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
-
         int32_t currentSpeed;
-        bool result = getSpeed((uint8_t)servoId, &currentSpeed);
-        if (result) {
-            PRINTLN("Servo ID " + String(servoId) + " current speed: " + String(currentSpeed));
-        } else {
-            LOG_ERR("Failed to read speed from servo ID " + String(servoId));
-        }
+        getSpeed((uint8_t)servoId, &currentSpeed);
+        PRINTLN("Servo ID " + String(servoId) + " current speed: " + String(currentSpeed));
         return true;
         
     } else if (cmd == "sgl") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
-
         int32_t currentLoad;
-        bool result = getLoad((uint8_t)servoId, &currentLoad);
-        if (result) {
-            PRINTLN("Servo ID " + String(servoId) + " current load: " + String(currentLoad));
-        } else {
-            LOG_ERR("Failed to read load from servo ID " + String(servoId));
-        }
+        getLoad((uint8_t)servoId, &currentLoad);
+        PRINTLN("Servo ID " + String(servoId) + " current load: " + String(currentLoad));
         return true;
 
     } else if (cmd == "sgv") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
-
         int32_t currentVoltage;
-        bool result = getVoltage((uint8_t)servoId, &currentVoltage);
-        if (result) {
-            PRINTLN("Servo ID " + String(servoId) + " current voltage: " + String(currentVoltage));
-        } else {
-            LOG_ERR("Failed to read voltage from servo ID " + String(servoId));
-        }
+        getVoltage((uint8_t)servoId, &currentVoltage);
+        PRINTLN("Servo ID " + String(servoId) + " current voltage: " + String(currentVoltage));
         return true;
 
     } else if (cmd == "sgt") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
-
         int32_t currentTemperature;
-        bool result = getTemperature((uint8_t)servoId, &currentTemperature);
-        if (result) {
-            PRINTLN("Servo ID " + String(servoId) + " current temperature: " + String(currentTemperature));
-        } else {
-            LOG_ERR("Failed to read temperature from servo ID " + String(servoId));
-        }
+        getTemperature((uint8_t)servoId, &currentTemperature);
+        PRINTLN("Servo ID " + String(servoId) + " current temperature: " + String(currentTemperature));
+        return true;
+
+    } else if (cmd == "sim") {
+        PRINTLN("Servo ID " + String(servoId) + " is " + String(isMoving((uint8_t)servoId) ? "MOVING" : "NOT MOVING"));
+        return true;
+
+    } else if (cmd == "sit") {
+        PRINTLN("Servo ID " + String(servoId) + " torque is " + String(isTorqueOn((uint8_t)servoId) ? "ENABLED" : "DISABLED"));
+        return true;
+
+    } else if (cmd == "sil") {
+        PRINTLN("Servo ID " + String(servoId) + " LED is " + String(isLedOn((uint8_t)servoId) ? "ON" : "OFF"));
         return true;
 
     } else if (cmd == "ssp") {
-        int servoId = 1; // Default to servo ID 1
-        int position = 2048; // Default to center position
-        
-        if (args.length() > 0) {
-            int spaceIndex = args.indexOf(' ');
-            if (spaceIndex != -1) {
-                servoId = args.substring(0, spaceIndex).toInt();
-                position = args.substring(spaceIndex + 1).toInt();
-            } else {
-                servoId = args.toInt();
-            }
-            
-            // Validate servo ID
-            if (servoId < 1 || servoId > 253) {
-                servoId = 1;
-            }
-
-            // Validate position (typical range for AX-12A is 0-1023)
-            if (position < 0 || position > 1023) {
-                position = 512; // Center position
-            }
-        }
-        
-        bool result = setPosition((uint8_t)servoId, (int32_t)position);
-        PRINTLN("Servo ID " + String(servoId) + " position set to " + String(position) + ": " + String(result ? "SUCCESS" : "FAILED"));
+        if (arg2 < 0 || arg2 > 1023)                // Validate position (typical range for AX-12A is 0-1023)
+            arg2 = 512;                             // Center position
+        setPosition((uint8_t)servoId, (int32_t)position);
+        PRINTLN("Servo ID " + String(servoId) + " position set to " + String(position));
         return true;
 
     } else if (cmd == "sss") {
-        int servoId = 1; // Default to servo ID 1
-        int speed = 100; // Default speed
-
-        if (args.length() > 0) {
-            int spaceIndex = args.indexOf(' ');
-            if (spaceIndex != -1) {
-                servoId = args.substring(0, spaceIndex).toInt();
-                speed = args.substring(spaceIndex + 1).toInt();
-            } else {
-                servoId = args.toInt();
-            }
-            
-            // Validate servo ID
-            if (servoId < 1 || servoId > 253) {
-                servoId = 1;
-            }
-
-            // Validate speed (typical range for AX-12A is 0-1023)
-            if (speed < 0 || speed > 1023) {
-                speed = 100;
-            }
-        }
-
-        bool result = setSpeed((uint8_t)servoId, (int32_t)speed);
-        PRINTLN("Servo ID " + String(servoId) + " speed set to " + String(speed) + ": " + String(result ? "SUCCESS" : "FAILED"));
+        if (arg2 < 0 || arg2 > 1023)                // Validate speed (typical range is 0-1023)
+            arg2 = 100;                             // default speed
+        setSpeed((uint8_t)servoId, (int32_t)speed);
+        PRINTLN("Servo ID " + String(servoId) + " speed set to " + String(speed));
         return true;
         
     } else if (cmd == "ston") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
         
         bool result = torqueOn((uint8_t)servoId);
         PRINTLN("Servo ID " + String(servoId) + " torque " + String(result ? "ENABLED" : "FAILED"));
         return true;
 
     } else if (cmd == "stoff") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
         
         bool result = torqueOff((uint8_t)servoId);
         PRINTLN("Servo ID " + String(servoId) + " torque " + String(result ? "DISABLED" : "FAILED"));
         return true;
         
     } else if (cmd == "slon") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
         
         bool result = ledOn((uint8_t)servoId);
         PRINTLN("Servo ID " + String(servoId) + " LED " + String(result ? "ON" : "FAILED"));
         return true;
 
     } else if (cmd == "sloff") {
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
         
         bool result = ledOff((uint8_t)servoId);
         PRINTLN("Servo ID " + String(servoId) + " LED " + String(result ? "OFF" : "FAILED"));
@@ -661,6 +540,10 @@ void Servo::printConsoleHelp() {
     PRINTLN("  sgl [id]        - Get servo load (default id=1)");
     PRINTLN("  sgv [id]        - Get servo voltage (default id=1)");
     PRINTLN("  sgt [id]        - Get servo temperature (default id=1)");
+    PRINTLN("");
+    PRINTLN("  sim [id]        - Check is servo moving (default id=1)");
+    PRINTLN("  sit [id]        - Check is servo torque enabled (default id=1)");
+    PRINTLN("  sil [id]        - Check is servo LED enabled (default id=1)");
     PRINTLN("");
     PRINTLN("  ssp [id] [pos]  - Set servo position (default id=1, pos=512)");
     PRINTLN("  sss [id] [spd]  - Set servo speed (default id=1, spd=100)");

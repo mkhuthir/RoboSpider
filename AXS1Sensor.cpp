@@ -31,7 +31,7 @@ bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
 // Update method to refresh sensor data
 bool AXS1Sensor::update() {
 
-    if (RemoconArrived()) {             // Check if remote control signal has arrived
+    if (RemoconArrived()) {             // TODO: test this using a remote
         
         int remoconRX = getRemoconRX(); // Read remote control RX data
         
@@ -44,13 +44,6 @@ bool AXS1Sensor::update() {
 
     if (ObstacleDetected()) {           // Check if obstacle is detected
         playTone(30, 1);
-    }
-
-    if (getSoundDetectedCount() == 3) {
-        playMelody(21);
-        resetSoundDataMaxHold();
-        resetSoundDetectedCount();
-        //TODO: resetSoundDetectedTime()
     }
 
     return true;
