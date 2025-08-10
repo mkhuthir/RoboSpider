@@ -46,15 +46,15 @@
             bool                setSpeed(uint8_t id, int32_t speed);                        // set the speed of a servo
 
             bool                isMoving(uint8_t id);                                       // check if a servo is currently moving
-            bool                ledOn(uint8_t dxl_id);                                      // turn on the LED of a servo
-            bool                ledOff(uint8_t dxl_id);                                     // turn off the LED of a servo
+            
             bool                torqueOn(uint8_t id);                                       // turn on the torque of a servo
             bool                torqueOff(uint8_t id);                                      // turn off the torque of a servo
-
-            bool                printStatus(uint8_t id);                                    // print the status of a servo for debugging
+            bool                ledOn(uint8_t dxl_id);                                      // turn on the LED of a servo
+            bool                ledOff(uint8_t dxl_id);                                     // turn off the LED of a servo
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             bool                init(uint8_t dxl_id, int32_t speed);                        // initialize a servo with default settings            
             bool                runConsoleCommands(const String& cmd, const String& args);  // Process console commands for servo control
+            bool                printStatus(uint8_t id);                                    // print the status of a servo for debugging            
             void                printConsoleHelp();                                         // Print servo-specific help information
             DynamixelWorkbench* getWorkbench();                                             // if you need to expose the workbench pointer
 //---------------------------------------------------------------------------------------------------------------------------------------------------

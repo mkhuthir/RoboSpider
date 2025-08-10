@@ -83,45 +83,7 @@ uint32_t Servo::getBaudrate(void) {
     }
     return baudrate;
 }
-
-// Get the model name of a servo
-const char * Servo::getModelName(uint8_t id) {
-
-    const char*  model_name = NULL;
-    model_name = dxl.getModelName(id, &log);
-
-    if (model_name == NULL)
-    {   
-        LOG_ERR(log);
-        return NULL;
-    }
-    return model_name;
-}
-
-// Get the model number of a servo
-uint16_t Servo::getModelNumber(uint8_t id) {
-    uint16_t model_number = 0;
-    model_number = dxl.getModelNumber(id, &log);
-    if (model_number == 0)
-    {
-        LOG_ERR(log);
-        return 0;
-    }
-    return model_number;
-}
-
-// Ping a servo to check if it is connected
-bool Servo::ping(uint8_t dxl_id) {
-
-    uint16_t model_number = 0;
-    if (!dxl.ping(dxl_id, &model_number, &log))
-    {
-        LOG_ERR(log);
-        return false;
-
-    }
-    return true;
-}
+//-----------------------------------------------------------------------------
 
 // Write a register to a servo with address and length
 bool Servo::writeRegister(uint8_t id, uint16_t address, uint16_t length, uint8_t* data) {
@@ -169,6 +131,32 @@ bool Servo::readRegister(uint8_t id, const char *item_name, int32_t *data) {
         return false;  
     }
 
+    return true;
+}
+
+// Write an item to a servo
+bool Servo::itemWrite(uint8_t id, const char *item_name, int32_t data) {
+    
+    if (!dxl.itemWrite(id, item_name, data, &log))
+    {
+        LOG_ERR(log);
+        LOG_ERR("item: " + String(item_name)+ " id: " + String(id));
+        return false;  
+    }
+    return true;
+    
+}
+
+// Read an item from a servo
+bool Servo::itemRead(uint8_t id, const char *item_name, int32_t *data) {
+    
+    if (!dxl.itemRead(id, item_name, data, &log))
+    {        
+        LOG_ERR(log);
+        LOG_ERR("item: " + String(item_name)+ " id: " + String(id) );
+        return false;  
+        
+    }
     return true;
 }
 
@@ -223,83 +211,106 @@ bool Servo::syncWrite(uint8_t index, uint8_t *id, uint8_t id_num, int32_t *data,
     return true;
 
 }
+//------------------------------------------------------------------------
+// Ping a servo to check if it is connected
+bool Servo::ping(uint8_t dxl_id) {
 
-// Turn on the torque for a servo
-bool Servo::torqueOn(uint8_t id) {
-    
-    if (!dxl.torqueOn(id, &log))
+    uint16_t model_number = 0;
+    if (!dxl.ping(dxl_id, &model_number, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
-        return false;  
+        return false;
+
     }
     return true;
-
 }
 
-// Turn off the torque for a servo
-bool Servo::torqueOff(uint8_t id) {
-    
-    if (!dxl.torqueOff(id, &log))
+// Get the model name of a servo
+const char * Servo::getModelName(uint8_t id) {
+
+    const char*  model_name = NULL;
+    model_name = dxl.getModelName(id, &log);
+
+    if (model_name == NULL)
+    {   
+        LOG_ERR(log);
+        return NULL;
+    }
+    return model_name;
+}
+
+// Get the model number of a servo
+uint16_t Servo::getModelNumber(uint8_t id) {
+    uint16_t model_number = 0;
+    model_number = dxl.getModelNumber(id, &log);
+    if (model_number == 0)
     {
         LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
-        return false;  
+        return 0;
     }
-    return true;
-    
+    return model_number;
 }
 
-// Write an item to a servo
-bool Servo::itemWrite(uint8_t id, const char *item_name, int32_t data) {
-    
-    if (!dxl.itemWrite(id, item_name, data, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("item: " + String(item_name)+ " id: " + String(id));
-        return false;  
-    }
-    return true;
-    
-}
 
-// Read an item from a servo
-bool Servo::itemRead(uint8_t id, const char *item_name, int32_t *data) {
+// Get the present position data of a servo in value
+bool Servo::getPosition(uint8_t id, int32_t* data) {
     
-    if (!dxl.itemRead(id, item_name, data, &log))
+    if (!dxl.getPresentPositionData(id, data, &log))
     {        
         LOG_ERR(log);
-        LOG_ERR("item: " + String(item_name)+ " id: " + String(id) );
-        return false;  
-        
-    }
-    return true;
-}
-
-// Turn on the LED of a servo
-bool Servo::ledOn(uint8_t dxl_id) {
-    
-    if (!dxl.ledOn(dxl_id, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(dxl_id));
+        LOG_ERR("id: " + String(id));
         return false;  
     }
     return true;
 
 }
 
-// Turn off the LED of a servo
-bool Servo::ledOff(uint8_t dxl_id) {
+// Get the present velocity data of a servo in value
+bool Servo::getSpeed(uint8_t id, int32_t* data) {
     
-    if (!dxl.ledOff(dxl_id, &log))
+    if (!dxl.getPresentVelocityData(id, data, &log))
     {
         LOG_ERR(log);
-        LOG_ERR("id: " + String(dxl_id));
+        LOG_ERR("id: " + String(id));
         return false;  
     }
     return true;
-    
+}
+
+// Get the present load data of a servo in value
+bool Servo::getLoad(uint8_t id, int32_t* data) {
+
+    if (true)
+    {
+        LOG_ERR(log);
+        LOG_ERR("id: " + String(id));
+        return false;
+    }
+    return true;
+}
+
+// Get the present voltage data of a servo in value
+bool Servo::getVoltage(uint8_t id, int32_t* data) {
+
+    if (true)
+    {
+        LOG_ERR(log);
+        LOG_ERR("id: " + String(id));
+        return false;
+    }
+    return true;
+}
+
+// Get the present temperature data of a servo in value
+bool Servo::getTemperature(uint8_t id, int32_t* data) {
+
+    if (true)
+    {
+        LOG_ERR(log);
+        LOG_ERR("id: " + String(id));
+        return false;
+    }
+    return true;
 }
 
 // Set a servo to joint mode
@@ -342,33 +353,69 @@ bool Servo::setSpeed(uint8_t dxl_id, int32_t speed) {
     
 }
 
-
-// Get the present position data of a servo in value
-bool Servo::getPosition(uint8_t id, int32_t* data) {
-    
-    if (!dxl.getPresentPositionData(id, data, &log))
-    {        
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
-        return false;  
+// Check if a servo is currently moving
+bool Servo::isMoving(uint8_t id) {
+    int32_t isMoving = 0;
+    if (!readRegister(id, "Moving", &isMoving)) {
+        LOG_ERR("Failed to read moving status for servo ID: " + String(id));
+        return false;
     }
-    return true;
-
+    return isMoving;
 }
 
-// Get the present velocity data of a servo in value
-bool Servo::getSpeed(uint8_t id, int32_t* data) {
+// Turn on the torque for a servo
+bool Servo::torqueOn(uint8_t id) {
     
-    if (!dxl.getPresentVelocityData(id, data, &log))
+    if (!dxl.torqueOn(id, &log))
     {
         LOG_ERR(log);
         LOG_ERR("id: " + String(id));
         return false;  
     }
     return true;
+
 }
 
+// Turn off the torque for a servo
+bool Servo::torqueOff(uint8_t id) {
+    
+    if (!dxl.torqueOff(id, &log))
+    {
+        LOG_ERR(log);
+        LOG_ERR("id: " + String(id));
+        return false;  
+    }
+    return true;
+    
+}
 
+// Turn on the LED of a servo
+bool Servo::ledOn(uint8_t dxl_id) {
+    
+    if (!dxl.ledOn(dxl_id, &log))
+    {
+        LOG_ERR(log);
+        LOG_ERR("id: " + String(dxl_id));
+        return false;  
+    }
+    return true;
+
+}
+
+// Turn off the LED of a servo
+bool Servo::ledOff(uint8_t dxl_id) {
+    
+    if (!dxl.ledOff(dxl_id, &log))
+    {
+        LOG_ERR(log);
+        LOG_ERR("id: " + String(dxl_id));
+        return false;  
+    }
+    return true;
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 // Initialize a servo with default settings
 bool Servo::init(uint8_t dxl_id, int32_t speed) {
     bool result =
@@ -384,45 +431,6 @@ bool Servo::init(uint8_t dxl_id, int32_t speed) {
         LOG_INF("Servo with ID: " + String(dxl_id) + " initialized successfully.");
     }
     return result;
-}
-
-// Check if a servo is currently moving
-bool Servo::isMoving(uint8_t id) {
-    int32_t isMoving = 0;
-    if (!readRegister(id, "Moving", &isMoving)) {
-        LOG_ERR("Failed to read moving status for servo ID: " + String(id));
-        return false;
-    }
-    return isMoving;
-}
-
-// Print the status of a servo for debugging
-bool Servo::printStatus(uint8_t id) {
-    
-    int32_t position = 0;
-    int32_t speed = 0;
-    int32_t torque_status = 0;
-    int32_t moving = 0;
-    int32_t led_status = 0;
-    
-    getPosition(id, &position);
-    getSpeed(id, &speed);
-    readRegister(id, "Torque_Enable", &torque_status);
-    readRegister(id, "Moving", &moving);
-    readRegister(id, "LED", &led_status);
-
-    PRINTLN("\nServo Status:");
-    PRINTLN("Servo ID     : " + String(id));                         // Print the ID of the servo
-    PRINTLN("Model Number : " + String(getModelNumber(id)));
-    PRINTLN("Model Name   : " + String(getModelName(id)));
-    PRINTLN("Position     : " + String(position));
-    PRINTLN("Speed        : " + String(speed));
-    PRINTLN("Torque       : " + String(torque_status ? "Enabled" : "Disabled"));
-    PRINTLN("Moving       : " + String(moving ? "YES" : "NO"));
-    PRINTLN("LED          : " + String(led_status ? "ON" : "OFF"));
-    
-    return true;                                                    // Return true to indicate successful status print
-
 }
 
 // Process console commands for servo control
@@ -457,8 +465,8 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
         PRINTLN("Servo ID " + String(servoId) + " ping: " + String(result ? "SUCCESS" : "FAILED"));
         return true;
 
-    } else if (cmd == "ston") {
-        // Servo torque on: ston [id] - enable torque for specific servo (default ID 1)
+    } else if (cmd == "sgp") {
+        // Get servo current position: sgp [id] - read current position of servo
         int servoId = 1; // Default to servo ID 1
         if (args.length() > 0) {
             int parsedId = args.toInt();
@@ -467,50 +475,32 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
             }
         }
         
-        bool result = torqueOn((uint8_t)servoId);
-        PRINTLN("Servo ID " + String(servoId) + " torque " + String(result ? "ENABLED" : "FAILED"));
+        int32_t currentPos;
+        bool result = getPosition((uint8_t)servoId, &currentPos);
+        if (result) {
+            PRINTLN("Servo ID " + String(servoId) + " current position: " + String(currentPos));
+        } else {
+            LOG_ERR("Failed to read position from servo ID " + String(servoId));
+        }
         return true;
+        
+    } else if (cmd == "sgs") {
+        // Get servo current speed: sgs [id] - read current speed of servo
+        int servoId = 1; // Default to servo ID 1
+        if (args.length() > 0) {
+            int parsedId = args.toInt();
+            if (parsedId >= 1 && parsedId <= 253) {
+                servoId = parsedId;
+            }
+        }
 
-    } else if (cmd == "stoff") {
-        // Servo torque off: stoff [id] - disable torque for specific servo (default ID 1)
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
+        int32_t currentSpeed;
+        bool result = getSpeed((uint8_t)servoId, &currentSpeed);
+        if (result) {
+            PRINTLN("Servo ID " + String(servoId) + " current speed: " + String(currentSpeed));
+        } else {
+            LOG_ERR("Failed to read speed from servo ID " + String(servoId));
         }
-        
-        bool result = torqueOff((uint8_t)servoId);
-        PRINTLN("Servo ID " + String(servoId) + " torque " + String(result ? "DISABLED" : "FAILED"));
-        return true;
-        
-    } else if (cmd == "slon") {
-        // Servo LED on: slon [id] - turn on LED for specific servo (default ID 1)
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
-        
-        bool result = ledOn((uint8_t)servoId);
-        PRINTLN("Servo ID " + String(servoId) + " LED " + String(result ? "ON" : "FAILED"));
-        return true;
-
-    } else if (cmd == "sloff") {
-        // Servo LED off: sloff [id] - turn off LED for specific servo (default ID 1)
-        int servoId = 1; // Default to servo ID 1
-        if (args.length() > 0) {
-            int parsedId = args.toInt();
-            if (parsedId >= 1 && parsedId <= 253) {
-                servoId = parsedId;
-            }
-        }
-        
-        bool result = ledOff((uint8_t)servoId);
-        PRINTLN("Servo ID " + String(servoId) + " LED " + String(result ? "OFF" : "FAILED"));
         return true;
 
     } else if (cmd == "ssp") {
@@ -570,9 +560,9 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
         bool result = setSpeed((uint8_t)servoId, (int32_t)speed);
         PRINTLN("Servo ID " + String(servoId) + " speed set to " + String(speed) + ": " + String(result ? "SUCCESS" : "FAILED"));
         return true;
-
-    } else if (cmd == "sgp") {
-        // Get servo current position: sgp [id] - read current position of servo
+        
+    } else if (cmd == "ston") {
+        // Servo torque on: ston [id] - enable torque for specific servo (default ID 1)
         int servoId = 1; // Default to servo ID 1
         if (args.length() > 0) {
             int parsedId = args.toInt();
@@ -581,16 +571,12 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
             }
         }
         
-        int32_t currentPos;
-        bool result = getPosition((uint8_t)servoId, &currentPos);
-        if (result) {
-            PRINTLN("Servo ID " + String(servoId) + " current position: " + String(currentPos));
-        } else {
-            LOG_ERR("Failed to read position from servo ID " + String(servoId));
-        }
+        bool result = torqueOn((uint8_t)servoId);
+        PRINTLN("Servo ID " + String(servoId) + " torque " + String(result ? "ENABLED" : "FAILED"));
         return true;
-    } else if (cmd == "sgs") {
-        // Get servo current speed: sgs [id] - read current speed of servo
+
+    } else if (cmd == "stoff") {
+        // Servo torque off: stoff [id] - disable torque for specific servo (default ID 1)
         int servoId = 1; // Default to servo ID 1
         if (args.length() > 0) {
             int parsedId = args.toInt();
@@ -598,16 +584,39 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
                 servoId = parsedId;
             }
         }
-
-        int32_t currentSpeed;
-        bool result = getSpeed((uint8_t)servoId, &currentSpeed);
-        if (result) {
-            PRINTLN("Servo ID " + String(servoId) + " current speed: " + String(currentSpeed));
-        } else {
-            LOG_ERR("Failed to read speed from servo ID " + String(servoId));
-        }
+        
+        bool result = torqueOff((uint8_t)servoId);
+        PRINTLN("Servo ID " + String(servoId) + " torque " + String(result ? "DISABLED" : "FAILED"));
         return true;
         
+    } else if (cmd == "slon") {
+        // Servo LED on: slon [id] - turn on LED for specific servo (default ID 1)
+        int servoId = 1; // Default to servo ID 1
+        if (args.length() > 0) {
+            int parsedId = args.toInt();
+            if (parsedId >= 1 && parsedId <= 253) {
+                servoId = parsedId;
+            }
+        }
+        
+        bool result = ledOn((uint8_t)servoId);
+        PRINTLN("Servo ID " + String(servoId) + " LED " + String(result ? "ON" : "FAILED"));
+        return true;
+
+    } else if (cmd == "sloff") {
+        // Servo LED off: sloff [id] - turn off LED for specific servo (default ID 1)
+        int servoId = 1; // Default to servo ID 1
+        if (args.length() > 0) {
+            int parsedId = args.toInt();
+            if (parsedId >= 1 && parsedId <= 253) {
+                servoId = parsedId;
+            }
+        }
+        
+        bool result = ledOff((uint8_t)servoId);
+        PRINTLN("Servo ID " + String(servoId) + " LED " + String(result ? "OFF" : "FAILED"));
+        return true;
+
     } else if (cmd == "s?") {
         // Show help for servo commands
         printConsoleHelp();
@@ -617,16 +626,45 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
     return false;
 }
 
+// Print the status of a servo for debugging
+bool Servo::printStatus(uint8_t id) {
+    
+    int32_t position = 0;
+    int32_t speed = 0;
+    int32_t torque_status = 0;
+    int32_t moving = 0;
+    int32_t led_status = 0;
+    
+    getPosition(id, &position);
+    getSpeed(id, &speed);
+    readRegister(id, "Torque_Enable", &torque_status);
+    readRegister(id, "Moving", &moving);
+    readRegister(id, "LED", &led_status);
+
+    PRINTLN("\nServo Status:");
+    PRINTLN("Servo ID     : " + String(id));                         // Print the ID of the servo
+    PRINTLN("Model Number : " + String(getModelNumber(id)));
+    PRINTLN("Model Name   : " + String(getModelName(id)));
+    PRINTLN("Position     : " + String(position));
+    PRINTLN("Speed        : " + String(speed));
+    PRINTLN("Torque       : " + String(torque_status ? "Enabled" : "Disabled"));
+    PRINTLN("Moving       : " + String(moving ? "YES" : "NO"));
+    PRINTLN("LED          : " + String(led_status ? "ON" : "OFF"));
+    
+    return true;                                                    // Return true to indicate successful status print
+
+}
+
 // Print servo-specific help information
 void Servo::printConsoleHelp() {
     PRINTLN("Servo Commands:");
     PRINTLN("  ss [id]         - Show servo status (default id=1)");
     PRINTLN("  sp [id]         - Ping servo (default id=1)");
     PRINTLN("");
-    PRINTLN("  ssp [id] [pos]  - Set servo position (default id=1, pos=512)");
-    PRINTLN("  sss [id] [spd]  - Set servo speed (default id=1, spd=100)");
     PRINTLN("  sgp [id]        - Get servo position (default id=1)");
     PRINTLN("  sgs [id]        - Get servo speed (default id=1)");
+    PRINTLN("  ssp [id] [pos]  - Set servo position (default id=1, pos=512)");
+    PRINTLN("  sss [id] [spd]  - Set servo speed (default id=1, spd=100)");
     PRINTLN("");
     PRINTLN("  ston [id]       - Enable servo torque (default id=1)");
     PRINTLN("  stoff [id]      - Disable servo torque (default id=1)");
