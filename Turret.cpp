@@ -80,11 +80,11 @@ void Turret::printStatus() {
   
   int32_t panPosition = 0, tiltPosition = 0;
 
-  if (!servo->getPresentPosition(turret_ids[0], &panPosition)) {
+  if (!servo->getPosition(turret_ids[0], &panPosition)) {
     LOG_ERR("Failed to read pan servo position");
   }
 
-  if (!servo->getPresentPosition(turret_ids[1], &tiltPosition)) {
+  if (!servo->getPosition(turret_ids[1], &tiltPosition)) {
     LOG_ERR("Failed to read tilt servo position");
   }
 

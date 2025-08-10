@@ -33,27 +33,20 @@
             bool                setNormalDirection(uint8_t id);                             // set the servo direction to normal
             bool                setReverseDirection(uint8_t id);                            // set the servo direction to reverse
 
-            bool                goalPosition(uint8_t id, int32_t value);
-            bool                goalPosition(uint8_t id, float radian);
-
-            bool                goalVelocity(uint8_t id, int32_t value);
-            bool                goalVelocity(uint8_t id, float velocity);
-
-       
-            bool                getRadian(uint8_t id, float* radian);
-            bool                getVelocity(uint8_t id, float* velocity);
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
 
-            bool                jointMode(uint8_t dxl_id);                                  // set a servo to joint mode
-
             const char *        getModelName(uint8_t id);                                   // get the model name of a servo by its ID
             uint16_t            getModelNumber(uint8_t id);                                 // get the model number of a servo by its ID
-            bool                getPresentPosition(uint8_t id, int32_t* data);              // get the present position of a servo
-            bool                getPresentSpeed(uint8_t id, int32_t* data);                 // get the present speed of a servo
-            bool                getPresentLoad(uint8_t id, int32_t* data);                  // get the present load of a servo
-            bool                getPresentVoltage(uint8_t id, int32_t* data);               // get the present voltage of a servo
-            bool                getPresentTemperature(uint8_t id, int32_t* data);           // get the present temperature of a servo
+            bool                getPosition(uint8_t id, int32_t* pos);                     // get the present position of a servo
+            bool                getSpeed(uint8_t id, int32_t* speed);                       // get the present speed of a servo
+            bool                getLoad(uint8_t id, int32_t* load);                         // get the present load of a servo
+            bool                getVoltage(uint8_t id, int32_t* voltage);                   // get the present voltage of a servo
+            bool                getTemperature(uint8_t id, int32_t* temperature);           // get the present temperature of a servo
+
+            bool                setJointMode(uint8_t dxl_id);                               // set a servo to joint mode
+            bool                setPosition(uint8_t id, int32_t position);                      // set the position of a servo
+            bool                setSpeed(uint8_t id, int32_t speed);                         // set the speed of a servo
 
             bool                isMoving(uint8_t id);                                       // check if a servo is currently moving
             bool                ledOn(uint8_t dxl_id);                                      // turn on the LED of a servo
@@ -63,7 +56,7 @@
 
             bool                printStatus(uint8_t id);                                    // print the status of a servo for debugging
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-            bool                init(uint8_t dxl_id, int32_t velocity);                     // initialize a servo with default settings            
+            bool                init(uint8_t dxl_id, int32_t speed);                        // initialize a servo with default settings            
             bool                runConsoleCommands(const String& cmd, const String& args);  // Process console commands for servo control
             void                printConsoleHelp();                                         // Print servo-specific help information
             DynamixelWorkbench* getWorkbench();                                             // if you need to expose the workbench pointer

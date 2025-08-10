@@ -73,21 +73,21 @@ void Leg::moveStandDown() {
 // Get current coxa angle
 int32_t Leg::getCoxa() {
   int32_t angle = 0;
-  servo->getPresentPosition(legIDs[Coxa], &angle);
+  servo->getPosition(legIDs[Coxa], &angle);
   return angle;
 }
 
 // Get current femur angle
 int32_t Leg::getFemur() {
   int32_t angle = 0;
-  servo->getPresentPosition(legIDs[Femur], &angle);
+  servo->getPosition(legIDs[Femur], &angle);
   return angle;
 }
 
 // Get current tibia angle
 int32_t Leg::getTibia() {
   int32_t angle = 0;
-  servo->getPresentPosition(legIDs[Tibia], &angle);
+  servo->getPosition(legIDs[Tibia], &angle);
   return angle;
 }
 

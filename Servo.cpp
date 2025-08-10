@@ -329,7 +329,7 @@ bool Servo::setReverseDirection(uint8_t id) {
 }
 
 // Set a servo to joint mode
-bool Servo::jointMode(uint8_t dxl_id) {
+bool Servo::setJointMode(uint8_t dxl_id) {
     
     if (!dxl.jointMode(dxl_id, 0, 0, &log))
     {
@@ -343,7 +343,7 @@ bool Servo::jointMode(uint8_t dxl_id) {
 
 
 // Set the goal position of a servo in value
-bool Servo::goalPosition(uint8_t dxl_id, int32_t position) {
+bool Servo::setPosition(uint8_t dxl_id, int32_t position) {
 
     if (!dxl.goalPosition(dxl_id, position, &log))
     {
@@ -355,23 +355,10 @@ bool Servo::goalPosition(uint8_t dxl_id, int32_t position) {
     
 }
 
-// Set the goal position of a servo in radians
-bool Servo::goalPosition(uint8_t dxl_id, float radian) {
-    
-    if (!dxl.goalPosition(dxl_id, radian, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(dxl_id));
-        return false;
-    }
-    return true;
+// Set the goal speed of a servo in int value
+bool Servo::setSpeed(uint8_t dxl_id, int32_t speed) {
 
-}
-
-// Set the goal velocity of a servo in int value
-bool Servo::goalVelocity(uint8_t dxl_id, int32_t velocity) {
-    
-    if (!dxl.goalVelocity(dxl_id, velocity, &log))
+    if (!dxl.goalVelocity(dxl_id, speed, &log))
     {
         LOG_ERR(log);
         LOG_ERR("id: " + String(dxl_id));
@@ -381,21 +368,9 @@ bool Servo::goalVelocity(uint8_t dxl_id, int32_t velocity) {
     
 }
 
-// Set the goal velocity of a servo in float
-bool Servo::goalVelocity(uint8_t dxl_id, float velocity) {
-    
-    if (!dxl.goalVelocity(dxl_id, velocity, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(dxl_id));
-        return false;  
-    }
-    return true;
-    
-}
 
 // Get the present position data of a servo in value
-bool Servo::getPresentPosition(uint8_t id, int32_t* data) {
+bool Servo::getPosition(uint8_t id, int32_t* data) {
     
     if (!dxl.getPresentPositionData(id, data, &log))
     {        
@@ -407,21 +382,8 @@ bool Servo::getPresentPosition(uint8_t id, int32_t* data) {
 
 }
 
-// Get the present position of a servo in radians
-bool Servo::getRadian(uint8_t id, float* radian) {
-    
-    if (!dxl.getRadian(id, radian, &log))
-    {        
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
-        return false;  
-    }
-    return true;
-    
-}
-
 // Get the present velocity data of a servo in value
-bool Servo::getPresentSpeed(uint8_t id, int32_t* data) {
+bool Servo::getSpeed(uint8_t id, int32_t* data) {
     
     if (!dxl.getPresentVelocityData(id, data, &log))
     {
@@ -432,25 +394,14 @@ bool Servo::getPresentSpeed(uint8_t id, int32_t* data) {
     return true;
 }
 
-// Get the present velocity of a servo in float
-bool Servo::getVelocity(uint8_t id, float* velocity) {
-    
-    if (!dxl.getVelocity(id, velocity, &log))
-    {        
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
-        return false;  
-    }
-    return true;
-}
 
 // Initialize a servo with default settings
-bool Servo::init(uint8_t dxl_id, int32_t velocity) {
+bool Servo::init(uint8_t dxl_id, int32_t speed) {
     bool result =
         ping(dxl_id) &&
-        jointMode(dxl_id) &&
+        setJointMode(dxl_id) &&
         torqueOn(dxl_id) &&
-        goalVelocity(dxl_id, velocity) &&
+        setSpeed(dxl_id, speed) &&
         ledOn(dxl_id);
 
     if (!result) {
@@ -473,39 +424,29 @@ bool Servo::isMoving(uint8_t id) {
 
 // Print the status of a servo for debugging
 bool Servo::printStatus(uint8_t id) {
+    
+    int32_t position = 0;
+    int32_t speed = 0;
+    int32_t torque_status = 0;
+    int32_t moving = 0;
+    int32_t led_status = 0;
+    
+    getPosition(id, &position);
+    getSpeed(id, &speed);
+    readRegister(id, "Torque_Enable", &torque_status);
+    readRegister(id, "Moving", &moving);
+    readRegister(id, "LED", &led_status);
 
     PRINTLN("\nServo Status:");
-    PRINTLN("Servo ID         : " + String(id));                         // Print the ID of the servo
-    PRINTLN("Model Number     : " + String(getModelNumber(id)));
-    PRINTLN("Model Name       : " + String(getModelName(id)));
-
-    int32_t position = 0;
-    getPresentPosition(id, &position);
-    PRINTLN("Present Position : " + String(position));
-
-    float radian = 0.0f;
-    getRadian(id, &radian);
-    PRINTLN("Radian           : " + String(radian));
-
-    int32_t velocity = 0;
-    getPresentSpeed(id, &velocity);
-    PRINTLN("Present Velocity : " + String(velocity));
-
-    float velocity_f = 0.0f;
-    getVelocity(id, &velocity_f);
-    PRINTLN("Velocity (float) : " + String(velocity_f));
-
-    int32_t torque_status = 0;
-    readRegister(id, "Torque_Enable", &torque_status);
-    PRINTLN("Torque Enabled   : " + String(torque_status ? "YES" : "NO"));
-
-    int32_t led_status = 0;
-    readRegister(id, "LED", &led_status);
-    PRINTLN("LED Status       : " + String(led_status ? "ON" : "OFF"));
-
-    int32_t moving = 0;
-    readRegister(id, "Moving", &moving);
-    PRINTLN("Moving           : " + String(moving ? "YES" : "NO"));
+    PRINTLN("Servo ID     : " + String(id));                         // Print the ID of the servo
+    PRINTLN("Model Number : " + String(getModelNumber(id)));
+    PRINTLN("Model Name   : " + String(getModelName(id)));
+    PRINTLN("Position     : " + String(position));
+    PRINTLN("Speed        : " + String(speed));
+    PRINTLN("Torque       : " + String(torque_status ? "Enabled" : "Disabled"));
+    PRINTLN("Moving       : " + String(moving ? "YES" : "NO"));
+    PRINTLN("LED          : " + String(led_status ? "ON" : "OFF"));
+    
     return true;                                                    // Return true to indicate successful status print
 
 }
@@ -623,20 +564,20 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
             }
         }
         
-        bool result = goalPosition((uint8_t)servoId, (int32_t)position);
+        bool result = setPosition((uint8_t)servoId, (int32_t)position);
         PRINTLN("Servo ID " + String(servoId) + " position set to " + String(position) + ": " + String(result ? "SUCCESS" : "FAILED"));
         return true;
 
-    } else if (cmd == "ssv") {
-        // Servo velocity: ssv [id] [velocity] - set goal velocity for servo
+    } else if (cmd == "sss") {
+        // Servo speed: sss [id] [speed] - set goal speed for servo
         int servoId = 1; // Default to servo ID 1
-        int velocity = 100; // Default velocity
-        
+        int speed = 100; // Default speed
+
         if (args.length() > 0) {
             int spaceIndex = args.indexOf(' ');
             if (spaceIndex != -1) {
                 servoId = args.substring(0, spaceIndex).toInt();
-                velocity = args.substring(spaceIndex + 1).toInt();
+                speed = args.substring(spaceIndex + 1).toInt();
             } else {
                 servoId = args.toInt();
             }
@@ -645,15 +586,15 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
             if (servoId < 1 || servoId > 253) {
                 servoId = 1;
             }
-            
-            // Validate velocity (typical range for AX-12A is 0-1023)
-            if (velocity < 0 || velocity > 1023) {
-                velocity = 100;
+
+            // Validate speed (typical range for AX-12A is 0-1023)
+            if (speed < 0 || speed > 1023) {
+                speed = 100;
             }
         }
-        
-        bool result = goalVelocity((uint8_t)servoId, (int32_t)velocity);
-        PRINTLN("Servo ID " + String(servoId) + " velocity set to " + String(velocity) + ": " + String(result ? "SUCCESS" : "FAILED"));
+
+        bool result = setSpeed((uint8_t)servoId, (int32_t)speed);
+        PRINTLN("Servo ID " + String(servoId) + " speed set to " + String(speed) + ": " + String(result ? "SUCCESS" : "FAILED"));
         return true;
 
     } else if (cmd == "sgp") {
@@ -667,15 +608,15 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
         }
         
         int32_t currentPos;
-        bool result = getPresentPosition((uint8_t)servoId, &currentPos);
+        bool result = getPosition((uint8_t)servoId, &currentPos);
         if (result) {
             PRINTLN("Servo ID " + String(servoId) + " current position: " + String(currentPos));
         } else {
             LOG_ERR("Failed to read position from servo ID " + String(servoId));
         }
         return true;
-    } else if (cmd == "sgv") {
-        // Get servo current velocity: sgv [id] - read current velocity of servo
+    } else if (cmd == "sgs") {
+        // Get servo current speed: sgs [id] - read current speed of servo
         int servoId = 1; // Default to servo ID 1
         if (args.length() > 0) {
             int parsedId = args.toInt();
@@ -684,12 +625,12 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
             }
         }
 
-        int32_t currentVel;
-        bool result = getPresentSpeed((uint8_t)servoId, &currentVel);
+        int32_t currentSpeed;
+        bool result = getSpeed((uint8_t)servoId, &currentSpeed);
         if (result) {
-            PRINTLN("Servo ID " + String(servoId) + " current velocity: " + String(currentVel));
+            PRINTLN("Servo ID " + String(servoId) + " current speed: " + String(currentSpeed));
         } else {
-            LOG_ERR("Failed to read velocity from servo ID " + String(servoId));
+            LOG_ERR("Failed to read speed from servo ID " + String(servoId));
         }
         return true;
         
@@ -705,21 +646,21 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
 // Print servo-specific help information
 void Servo::printConsoleHelp() {
     PRINTLN("Servo Commands:");
-    PRINTLN("  ss [id]         - Show servo status (default ID=1)");
-    PRINTLN("  sp [id]         - Ping servo (default ID=1)");
-    PRINTLN("  ston [id]       - Enable servo torque (default ID=1)");
-    PRINTLN("  stoff [id]      - Disable servo torque (default ID=1)");
-    PRINTLN("  slon [id]       - Turn on servo LED (default ID=1)");
-    PRINTLN("  sloff [id]      - Turn off servo LED (default ID=1)");
-    PRINTLN("  ssp [id] [pos]  - Set servo position (default ID=1, pos=512)");
-    PRINTLN("  ssv [id] [vel]  - Set servo velocity (default ID=1, vel=100)");
-    PRINTLN("  sgp [id]        - Get current servo position (default ID=1)");
-    PRINTLN("  sgv [id]        - Get current servo velocity (default ID=1)");
+    PRINTLN("  ss [id]         - Show servo status (default id=1)");
+    PRINTLN("  sp [id]         - Ping servo (default id=1)");
+    PRINTLN("  ston [id]       - Enable servo torque (default id=1)");
+    PRINTLN("  stoff [id]      - Disable servo torque (default id=1)");
+    PRINTLN("  slon [id]       - Turn on servo LED (default id=1)");
+    PRINTLN("  sloff [id]      - Turn off servo LED (default id=1)");
+    PRINTLN("  ssp [id] [pos]  - Set servo position (default id=1, pos=512)");
+    PRINTLN("  sss [id] [spd]  - Set servo speed (default id=1, spd=100)");
+    PRINTLN("  sgp [id]        - Get current servo position (default id=1)");
+    PRINTLN("  sgs [id]        - Get current servo speed (default id=1)");
     PRINTLN("  s?              - Show this help message");
     PRINTLN("");
 }
 
 // Return the DynamixelWorkbench instance
-DynamixelWorkbench* Servo::getWorkbench() {
+DynamixelWorkbench* Servo::getWorkbench()    {
     return &dxl;
 }
