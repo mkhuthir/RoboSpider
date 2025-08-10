@@ -91,6 +91,34 @@ void Console::println(const String& message) {
     logStream->println(message);
 }
 
+// Print float value
+void Console::print(float value) {
+    if (logStream) {
+        logStream->print(value);
+    }
+}
+
+// Print float value with newline
+void Console::println(float value) {
+    if (logStream) {
+        logStream->println(value);
+    }
+}
+
+// Print int value
+void Console::print(int value) {
+    if (logStream) {
+        logStream->print(value);
+    }
+}
+
+// Print int value with newline
+void Console::println(int value) {
+    if (logStream) {
+        logStream->println(value);
+    }
+}
+
 // Static method to print error messages
 void Console::printError(const String& message) {
     printLog(DEBUG_ERR, LOG_HEADER_ERROR, COLOR_RED, message);
@@ -274,7 +302,7 @@ void Console::printAllHelp() {
 
 // Print console-specific help information
 void Console::printConsoleHelp() {
-    println("Console Commands:");
+    println("Console Commands:\n\r");
     println("  ? / h            - Show this help message");
     println("  ??               - Show all available commands");
     println("  s?               - Show servo commands");
@@ -283,6 +311,7 @@ void Console::printConsoleHelp() {
     println("  a?               - Show AX-S1 Sensor commands");
     println("  t?               - Show turret commands");
     println("  g?               - Show gait controller commands");
+    println("");
     println("  cls / clear      - Clear the terminal screen");
     println("  debug [0-4]      - Set debug level (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
     println("  color [on/off]   - Enable/disable color output");
@@ -595,30 +624,3 @@ void Console::resetInputState() {
     print("\033[4 q");                                      // Reset to insert mode cursor
 }
 
-// Print float value
-void Console::print(float value) {
-    if (logStream) {
-        logStream->print(value);
-    }
-}
-
-// Print float value with newline
-void Console::println(float value) {
-    if (logStream) {
-        logStream->println(value);
-    }
-}
-
-// Print int value
-void Console::print(int value) {
-    if (logStream) {
-        logStream->print(value);
-    }
-}
-
-// Print int value with newline
-void Console::println(int value) {
-    if (logStream) {
-        logStream->println(value);
-    }
-}

@@ -23,9 +23,6 @@
             bool                readRegister(uint8_t id, const char *item_name, int32_t *data);
             bool                writeRegister(uint8_t id, const char *item_name, int32_t data);
 
-            bool                itemRead(uint8_t id, const char *item_name, int32_t *data);
-            bool                itemWrite(uint8_t id, const char *item_name, int32_t data);
-
             bool                addSyncWriteHandler(uint16_t address, uint16_t length);
             bool                addSyncWriteHandler(uint8_t id, const char *item_name);
             bool                syncWrite(uint8_t index, int32_t *data);

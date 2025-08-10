@@ -133,30 +133,6 @@ bool Servo::writeRegister(uint8_t id, const char *item_name, int32_t data) {
     return true;
 }
 
-// Read an item from a servo
-bool Servo::itemRead(uint8_t id, const char *item_name, int32_t *data) {
-    
-    if (!dxl.itemRead(id, item_name, data, &log))
-    {        
-        LOG_ERR(log);
-        LOG_ERR("item: " + String(item_name)+ " id: " + String(id) );
-        return false;  
-    }
-    return true;
-}
-
-// Write an item to a servo
-bool Servo::itemWrite(uint8_t id, const char *item_name, int32_t data) {
-    
-    if (!dxl.itemWrite(id, item_name, data, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("item: " + String(item_name)+ " id: " + String(id));
-        return false;  
-    }
-    return true;
-}
-
 // Add a sync write handler with address and length
 bool Servo::addSyncWriteHandler(uint16_t address, uint16_t length) {
     
@@ -270,37 +246,22 @@ bool Servo::getSpeed(uint8_t id, int32_t* speed) {
 
 // Get the present load data of a servo in value
 bool Servo::getLoad(uint8_t id, int32_t* load) {
-
-    if (true)
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
+    if (!readRegister(id, "Present_Load", load))
         return false;
-    }
     return true;
 }
 
 // Get the present voltage data of a servo in value
 bool Servo::getVoltage(uint8_t id, int32_t* voltage) {
-
-    if (true)
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
+    if (!readRegister(id, "Present_Voltage", voltage))
         return false;
-    }
     return true;
 }
 
 // Get the present temperature data of a servo in value
 bool Servo::getTemperature(uint8_t id, int32_t* temperature) {
-
-    if (true)
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
+    if (!readRegister(id, "Present_Temperature", temperature))
         return false;
-    }
     return true;
 }
 
@@ -344,10 +305,8 @@ bool Servo::setSpeed(uint8_t dxl_id, int32_t speed) {
 // Check if a servo is currently moving
 bool Servo::isMoving(uint8_t id) {
     int32_t isMoving = 0;
-    if (!readRegister(id, "Moving", &isMoving)) {
-        LOG_ERR("Failed to read moving status for servo ID: " + String(id));
+    if (!readRegister(id, "Moving", &isMoving))
         return false;
-    }
     return isMoving;
 }
 
@@ -482,6 +441,60 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
             LOG_ERR("Failed to read speed from servo ID " + String(servoId));
         }
         return true;
+        
+    } else if (cmd == "sgl") {
+        int servoId = 1; // Default to servo ID 1
+        if (args.length() > 0) {
+            int parsedId = args.toInt();
+            if (parsedId >= 1 && parsedId <= 253) {
+                servoId = parsedId;
+            }
+        }
+
+        int32_t currentLoad;
+        bool result = getLoad((uint8_t)servoId, &currentLoad);
+        if (result) {
+            PRINTLN("Servo ID " + String(servoId) + " current load: " + String(currentLoad));
+        } else {
+            LOG_ERR("Failed to read load from servo ID " + String(servoId));
+        }
+        return true;
+
+    } else if (cmd == "sgv") {
+        int servoId = 1; // Default to servo ID 1
+        if (args.length() > 0) {
+            int parsedId = args.toInt();
+            if (parsedId >= 1 && parsedId <= 253) {
+                servoId = parsedId;
+            }
+        }
+
+        int32_t currentVoltage;
+        bool result = getVoltage((uint8_t)servoId, &currentVoltage);
+        if (result) {
+            PRINTLN("Servo ID " + String(servoId) + " current voltage: " + String(currentVoltage));
+        } else {
+            LOG_ERR("Failed to read voltage from servo ID " + String(servoId));
+        }
+        return true;
+
+    } else if (cmd == "sgt") {
+        int servoId = 1; // Default to servo ID 1
+        if (args.length() > 0) {
+            int parsedId = args.toInt();
+            if (parsedId >= 1 && parsedId <= 253) {
+                servoId = parsedId;
+            }
+        }
+
+        int32_t currentTemperature;
+        bool result = getTemperature((uint8_t)servoId, &currentTemperature);
+        if (result) {
+            PRINTLN("Servo ID " + String(servoId) + " current temperature: " + String(currentTemperature));
+        } else {
+            LOG_ERR("Failed to read temperature from servo ID " + String(servoId));
+        }
+        return true;
 
     } else if (cmd == "ssp") {
         int servoId = 1; // Default to servo ID 1
@@ -607,12 +620,20 @@ bool Servo::printStatus(uint8_t id) {
     int32_t torque_status = 0;
     int32_t moving = 0;
     int32_t led_status = 0;
-    
+    int32_t load = 0;
+    int32_t voltage = 0;
+    int32_t temperature = 0;
+
     getPosition(id, &position);
     getSpeed(id, &speed);
+    getLoad(id, &load);
+    getVoltage(id, &voltage);
+    getTemperature(id, &temperature);
+
     readRegister(id, "Torque_Enable", &torque_status);
     readRegister(id, "Moving", &moving);
     readRegister(id, "LED", &led_status);
+
 
     PRINTLN("\nServo Status:");
     PRINTLN("Servo ID     : " + String(id));                         // Print the ID of the servo
@@ -620,10 +641,14 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Model Name   : " + String(getModelName(id)));
     PRINTLN("Position     : " + String(position));
     PRINTLN("Speed        : " + String(speed));
+    PRINTLN("Load         : " + String(load));
+    PRINTLN("Voltage      : " + String(voltage));
+    PRINTLN("Temperature  : " + String(temperature));
     PRINTLN("Torque       : " + String(torque_status ? "Enabled" : "Disabled"));
     PRINTLN("Moving       : " + String(moving ? "YES" : "NO"));
     PRINTLN("LED          : " + String(led_status ? "ON" : "OFF"));
-    
+
+
     return true;                                                    // Return true to indicate successful status print
 }
 
@@ -635,6 +660,10 @@ void Servo::printConsoleHelp() {
     PRINTLN("");
     PRINTLN("  sgp [id]        - Get servo position (default id=1)");
     PRINTLN("  sgs [id]        - Get servo speed (default id=1)");
+    PRINTLN("  sgl [id]        - Get servo load (default id=1)");
+    PRINTLN("  sgv [id]        - Get servo voltage (default id=1)");
+    PRINTLN("  sgt [id]        - Get servo temperature (default id=1)");
+    PRINTLN("");
     PRINTLN("  ssp [id] [pos]  - Set servo position (default id=1, pos=512)");
     PRINTLN("  sss [id] [spd]  - Set servo speed (default id=1, spd=100)");
     PRINTLN("");
