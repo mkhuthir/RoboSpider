@@ -62,12 +62,12 @@ int AXS1Sensor::getModelNumber() {
 
     if (!servo->readRegister(id, AXS1_Model_Number_L, 1, &model_number_l)) {
         LOG_ERR("Failed to read Model Number for ID: " + String(id));
-        return -1;
+        return false;
     }
 
     if (!servo->readRegister(id, AXS1_Model_Number_H, 1, &model_number_h)) {
         LOG_ERR("Failed to read Model Number for ID: " + String(id));
-        return -1;
+        return false;
     }
 
     return static_cast<int>((model_number_h << 8) | model_number_l);  // Combine high and low bytes to get full model number
@@ -82,7 +82,7 @@ int AXS1Sensor::getFirmwareVersion() {
         return static_cast<int>(version);
     }
     LOG_ERR("Failed to read Firmware Version for ID: " + String(id));
-    return -1;
+    return false;
 }
 
 // Get the ID of the sensor
@@ -93,7 +93,7 @@ int AXS1Sensor::getID() {
         return static_cast<int>(id_value);
     }
     LOG_ERR("Failed to read ID for ID: " + String(id));
-    return -1;
+    return false;
 }
 
 // Get the baud rate of the sensor
@@ -104,7 +104,7 @@ int AXS1Sensor::getBaudRate() {
         return static_cast<int>(baud_rate);
     }
     LOG_ERR("Failed to read Baud Rate for ID: " + String(id));
-    return -1;
+    return false;
 }
 
 // Get the return delay time of the sensor
@@ -115,7 +115,7 @@ int AXS1Sensor::getReturnDelayTime() {
         return static_cast<int>(return_delay);
     }
     LOG_ERR("Failed to read Return Delay Time for ID: " + String(id));
-    return -1;
+    return false;
 }
 
 // Get the status return level of the sensor
@@ -126,7 +126,7 @@ int AXS1Sensor::getStatusReturnLevel() {
         return static_cast<int>(status_return);
     }
     LOG_ERR("Failed to read Status Return Level for ID: " + String(id));
-    return -1;
+    return false;
 }   
 
 // Get the distance data from the IR left side sensor
@@ -136,7 +136,7 @@ int AXS1Sensor::getDistanceLeft() {
     if (servo->readRegister(id, AXS1_Left_Distance_Data, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read IR Left Distance Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the distance data from the IR center sensor
@@ -146,7 +146,7 @@ int AXS1Sensor::getDistanceCenter() {
     if (servo->readRegister(id, AXS1_Center_Distance_Data, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read IR Center Distance Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the distance data from the IR right side sensor
@@ -156,7 +156,7 @@ int AXS1Sensor::getDistanceRight() {
     if (servo->readRegister(id, AXS1_Right_Distance_Data, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read IR Right Distance Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the IR light left side sensor data
@@ -166,7 +166,7 @@ int AXS1Sensor::getIRLeft() {
     if (servo->readRegister(id, AXS1_Light_Left_Data, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read IR Left Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the IR light center sensor data
@@ -176,7 +176,7 @@ int AXS1Sensor::getIRCenter() {
     if (servo->readRegister(id, AXS1_Light_Center_Data, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read IR Center Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the IR light right side sensor data
@@ -186,7 +186,7 @@ int AXS1Sensor::getIRRight() {
     if (servo->readRegister(id, AXS1_Light_Right_Data, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read IR Right Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Set the obstacle detection comparison value
@@ -196,7 +196,7 @@ int AXS1Sensor::setObstacleCompare(uint8_t value) {
         return value;
     }
     LOG_ERR("Failed to set Obstacle Compare for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the obstacle detection comparison value
@@ -205,7 +205,7 @@ int AXS1Sensor::getObstacleCompare() {
     if (servo->readRegister(id, AXS1_IR_Obstacle_Detect_Compare, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read Obstacle Compare Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the obstacle detected status
@@ -214,7 +214,7 @@ int AXS1Sensor::ObstacleDetected() {
     if (servo->readRegister(id, AXS1_IR_Obstacle_Detected, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read Obstacle Detected Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Set the light detection comparison value
@@ -224,7 +224,7 @@ int AXS1Sensor::setLightCompare(uint8_t value) {
         return value;
     }
     LOG_ERR("Failed to set Light Compare for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the light detection comparison value
@@ -233,7 +233,7 @@ int AXS1Sensor::getLightCompare() {
     if (servo->readRegister(id, AXS1_Light_Detect_Compare,  1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read Light Compare Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the light detected status
@@ -242,7 +242,7 @@ int AXS1Sensor::LightDetected() {
     if (servo->readRegister(id, AXS1_Light_Detected, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read Light Detected Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the sound data from the sensor
@@ -251,7 +251,7 @@ int AXS1Sensor::getSoundData() {
     if (servo->readRegister(id, AXS1_Sound_Data, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read Sound Data for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the maximum hold sound data from the sensor
@@ -260,7 +260,7 @@ int AXS1Sensor::getSoundDataMaxHold() {
     if (servo->readRegister(id, AXS1_Sound_Data_Max_Hold, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read Sound Data Max Hold for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the count of sound detected by the sensor
@@ -269,7 +269,7 @@ int AXS1Sensor::getSoundDetectedCount() {
     if (servo->readRegister(id, AXS1_Sound_Detected_Count, 1, &val))
         return static_cast<int>(val);
     LOG_ERR("Failed to read Sound Detected Count for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Get the time of sound detected by the sensor
@@ -281,7 +281,7 @@ int AXS1Sensor::getSoundDetectedTime() {
         return (static_cast<int>(val_h) << 8) | static_cast<int>(val_l);
     }
     LOG_ERR("Failed to read Sound Detected Time for ID: " + String(id));
-    return FALSE;
+    return false;
 }
 
 // Reset the maximum hold sound data
@@ -415,7 +415,7 @@ int AXS1Sensor::getRemoconRX() {
         return static_cast<int>((val_h << 8) | val_l);  // Combine high and low bytes to get full RX data
     }
     LOG_ERR("Failed to read Remote Control RX Data for ID: " + String(id));
-    return -1;  // Return -1 if reading fails
+    return false;  // return false if reading fails
 }
  
 
@@ -428,7 +428,7 @@ int AXS1Sensor::getRemoconTX() {
         return static_cast<int>((val_h << 8) | val_l);  // Combine high and low bytes to get full TX data
     }
     LOG_ERR("Failed to read Remote Control TX Data for ID: " + String(id));
-    return -1;  // Return -1 if reading fails
+    return false;  // return false if reading fails
 }
 
 // Set the remote control TX data
