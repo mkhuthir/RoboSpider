@@ -43,7 +43,9 @@
             bool                setSpeed(uint8_t id, int32_t speed);                        // set the speed of a servo
 
             bool                isMoving(uint8_t id);                                       // check if a servo is currently moving
-            
+            bool                isTorqueOn(uint8_t id);                                     // check if the torque is enabled for a servo
+            bool                isLedOn(uint8_t id);                                        // check if the LED is enabled for a servo
+
             bool                torqueOn(uint8_t id);                                       // turn on the torque of a servo
             bool                torqueOff(uint8_t id);                                      // turn off the torque of a servo
             bool                ledOn(uint8_t dxl_id);                                      // turn on the LED of a servo

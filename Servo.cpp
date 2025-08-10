@@ -222,25 +222,15 @@ uint16_t Servo::getModelNumber(uint8_t id) {
 
 // Get the present position data of a servo in value
 bool Servo::getPosition(uint8_t id, int32_t* pos) {
-
-    if (!dxl.getPresentPositionData(id, pos, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
+    if (!readRegister(id, "Present_Position", pos))
         return false;  
-    }
     return true;
 }
 
 // Get the present velocity data of a servo in value
 bool Servo::getSpeed(uint8_t id, int32_t* speed) {
-
-    if (!dxl.getPresentVelocityData(id, speed, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
+    if (!readRegister(id, "Moving_Speed", speed))
         return false;  
-    }
     return true;
 }
 
@@ -308,6 +298,22 @@ bool Servo::isMoving(uint8_t id) {
     if (!readRegister(id, "Moving", &isMoving))
         return false;
     return isMoving;
+}
+
+// Check if the torque is enabled for a servo
+bool Servo::isTorqueOn(uint8_t id) {
+    int32_t isTorqueOn = 0;
+    if (!readRegister(id, "Torque_Enable", &isTorqueOn))
+        return false;
+    return isTorqueOn;
+}
+
+// Check if the LED is enabled for a servo
+bool Servo::isLedOn(uint8_t id) {
+    int32_t isLedOn = 0;
+    if (!readRegister(id, "LED", &isLedOn))
+        return false;
+    return isLedOn;
 }
 
 // Turn on the torque for a servo
@@ -617,9 +623,6 @@ bool Servo::printStatus(uint8_t id) {
     
     int32_t position = 0;
     int32_t speed = 0;
-    int32_t torque_status = 0;
-    int32_t moving = 0;
-    int32_t led_status = 0;
     int32_t load = 0;
     int32_t voltage = 0;
     int32_t temperature = 0;
@@ -630,11 +633,6 @@ bool Servo::printStatus(uint8_t id) {
     getVoltage(id, &voltage);
     getTemperature(id, &temperature);
 
-    readRegister(id, "Torque_Enable", &torque_status);
-    readRegister(id, "Moving", &moving);
-    readRegister(id, "LED", &led_status);
-
-
     PRINTLN("\nServo Status:");
     PRINTLN("Servo ID     : " + String(id));                         // Print the ID of the servo
     PRINTLN("Model Number : " + String(getModelNumber(id)));
@@ -644,9 +642,9 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Load         : " + String(load));
     PRINTLN("Voltage      : " + String(voltage));
     PRINTLN("Temperature  : " + String(temperature));
-    PRINTLN("Torque       : " + String(torque_status ? "Enabled" : "Disabled"));
-    PRINTLN("Moving       : " + String(moving ? "YES" : "NO"));
-    PRINTLN("LED          : " + String(led_status ? "ON" : "OFF"));
+    PRINTLN("Torque       : " + String(isTorqueOn(id) ? "Enabled" : "Disabled"));
+    PRINTLN("Moving       : " + String(isMoving(id) ? "YES" : "NO"));
+    PRINTLN("LED          : " + String(isLedOn(id) ? "ON" : "OFF"));
 
 
     return true;                                                    // Return true to indicate successful status print
