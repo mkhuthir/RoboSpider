@@ -182,7 +182,7 @@ bool Servo::syncWrite(uint8_t index, uint8_t *id, uint8_t id_num, int32_t *data,
 }
 
 //------------------------------------------------------------------------
-// Ping a servo to check if it is connected
+// Ping a servo to check if it is connected, ping is required before you can use a servo.
 bool Servo::ping(uint8_t dxl_id) {
 
     uint16_t model_number = 0;
@@ -222,40 +222,94 @@ uint16_t Servo::getModelNumber(uint8_t id) {
 
 // Get the present position data of a servo in value
 bool Servo::getPosition(uint8_t id, int32_t* pos) {
-    if (!readRegister(id, "Present_Position", pos))
-        return false;  
+    if (!readRegister(id, "Present_Position", pos)) return false;  
     return true;
 }
 
 // Get the present velocity data of a servo in value
 bool Servo::getSpeed(uint8_t id, int32_t* speed) {
-    if (!readRegister(id, "Moving_Speed", speed))
-        return false;  
+    if (!readRegister(id, "Moving_Speed", speed)) return false;
     return true;
 }
 
 // Get the present load data of a servo in value
 bool Servo::getLoad(uint8_t id, int32_t* load) {
-    if (!readRegister(id, "Present_Load", load))
-        return false;
+    if (!readRegister(id, "Present_Load", load)) return false;
     return true;
 }
 
 // Get the present voltage data of a servo in value
 bool Servo::getVoltage(uint8_t id, int32_t* voltage) {
-    if (!readRegister(id, "Present_Voltage", voltage))
-        return false;
+    if (!readRegister(id, "Present_Voltage", voltage)) return false;
     return true;
 }
 
 // Get the present temperature data of a servo in value
 bool Servo::getTemperature(uint8_t id, int32_t* temperature) {
-    if (!readRegister(id, "Present_Temperature", temperature))
-        return false;
+    if (!readRegister(id, "Present_Temperature", temperature)) return false;
     return true;
 }
 
+// Set the goal position of a servo in value
+bool Servo::setPosition(uint8_t dxl_id, int32_t position) {
+    if (!writeRegister(dxl_id, "Goal_Position", position)) return false;
+    return true;
+}
+
+// Set the goal speed of a servo in int value
+bool Servo::setSpeed(uint8_t dxl_id, int32_t speed) {
+    if (!writeRegister(dxl_id, "Moving_Speed", speed)) return false;
+    return true;
+}
+ 
+// Check if a servo is currently moving
+bool Servo::isMoving(uint8_t id) {
+    int32_t isMoving = 0;
+    if (!readRegister(id, "Moving", &isMoving)) return false;
+    return isMoving;
+}
+
+// Check if the torque is enabled for a servo
+bool Servo::isTorqueOn(uint8_t id) {
+    int32_t isTorqueOn = 0;
+    if (!readRegister(id, "Torque_Enable", &isTorqueOn)) return false;
+    return isTorqueOn;
+}
+
+// Check if the LED is enabled for a servo
+bool Servo::isLedOn(uint8_t id) {
+    int32_t isLedOn = 0;
+    if (!readRegister(id, "LED", &isLedOn)) return false;
+    return isLedOn;
+}
+
+// Turn on the torque for a servo
+bool Servo::torqueOn(uint8_t id) {
+    if (!writeRegister(id, "Torque_Enable", 1)) return false;
+    return true;
+}
+
+// Turn off the torque for a servo
+bool Servo::torqueOff(uint8_t id) {
+    if (!writeRegister(id, "Torque_Enable", 0)) return false;
+    return true;
+}
+
+// Turn on the LED of a servo
+bool Servo::ledOn(uint8_t dxl_id) {
+    if (!writeRegister(dxl_id, "LED", 1)) return false;
+    return true;
+}
+
+// Turn off the LED of a servo
+bool Servo::ledOff(uint8_t dxl_id) {
+    if (!writeRegister(dxl_id, "LED", 0)) return false;
+    return true;
+}
+
+
 // Set a servo to joint mode
+// TODO: Remove setJointMode and replace it with setMaxCW and setMaxCCW.
 bool Servo::setJointMode(uint8_t dxl_id) {
     
     if (!dxl.jointMode(dxl_id, 0, 0, &log))
@@ -266,104 +320,6 @@ bool Servo::setJointMode(uint8_t dxl_id) {
     }
     return true;
 }
-
-// Set the goal position of a servo in value
-bool Servo::setPosition(uint8_t dxl_id, int32_t position) {
-
-    if (!dxl.goalPosition(dxl_id, position, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(dxl_id));
-        return false;  
-    }
-    return true;
-    
-}
-
-// Set the goal speed of a servo in int value
-bool Servo::setSpeed(uint8_t dxl_id, int32_t speed) {
-
-    if (!dxl.goalVelocity(dxl_id, speed, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(dxl_id));
-        return false;
-    }
-    return true;
-}
-
-// Check if a servo is currently moving
-bool Servo::isMoving(uint8_t id) {
-    int32_t isMoving = 0;
-    if (!readRegister(id, "Moving", &isMoving))
-        return false;
-    return isMoving;
-}
-
-// Check if the torque is enabled for a servo
-bool Servo::isTorqueOn(uint8_t id) {
-    int32_t isTorqueOn = 0;
-    if (!readRegister(id, "Torque_Enable", &isTorqueOn))
-        return false;
-    return isTorqueOn;
-}
-
-// Check if the LED is enabled for a servo
-bool Servo::isLedOn(uint8_t id) {
-    int32_t isLedOn = 0;
-    if (!readRegister(id, "LED", &isLedOn))
-        return false;
-    return isLedOn;
-}
-
-// Turn on the torque for a servo
-bool Servo::torqueOn(uint8_t id) {
-    
-    if (!dxl.torqueOn(id, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
-        return false;  
-    }
-    return true;
-}
-
-// Turn off the torque for a servo
-bool Servo::torqueOff(uint8_t id) {
-    
-    if (!dxl.torqueOff(id, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
-        return false;  
-    }
-    return true;
-}
-
-// Turn on the LED of a servo
-bool Servo::ledOn(uint8_t dxl_id) {
-    
-    if (!dxl.ledOn(dxl_id, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(dxl_id));
-        return false;  
-    }
-    return true;
-}
-
-// Turn off the LED of a servo
-bool Servo::ledOff(uint8_t dxl_id) {
-    
-    if (!dxl.ledOff(dxl_id, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(dxl_id));
-        return false;  
-    }
-    return true;
-}
-
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 // Initialize a servo with default settings
 bool Servo::init(uint8_t dxl_id, int32_t speed) {
@@ -524,13 +480,11 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Torque       : " + String(isTorqueOn(id) ? "Enabled" : "Disabled"));
     PRINTLN("Moving       : " + String(isMoving(id) ? "YES" : "NO"));
     PRINTLN("LED          : " + String(isLedOn(id) ? "ON" : "OFF"));
-
-
     return true;                                                    // Return true to indicate successful status print
 }
 
 // Print servo-specific help information
-void Servo::printConsoleHelp() {
+bool Servo::printConsoleHelp() {
     PRINTLN("Servo Commands:");
     PRINTLN("  ss [id]         - Show servo status (default id=1)");
     PRINTLN("  sp [id]         - Ping servo (default id=1)");
@@ -555,6 +509,7 @@ void Servo::printConsoleHelp() {
     PRINTLN("");
     PRINTLN("  s?              - Show this help message");
     PRINTLN("");
+    return true;
 }
 
 // Return the DynamixelWorkbench instance
