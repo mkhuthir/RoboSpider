@@ -10,92 +10,65 @@ Turret::Turret(){
 
 // Initialize the turret servos
 bool Turret::begin(Servo* servo) {
-  
   this->servo = servo;  // Set the servo pointer
-  
-  if (!servo->init(turret_ids[0], TURRET_VELOCITY)) {   // Initialize pan servo with default velocity
-    LOG_ERR("Failed to initialize turret pan servo ID: " + String(turret_ids[0]));
-    return false;
-  }
-
-  if (!servo->init(turret_ids[1], TURRET_VELOCITY)) {   // Initialize tilt servo with default velocity
-    LOG_ERR("Failed to initialize turret tilt servo ID: " + String(turret_ids[1]));
-    return false;
-  }
-
-  moveHome();                           // Move turret to home position
+  if (!servo->init(turret_ids[0], TURRET_VELOCITY)) return false;
+  if (!servo->init(turret_ids[1], TURRET_VELOCITY)) return false;
+  moveHome();
   LOG_INF("Turret initialized successfully. (Servo IDs: " + String(turret_ids[0]) + ", " + String(turret_ids[1]) + ")");
-  return true;                          // Return true if initialization is successful
+  return true;
 }
 
 // Update turret state
 bool Turret::update() {
- 
-  return true;      // Return true if update is successful
+  return true;
 }
 
 // Rotate the turret to specified angles
-void Turret::move(int32_t *positions) {
+bool Turret::move(int32_t *positions) {
+  const uint8_t num_positions = 1;                                                              // Number of positions to write
   if (servo == nullptr) {
-    LOG_ERR("Cannot move turret: servo not initialized");
-    return;
+    LOG_ERR("Servo controller not initialized. Call begin() first.");
+    return false;
   }
-  
-  const uint8_t num_positions = 1;                                                        // Number of positions to write
-  servo->syncWrite(handler_index, turret_ids, TURRET_SERVOS, positions, num_positions);   // Write target positions to servos
-  LOG_DBG("Turret moved to position - Pan: " + String(positions[0]) + ", Tilt: " + String(positions[1]));
+  return servo->syncWrite(handler_index, turret_ids, TURRET_SERVOS, positions, num_positions);  // Write target positions to servos
 }
 
 // Rotate the turret to home position
-void Turret::moveHome() {
-  move(poseTurretHome);    // Reset turret to home position
+bool Turret::moveHome() {
+  return move(poseTurretHome); 
 }
 
 // Rotate turret to the right
-void Turret::moveRight() {
-  move(poseTurretRight); // Rotate turret to the right
+bool Turret::moveRight() {
+  return move(poseTurretRight);
 } 
 
 // Rotate turret to the left
-void Turret::moveLeft() {
-  move(poseTurretLeft);  // Rotate turret to the left
+bool Turret::moveLeft() {
+  return move(poseTurretLeft);
 }
 
 // Rotate turret up
-void Turret::moveUp() {
-  move(poseTurretUp);  // Rotate turret up
+bool Turret::moveUp() {
+  return move(poseTurretUp);
 }
 
 // Rotate turret down
-void Turret::moveDown() {
-  move(poseTurretDown); // Rotate turret down
+bool Turret::moveDown() {
+  return move(poseTurretDown);
 } 
 
 // Print current turret angles to Serial
-void Turret::printStatus() {
-  if (servo == nullptr) {
-    LOG_ERR("Turret Status: Not initialized");
-    return;
-  }
-  
+bool Turret::printStatus() {
   int32_t panPosition = 0, tiltPosition = 0;
-
-  if (!servo->getPosition(turret_ids[0], &panPosition)) {
-    LOG_ERR("Failed to read pan servo position");
-  }
-
-  if (!servo->getPosition(turret_ids[1], &tiltPosition)) {
-    LOG_ERR("Failed to read tilt servo position");
-  }
-
-  PRINT("Turret Status: Pan: ");
-  PRINT((int)panPosition);
-  PRINT(" | Tilt: ");
-  PRINTLN((int)tiltPosition);
+  if (!servo->getPosition(turret_ids[0], &panPosition)) return false;
+  if (!servo->getPosition(turret_ids[1], &tiltPosition)) return false;
+  PRINTLN("Turret Status: Pan: " + String(panPosition) + " | Tilt: " + String(tiltPosition));
+  return true;
 }
 
 // Print turret-specific help information
-void Turret::printConsoleHelp() {
+bool Turret::printConsoleHelp() {
     PRINTLN("Turret Commands:");
     PRINTLN("  tu               - Move turret up");
     PRINTLN("  td               - Move turret down");
@@ -105,6 +78,7 @@ void Turret::printConsoleHelp() {
     PRINTLN("  ts               - Print current turret angles");
     PRINTLN("  t?               - Print this help message");
     PRINTLN("");
+    return true;
 }
 
 // Process console commands for turret control
@@ -138,5 +112,5 @@ bool Turret::runConsoleCommands(const String& cmd, const String& args) {
         return true;
 
     }
-    return false;
+    return false; // Command not recognized
 }

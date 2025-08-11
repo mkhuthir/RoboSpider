@@ -12,17 +12,16 @@
       bool begin(Servo* servo);         // Initialize the turret servos
       bool update();                    // Update turret state
 
-      void move(int32_t *positions);    // Rotate the turret to specified angles
-      void moveHome();                  // Rotate the turret to home position
-      void moveRight();                 // Rotate turret to the right
-      void moveLeft();                  // Rotate turret to the left
-      void moveUp();                    // Rotate turret up
-      void moveDown();                  // Rotate turret down
-      void printStatus();               // Print current turret angles to Serial
-      
-      
+      bool move(int32_t *positions);    // Rotate the turret to specified angles
+      bool moveHome();                  // Rotate the turret to home position
+      bool moveRight();                 // Rotate turret to the right
+      bool moveLeft();                  // Rotate turret to the left
+      bool moveUp();                    // Rotate turret up
+      bool moveDown();                  // Rotate turret down
+      bool printStatus();               // Print current turret angles to Serial
+
       bool runConsoleCommands(const String& cmd, const String& args); // Process console commands for turret control
-      void printConsoleHelp();                                        // Print turret-specific help information
+      bool printConsoleHelp();                                        // Print turret-specific help information
 
     private:
       Servo*  servo;                    // Pointer to the servo instance

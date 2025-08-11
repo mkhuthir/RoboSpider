@@ -3,8 +3,8 @@
 
     // Sensor ID for AX-S1
     #define AXS1_SENSOR_ID                      100
-    #define AXS1_OBSTACLE_DETECTED              6  // Obstacle detected threshold
-    #define AXS1_LIGHT_DETECTED                 6  // Light detected threshold
+    #define AXS1_OBSTACLE_DETECTED              8  // Obstacle detected threshold
+    #define AXS1_LIGHT_DETECTED                 8  // Light detected threshold
 
     // EEPROM Area (Section 4.6 https://emanual.robotis.com/docs/en/parts/sensor/ax-s1/)
     #define AXS1_Model_Number_L                 0   // access=R  , initial value=13(0x0D)
