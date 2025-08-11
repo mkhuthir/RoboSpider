@@ -29,9 +29,9 @@
             bool                syncWrite(uint8_t index, uint8_t *id, uint8_t id_num, int32_t *data, uint8_t data_num_for_each_id);
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
-
             const char *        getModelName(uint8_t id);                                   // get the model name of a servo by its ID
             uint16_t            getModelNumber(uint8_t id);                                 // get the model number of a servo by its ID
+
             bool                getPosition(uint8_t id, int32_t* pos);                      // get the present position of a servo
             bool                getSpeed(uint8_t id, int32_t* speed);                       // get the present speed of a servo
             bool                getLoad(uint8_t id, int32_t* load);                         // get the present load of a servo
