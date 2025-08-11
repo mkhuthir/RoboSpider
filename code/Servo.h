@@ -37,9 +37,11 @@
             bool                getLoad(uint8_t id, int32_t* load);                         // get the present load of a servo
             bool                getVoltage(uint8_t id, int32_t* voltage);                   // get the present voltage of a servo
             bool                getTemperature(uint8_t id, int32_t* temperature);           // get the present temperature of a servo
-            
+            bool                getAngleLimits(uint8_t id, int32_t* CW_angle, int32_t* CCW_angle);
+
             bool                setPosition(uint8_t id, int32_t position);                  // set the position of a servo
             bool                setSpeed(uint8_t id, int32_t speed);                        // set the speed of a servo
+            bool                setAngleLimits(uint8_t id, int32_t CW_angle, int32_t CCW_angle);
 
             bool                isMoving(uint8_t id);                                       // check if a servo is currently moving
             bool                isTorqueOn(uint8_t id);                                     // check if the torque is enabled for a servo

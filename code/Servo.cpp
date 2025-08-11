@@ -250,6 +250,13 @@ bool Servo::getTemperature(uint8_t id, int32_t* temperature) {
     return true;
 }
 
+// Get the angle limits for a servo
+bool Servo::getAngleLimits(uint8_t id, int32_t* CW_angle, int32_t* CCW_angle) {
+    if (!readRegister(id, "CW_Angle_Limit", CW_angle)) return false;
+    if (!readRegister(id, "CCW_Angle_Limit", CCW_angle)) return false;
+    return true;
+}
+
 // Set the goal position of a servo in value
 bool Servo::setPosition(uint8_t dxl_id, int32_t position) {
     if (!writeRegister(dxl_id, "Goal_Position", position)) return false;
@@ -261,7 +268,14 @@ bool Servo::setSpeed(uint8_t dxl_id, int32_t speed) {
     if (!writeRegister(dxl_id, "Moving_Speed", speed)) return false;
     return true;
 }
- 
+
+// Set the angle limits for a servo
+bool Servo::setAngleLimits(uint8_t id, int32_t CW_angle, int32_t CCW_angle) {
+    if (!writeRegister(id, "CW_Angle_Limit", CW_angle)) return false;
+    if (!writeRegister(id, "CCW_Angle_Limit", CCW_angle)) return false;
+    return true;
+}
+        
 // Check if a servo is currently moving
 bool Servo::isMoving(uint8_t id) {
     int32_t isMoving = 0;
