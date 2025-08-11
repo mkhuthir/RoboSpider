@@ -475,8 +475,10 @@ bool Servo::printStatus(uint8_t id) {
     int32_t load = 0;
     int32_t voltage = 0;
     int32_t temperature = 0;
+    int32_t CW_angle = 0, CCW_angle = 0;
 
     getPosition(id, &position);
+    getAngleLimits(id, &CW_angle, &CCW_angle);
     getSpeed(id, &speed);
     getLoad(id, &load);
     getVoltage(id, &voltage);
@@ -487,6 +489,7 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Model Number : " + String(getModelNumber(id)));
     PRINTLN("Model Name   : " + String(getModelName(id)));
     PRINTLN("Position     : " + String(position));
+    PRINTLN("Angle Limits : CW " + String(CW_angle) + " ~ CCW " + String(CCW_angle));
     PRINTLN("Speed        : " + String(speed));
     PRINTLN("Load         : " + String(load));
     PRINTLN("Voltage      : " + String(voltage));
