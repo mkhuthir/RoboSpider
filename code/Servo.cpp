@@ -321,19 +321,6 @@ bool Servo::ledOff(uint8_t dxl_id) {
     return true;
 }
 
-
-// Set a servo to joint mode
-// TODO: Remove setJointMode and replace it with setMaxCW and setMaxCCW.
-bool Servo::setJointMode(uint8_t dxl_id) {
-    
-    if (!dxl.jointMode(dxl_id, 0, 0, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(dxl_id));
-        return false;  
-    }
-    return true;
-}
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 // Initialize a servo with default settings
 bool Servo::init(   uint8_t dxl_id, 

@@ -51,8 +51,6 @@
             bool                torqueOff(uint8_t id);                                      // turn off the torque of a servo
             bool                ledOn(uint8_t dxl_id);                                      // turn on the LED of a servo
             bool                ledOff(uint8_t dxl_id);                                     // turn off the LED of a servo
-
-            bool                setJointMode(uint8_t dxl_id);                               // set a servo to joint mode
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             bool                init(   uint8_t dxl_id,                                     // initialize a servo with default settings            
                                         int32_t speed,
