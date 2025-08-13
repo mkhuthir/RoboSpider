@@ -2,13 +2,13 @@
 #define LEG_POSES_H
 
   // LEG SERVOS
-  #define LEG_VELOCITY  300   // Default velocity for coxa servo
-  #define COXA_MIN      0     // Min angle for COXA servo
-  #define COXA_MAX      1023  // Max angle for COXA servo
-  #define FEMUR_MIN     0     // Min angle for FEMUR servo
-  #define FEMUR_MAX     1023  // Max angle for FEMUR servo
-  #define TIBIA_MIN     0     // Min angle for TIBIA servo
-  #define TIBIA_MAX     1023  // Max angle for TIBIA servo
+  #define LEG_SPEED           300   // Default speed for coxa servo
+  #define COXA_CW_LIMIT       0     // Min angle for COXA servo
+  #define COXA_CCW_LIMIT      1023  // Max angle for COXA servo
+  #define FEMUR_CW_LIMIT      0     // Min angle for FEMUR servo
+  #define FEMUR_CCW_LIMIT     1023  // Max angle for FEMUR servo
+  #define TIBIA_CW_LIMIT      0     // Min angle for TIBIA servo
+  #define TIBIA_CCW_LIMIT     1023  // Max angle for TIBIA servo
 
   int32_t poseLegPointUp[LEG_SERVOS]   = {512, 819, 512};  // Leg pose for pointing up
   int32_t poseLegPointDown[LEG_SERVOS] = {512, 204, 512};  // Leg pose for pointing down

@@ -11,8 +11,8 @@ Turret::Turret(){
 // Initialize the turret servos
 bool Turret::begin(Servo* servo) {
   this->servo = servo;  // Set the servo pointer
-  if (!servo->init(turret_ids[0], TURRET_VELOCITY)) return false;
-  if (!servo->init(turret_ids[1], TURRET_VELOCITY)) return false;
+  if (!servo->init(turret_ids[0], TURRET_SPEED, TURRET_PAN_CW_LIMIT, TURRET_PAN_CCW_LIMIT)) return false;
+  if (!servo->init(turret_ids[1], TURRET_SPEED, TURRET_TILT_CW_LIMIT, TURRET_TILT_CCW_LIMIT)) return false;
   moveHome();
   LOG_INF("Turret initialized successfully. (Servo IDs: " + String(turret_ids[0]) + ", " + String(turret_ids[1]) + ")");
   return true;

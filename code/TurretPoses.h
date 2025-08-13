@@ -3,14 +3,19 @@
 
 
    // Turret servos
-  #define TURRET_PAN_ID     19
-  #define TURRET_TILT_ID    20
+  #define TURRET_PAN_ID         19
+  #define TURRET_TILT_ID        20
 
-  #define TURRET_VELOCITY   500   // Default velocity for turret servos
-  #define TURRET_PAN_MIN    0     // Min angle for turret pan servo
-  #define TURRET_PAN_MAX    1023  // Max angle for turret pan servo
-  #define TURRET_TILT_MIN   0     // Min angle for turret tilt servo
-  #define TURRET_TILT_MAX   1023  // Max angle for turret tilt servo
+  #define TURRET_PAN_CW_LIMIT   0
+  #define TURRET_PAN_CCW_LIMIT  1023
+  #define TURRET_TILT_CW_LIMIT  72
+  #define TURRET_TILT_CCW_LIMIT 952
+
+  #define TURRET_SPEED          500   // Default speed for turret servos
+  #define TURRET_PAN_MIN        0     // Min angle for turret pan servo
+  #define TURRET_PAN_MAX        1023  // Max angle for turret pan servo
+  #define TURRET_TILT_MIN       0     // Min angle for turret tilt servo
+  #define TURRET_TILT_MAX       1023  // Max angle for turret tilt servo
 
   uint8_t turret_ids[TURRET_SERVOS]       = {TURRET_PAN_ID, TURRET_TILT_ID};  // Servo IDs for pan and tilt
   int32_t poseTurretHome[TURRET_SERVOS]   = {512, 204};                       // Turret pose for home position

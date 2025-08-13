@@ -21,9 +21,9 @@ void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
 
   this->servo = servo;  // Set the servo pointer
 
-  servo->init(legIDs[Coxa] , LEG_VELOCITY);   // Initialize coxa servo with velocity
-  servo->init(legIDs[Femur], LEG_VELOCITY);   // Initialize femur servo with velocity
-  servo->init(legIDs[Tibia], LEG_VELOCITY);   // Initialize tibia servo with velocity
+  servo->init(legIDs[Coxa] , LEG_SPEED, COXA_CW_LIMIT, COXA_CCW_LIMIT);   // Initialize coxa servo with velocity
+  servo->init(legIDs[Femur], LEG_SPEED, FEMUR_CW_LIMIT, FEMUR_CCW_LIMIT);   // Initialize femur servo with velocity
+  servo->init(legIDs[Tibia], LEG_SPEED, TIBIA_CW_LIMIT, TIBIA_CCW_LIMIT);   // Initialize tibia servo with velocity
 
   LOG_INF("Leg initialized successfully. (Servo IDs: " + String(legIDs[Coxa]) + ", " + String(legIDs[Femur]) + ", " + String(legIDs[Tibia]) + ")");
 }

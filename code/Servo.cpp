@@ -336,12 +336,15 @@ bool Servo::setJointMode(uint8_t dxl_id) {
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 // Initialize a servo with default settings
-bool Servo::init(uint8_t dxl_id, int32_t speed) {
+bool Servo::init(   uint8_t dxl_id, 
+                    int32_t speed,
+                    int32_t CW_angle, 
+                    int32_t CCW_angle) {
     bool result =
         ping(dxl_id) &&
-        setJointMode(dxl_id) &&
-        torqueOn(dxl_id) &&
         setSpeed(dxl_id, speed) &&
+        setAngleLimits(dxl_id, CW_angle, CCW_angle) &&
+        torqueOn(dxl_id) &&
         ledOn(dxl_id);
 
     if (!result) {

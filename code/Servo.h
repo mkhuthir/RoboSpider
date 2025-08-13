@@ -54,7 +54,10 @@
 
             bool                setJointMode(uint8_t dxl_id);                               // set a servo to joint mode
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-            bool                init(uint8_t dxl_id, int32_t speed);                        // initialize a servo with default settings            
+            bool                init(   uint8_t dxl_id,                                     // initialize a servo with default settings            
+                                        int32_t speed,
+                                        int32_t CW_angle, 
+                                        int32_t CCW_angle);                                 
             bool                runConsoleCommands(const String& cmd, const String& args);  // Process console commands for servo control
             bool                printStatus(uint8_t id);                                    // print the status of a servo for debugging            
             bool                printConsoleHelp();                                         // Print servo-specific help information
