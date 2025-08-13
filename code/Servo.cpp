@@ -6,18 +6,11 @@
 Servo::Servo(){}
 
 //initialize the DynamixelWorkbench instance
-bool Servo::begin(const char* device_name, uint32_t baudrate) {
-    
-    if (!dxl.init(device_name, baudrate, &log)) {
-        LOG_ERR(log);
-        return false;  
-    } else {
-        LOG_INF("DynamixelWorkbench initialized successfully at baudrate: "+ String(baudrate)+ " bps");
-    }
-
-    if (!setPacketHandler(PROTOCOL_VERSION))
-        return false;  
-    
+bool Servo::begin(const char* device_name, uint32_t baudrate, float protocol_version) {
+    if (!setPortHandler(device_name)) return false;
+    if (!setBaudrate(baudrate)) return false;
+    if (!setPacketHandler(protocol_version)) return false;
+    LOG_INF("DynamixelWorkbench initialized successfully");
     return true;
 }
 
@@ -29,7 +22,6 @@ bool Servo::setPortHandler(const char *device_name) {
         LOG_ERR(log);
         return false;  
     }       
-    
     LOG_INF("Port handler set to: " + String(device_name));
     return true;
 }
@@ -41,7 +33,6 @@ bool Servo::setBaudrate(uint32_t baud_rate) {
     {        
         LOG_ERR(log);
     }
-
     LOG_INF("Baudrate set to: "+ String(baud_rate));
     return true;
 }
@@ -53,7 +44,6 @@ bool Servo::setPacketHandler(float protocol_version) {
     {        
         LOG_ERR(log);
     }
-
     LOG_INF("Packet handler set with protocol version: " + String(protocol_version));
     return true;
 }
@@ -66,7 +56,6 @@ float Servo::getProtocolVersion(void) {
         LOG_ERR("Failed to get protocol version!");
         return -1.0;
     }
-
     LOG_INF("Protocol Version: " + String(protocol_version));
     return protocol_version;
 }

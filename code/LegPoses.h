@@ -3,8 +3,8 @@
 
   // LEG SERVOS
   #define LEG_SPEED           300   // Default speed for coxa servo
-  #define COXA_CW_LIMIT       0     // Min angle for COXA servo
-  #define COXA_CCW_LIMIT      1023  // Max angle for COXA servo
+  #define COXA_CW_LIMIT       225     // Min angle for COXA servo
+  #define COXA_CCW_LIMIT      750  // Max angle for COXA servo
   #define FEMUR_CW_LIMIT      0     // Min angle for FEMUR servo
   #define FEMUR_CCW_LIMIT     1023  // Max angle for FEMUR servo
   #define TIBIA_CW_LIMIT      0     // Min angle for TIBIA servo

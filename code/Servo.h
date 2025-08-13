@@ -2,15 +2,15 @@
 #define SERVO_H
 
     #include <DynamixelWorkbench.h> // Include DynamixelWorkbench for managing servos
-    
-    #define PROTOCOL_VERSION 1.0    // Protocol version for Dynamixel servos
-
 
     class Servo {
         public:
             Servo();
 //---------------------------------------------------------------------------------------------------------------------------------------------------            
-            bool                begin(const char* device_name, uint32_t baudrate);          // initialize the controller with device name and baudrate
+            bool                begin(  const char* device_name,                            // initialize the controller with device name and baudrate
+                                        uint32_t baudrate,
+                                        float protocol_version);          
+                                        
             bool                setPortHandler(const char *device_name);                    // set the port handler for the controller  
             bool                setBaudrate(uint32_t baud_rate);                            // set the baudrate for the controller
             bool                setPacketHandler(float protocol_version);                   // set the packet handler with the protocol version
