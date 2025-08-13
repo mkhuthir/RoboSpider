@@ -334,108 +334,130 @@ bool Servo::init(   uint8_t dxl_id,
 // Process console commands for servo control
 bool Servo::runConsoleCommands(const String& cmd, const String& args) {
     
-    int servoId = 1;                                // Default to servo ID 1
-    int arg2    = 0;                                // Default to 0
+    int id      = 1;                                // Default servo ID to 1
+    int arg2    = 0;                                // Default argument2 to 0
+    int arg3    = 0;                                // Default argument3 to 0
 
     if (args.length() > 0) {
-        int spaceIndex = args.indexOf(' ');
-        if (spaceIndex != -1) {
-            servoId = args.substring(0, spaceIndex).toInt();
-            arg2    = args.substring(spaceIndex + 1).toInt();
+        int spaceIndex1 = args.indexOf(' ');        
+        if (spaceIndex1 != -1) {
+            id = args.substring(0, spaceIndex1).toInt();
+            int spaceIndex2 = args.indexOf(' ', spaceIndex1 + 1);
+            if (spaceIndex2 == -1) {
+                arg2 = args.substring(spaceIndex1 + 1).toInt();
+            } else {
+                arg2 = args.substring(spaceIndex1 + 1, spaceIndex2).toInt();
+                arg3 = args.substring(spaceIndex2 + 1).toInt();
+            }
         } else {
-            servoId = args.toInt();
+            id = args.toInt();
+            if (id < 1 || id > 253)           // Validate servo ID
+                id = 1;                       // Reset to default ID
         }
-        
-        if (servoId < 1 || servoId > 253)           // Validate servo ID
-            servoId = 1;                            // Reset to default ID
     }
 
     if (cmd == "ss") {
-        printStatus(servoId);
+        printStatus(id);
         return true;
 
     } else if (cmd == "sp") {
-        PRINTLN("Servo ID " + String(servoId) + " ping: " + String(ping((uint8_t)servoId) ? "SUCCESS" : "FAILED"));
+        PRINTLN("Servo ID " + String(id) + " ping: " + String(ping((uint8_t)id) ? "SUCCESS" : "FAILED"));
+        return true;
+
+    } else if (cmd == "sgal") {
+        int32_t CW_angle, CCW_angle;
+        getAngleLimits((uint8_t)id, &CW_angle, &CCW_angle);
+        PRINTLN("Servo ID " + String(id) + " angle limits: CW " + String(CW_angle) + " ~ CCW " + String(CCW_angle));
         return true;
 
     } else if (cmd == "sgp") {
         int32_t currentPos;
-        getPosition((uint8_t)servoId, &currentPos);
-        PRINTLN("Servo ID " + String(servoId) + " current position: " + String(currentPos));
+        getPosition((uint8_t)id, &currentPos);
+        PRINTLN("Servo ID " + String(id) + " current position: " + String(currentPos));
         return true;
         
     } else if (cmd == "sgs") {
         int32_t currentSpeed;
-        getSpeed((uint8_t)servoId, &currentSpeed);
-        PRINTLN("Servo ID " + String(servoId) + " current speed: " + String(currentSpeed));
+        getSpeed((uint8_t)id, &currentSpeed);
+        PRINTLN("Servo ID " + String(id) + " current speed: " + String(currentSpeed));
         return true;
         
     } else if (cmd == "sgl") {
         int32_t currentLoad;
-        getLoad((uint8_t)servoId, &currentLoad);
-        PRINTLN("Servo ID " + String(servoId) + " current load: " + String(currentLoad));
+        getLoad((uint8_t)id, &currentLoad);
+        PRINTLN("Servo ID " + String(id) + " current load: " + String(currentLoad));
         return true;
 
     } else if (cmd == "sgv") {
         int32_t currentVoltage;
-        getVoltage((uint8_t)servoId, &currentVoltage);
-        PRINTLN("Servo ID " + String(servoId) + " current voltage: " + String(currentVoltage));
+        getVoltage((uint8_t)id, &currentVoltage);
+        PRINTLN("Servo ID " + String(id) + " current voltage: " + String(currentVoltage));
         return true;
 
     } else if (cmd == "sgt") {
         int32_t currentTemperature;
-        getTemperature((uint8_t)servoId, &currentTemperature);
-        PRINTLN("Servo ID " + String(servoId) + " current temperature: " + String(currentTemperature));
+        getTemperature((uint8_t)id, &currentTemperature);
+        PRINTLN("Servo ID " + String(id) + " current temperature: " + String(currentTemperature));
         return true;
 
     } else if (cmd == "sim") {
-        PRINTLN("Servo ID " + String(servoId) + " is " + String(isMoving((uint8_t)servoId) ? "MOVING" : "NOT MOVING"));
+        PRINTLN("Servo ID " + String(id) + " is " + String(isMoving((uint8_t)id) ? "MOVING" : "NOT MOVING"));
         return true;
 
     } else if (cmd == "sit") {
-        PRINTLN("Servo ID " + String(servoId) + " torque is " + String(isTorqueOn((uint8_t)servoId) ? "ENABLED" : "DISABLED"));
+        PRINTLN("Servo ID " + String(id) + " torque is " + String(isTorqueOn((uint8_t)id) ? "ENABLED" : "DISABLED"));
         return true;
 
     } else if (cmd == "sil") {
-        PRINTLN("Servo ID " + String(servoId) + " LED is " + String(isLedOn((uint8_t)servoId) ? "ON" : "OFF"));
+        PRINTLN("Servo ID " + String(id) + " LED is " + String(isLedOn((uint8_t)id) ? "ON" : "OFF"));
         return true;
 
     } else if (cmd == "ssp") {
-        if (arg2 < 0 || arg2 > 1023)                // Validate position (typical range for AX-12A is 0-1023)
+        if (arg2 < 0 || arg2 > 1023)                // Validate position (typical range for AX is 0-1023)
             arg2 = 512;                             // Center position
-        setPosition((uint8_t)servoId, (int32_t)arg2);
-        PRINTLN("Servo ID " + String(servoId) + " position set to " + String(arg2));
+        setPosition((uint8_t)id, (int32_t)arg2);
+        PRINTLN("Servo ID " + String(id) + " position set to " + String(arg2));
         return true;
 
     } else if (cmd == "sss") {
         if (arg2 < 0 || arg2 > 1023)                // Validate speed (typical range is 0-1023)
             arg2 = 100;                             // default speed
-        setSpeed((uint8_t)servoId, (int32_t)arg2);
-        PRINTLN("Servo ID " + String(servoId) + " speed set to " + String(arg2));
+        setSpeed((uint8_t)id, (int32_t)arg2);
+        PRINTLN("Servo ID " + String(id) + " speed set to " + String(arg2));
         return true;
-        
+
+    } else if (cmd == "ssal") {
+        if (arg2 < 0 || arg2 > 1023)                // Validate ANGLE (typical range is 0-1023)
+            arg2 = 412;                             // default CW angle
+        if (arg3 < 0 || arg3 > 1023)                // Validate ANGLE (typical range is 0-1023)
+            arg3 = 612;                             // default CCW angle
+
+        setAngleLimits((uint8_t)id, (int32_t)arg2, (int32_t)arg3);
+        PRINTLN("Servo ID " + String(id) + " angle limits: CW " + String(arg2) + " ~ CCW " + String(arg3));
+        return true;
+
     } else if (cmd == "ston") {
         
-        bool result = torqueOn((uint8_t)servoId);
-        PRINTLN("Servo ID " + String(servoId) + " torque " + String(result ? "ENABLED" : "FAILED"));
+        bool result = torqueOn((uint8_t)id);
+        PRINTLN("Servo ID " + String(id) + " torque " + String(result ? "ENABLED" : "FAILED"));
         return true;
 
     } else if (cmd == "stoff") {
         
-        bool result = torqueOff((uint8_t)servoId);
-        PRINTLN("Servo ID " + String(servoId) + " torque " + String(result ? "DISABLED" : "FAILED"));
+        bool result = torqueOff((uint8_t)id);
+        PRINTLN("Servo ID " + String(id) + " torque " + String(result ? "DISABLED" : "FAILED"));
         return true;
         
     } else if (cmd == "slon") {
         
-        bool result = ledOn((uint8_t)servoId);
-        PRINTLN("Servo ID " + String(servoId) + " LED " + String(result ? "ON" : "FAILED"));
+        bool result = ledOn((uint8_t)id);
+        PRINTLN("Servo ID " + String(id) + " LED " + String(result ? "ON" : "FAILED"));
         return true;
 
     } else if (cmd == "sloff") {
         
-        bool result = ledOff((uint8_t)servoId);
-        PRINTLN("Servo ID " + String(servoId) + " LED " + String(result ? "OFF" : "FAILED"));
+        bool result = ledOff((uint8_t)id);
+        PRINTLN("Servo ID " + String(id) + " LED " + String(result ? "OFF" : "FAILED"));
         return true;
 
     } else if (cmd == "s?") {
@@ -482,28 +504,30 @@ bool Servo::printStatus(uint8_t id) {
 // Print servo-specific help information
 bool Servo::printConsoleHelp() {
     PRINTLN("Servo Commands:");
-    PRINTLN("  ss [id]         - Show servo status (default id=1)");
-    PRINTLN("  sp [id]         - Ping servo (default id=1)");
+    PRINTLN("  ss [id]              - Show servo status (default id=1)");
+    PRINTLN("  sp [id]              - Ping servo (default id=1)");
     PRINTLN("");
-    PRINTLN("  sgp [id]        - Get servo position (default id=1)");
-    PRINTLN("  sgs [id]        - Get servo speed (default id=1)");
-    PRINTLN("  sgl [id]        - Get servo load (default id=1)");
-    PRINTLN("  sgv [id]        - Get servo voltage (default id=1)");
-    PRINTLN("  sgt [id]        - Get servo temperature (default id=1)");
+    PRINTLN("  sgp [id]             - Get servo position (default id=1)");
+    PRINTLN("  sgs [id]             - Get servo speed (default id=1)");
+    PRINTLN("  sgal [id]            - Get servo angle limits (default id=1)");
+    PRINTLN("  sgl [id]             - Get servo load (default id=1)");
+    PRINTLN("  sgv [id]             - Get servo voltage (default id=1)");
+    PRINTLN("  sgt [id]             - Get servo temperature (default id=1)");
     PRINTLN("");
-    PRINTLN("  sim [id]        - Check is servo moving (default id=1)");
-    PRINTLN("  sit [id]        - Check is servo torque enabled (default id=1)");
-    PRINTLN("  sil [id]        - Check is servo LED enabled (default id=1)");
+    PRINTLN("  sim [id]             - Check is servo moving (default id=1)");
+    PRINTLN("  sit [id]             - Check is servo torque enabled (default id=1)");
+    PRINTLN("  sil [id]             - Check is servo LED enabled (default id=1)");
     PRINTLN("");
-    PRINTLN("  ssp [id] [pos]  - Set servo position (default id=1, pos=512)");
-    PRINTLN("  sss [id] [spd]  - Set servo speed (default id=1, spd=100)");
+    PRINTLN("  ssp [id] [pos]       - Set servo position (default id=1, pos=512)");
+    PRINTLN("  sss [id] [spd]       - Set servo speed (default id=1, spd=100)");
+    PRINTLN("  ssal [id] [cw] [ccw] - Set servo angle limits (default id=1, cw=0, ccw=1023)");
     PRINTLN("");
-    PRINTLN("  ston [id]       - Enable servo torque (default id=1)");
-    PRINTLN("  stoff [id]      - Disable servo torque (default id=1)");
-    PRINTLN("  slon [id]       - Turn on servo LED (default id=1)");
-    PRINTLN("  sloff [id]      - Turn off servo LED (default id=1)");
+    PRINTLN("  ston [id]            - Enable servo torque (default id=1)");
+    PRINTLN("  stoff [id]           - Disable servo torque (default id=1)");
+    PRINTLN("  slon [id]            - Turn on servo LED (default id=1)");
+    PRINTLN("  sloff [id]           - Turn off servo LED (default id=1)");
     PRINTLN("");
-    PRINTLN("  s?              - Show this help message");
+    PRINTLN("  s?                   - Show this help message");
     PRINTLN("");
     return true;
 }
