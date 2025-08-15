@@ -96,7 +96,7 @@
         bool RemoconArrived();
         int getRemoconRX();
         int getRemoconTX();
-        bool setRemoconTX(uint16_t value);
+        bool setRemoconTX(uint32_t value);
 
         // Status and Helper Functions
         void printStatus();

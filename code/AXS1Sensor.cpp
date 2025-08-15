@@ -405,7 +405,7 @@ int AXS1Sensor::getRemoconTX() {
 }
 
 // Set the remote control TX data
-bool AXS1Sensor::setRemoconTX(uint16_t value) {
+bool AXS1Sensor::setRemoconTX(uint32_t value) {
     
     if (value > 65535) {  // Check if value is within valid range
         LOG_ERR("Invalid Remote Control TX value: " + String(value));
