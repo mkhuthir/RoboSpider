@@ -31,7 +31,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
             const char *        getModelName(uint8_t id);                                   // get the model name of a servo by its ID
-            uint16_t            getModelNumber(uint8_t id);                                 // get the model number of a servo by its ID
+            bool                getModelNumber(uint8_t id, int32_t* model_number);          // get the model number of a servo by its ID
 
             bool                getPosition(uint8_t id, int32_t* pos);                      // get the present position of a servo
             bool                getSpeed(uint8_t id, int32_t* speed);                       // get the present speed of a servo

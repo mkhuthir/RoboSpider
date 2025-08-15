@@ -16,7 +16,7 @@ bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
     }
 
     this->servo = servo;
-    id  =   sensor_id;
+    this->id    = sensor_id;
 
     setObstacleCompare(AXS1_OBSTACLE_DETECTED);     // Set default obstacle detection threshold
     setLightCompare(AXS1_LIGHT_DETECTED);           // Set default light detection threshold
@@ -31,19 +31,8 @@ bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
 // Update method to refresh sensor data
 bool AXS1Sensor::update() {
 
-    if (RemoconArrived()) {             // TODO: test this using a remote
-        
-        int remoconRX = getRemoconRX(); // Read remote control RX data
-        
-        if (remoconRX == -1) {
-            LOG_ERR("Failed to read Remote Control RX data");
-            return false;               
-        }
-        playTone(40, 1);
-    }
-
     if (ObstacleDetected()) {           // Check if obstacle is detected
-        playTone(30, 1);
+        playTone(40, 1);
     }
 
     return true;
@@ -55,22 +44,12 @@ bool AXS1Sensor::ping() {
 }
 
 // Get the model number of the sensor
-int AXS1Sensor::getModelNumber() {
-    
-    uint32_t model_number_l = 0;
-    uint32_t model_number_h = 0;
-
-    if (!servo->readRegister(id, AXS1_Model_Number_L, 1, &model_number_l)) {
+bool AXS1Sensor::getModelNumber(uint32_t* model_number) {
+    if (!servo->readRegister(id, AXS1_Model_Number_L, 2, model_number)) {
         LOG_ERR("Failed to read Model Number for ID: " + String(id));
         return false;
     }
-
-    if (!servo->readRegister(id, AXS1_Model_Number_H, 1, &model_number_h)) {
-        LOG_ERR("Failed to read Model Number for ID: " + String(id));
-        return false;
-    }
-
-    return static_cast<int>((model_number_h << 8) | model_number_l);  // Combine high and low bytes to get full model number
+    return true;
 }
 
 // Get the firmware version of the sensor
@@ -211,9 +190,9 @@ int AXS1Sensor::getObstacleCompare() {
 // Get the obstacle detected status
 int AXS1Sensor::ObstacleDetected() {
     uint32_t val = 0;
-    if (servo->readRegister(id, AXS1_IR_Obstacle_Detected, 1, &val))
+    if (servo->readRegister(this->id, AXS1_IR_Obstacle_Detected, 1, &val))
         return static_cast<int>(val);
-    LOG_ERR("Failed to read Obstacle Detected Data for ID: " + String(id));
+    LOG_ERR("Failed to read Obstacle Detected Data for ID: " + String(this->id));
     return false;
 }
 
@@ -274,11 +253,9 @@ int AXS1Sensor::getSoundDetectedCount() {
 
 // Get the time of sound detected by the sensor
 int AXS1Sensor::getSoundDetectedTime() {
-    uint32_t val_l = 0;
-    uint32_t val_h = 0;
-    if (servo->readRegister(id, AXS1_Sound_Detected_Time_L, 1, &val_l) &&
-        servo->readRegister(id, AXS1_Sound_Detected_Time_H, 1, &val_h)) {
-        return (static_cast<int>(val_h) << 8) | static_cast<int>(val_l);
+    uint32_t val = 0;
+    if (servo->readRegister(id, AXS1_Sound_Detected_Time_L, 2, &val)) {
+        return (static_cast<int>(val));
     }
     LOG_ERR("Failed to read Sound Detected Time for ID: " + String(id));
     return false;
@@ -300,28 +277,22 @@ bool AXS1Sensor::resetSoundDataMaxHold() {
 bool AXS1Sensor::resetSoundDetectedCount() {
     
     uint8_t value = 0;
-
-    if (servo->writeRegister(id, AXS1_Sound_Detected_Count, 1, &value)) {
-        return true;
-    }
-    LOG_ERR("Failed to reset Sound Detected Count for ID: " + String(id));
+    if (!servo->writeRegister(id, AXS1_Sound_Detected_Count, 1, &value)) {
+        LOG_ERR("Failed to reset Sound Detected Count for ID: " + String(id));
     return false;
+    }
+    return true;
 }
 
 // Reset the sound detected time
 bool AXS1Sensor::resetSoundDetectedTime() {
-    //FIXME: reset not working.
-    uint8_t value = 1;
-
-    if (servo->writeRegister(id, AXS1_Sound_Detected_Time_L, 1, &value) &&
-        servo->writeRegister(id, AXS1_Sound_Detected_Time_H, 1, &value)) {
-        return true;
+    uint8_t value = 0;
+    if (!servo->writeRegister(id, AXS1_Sound_Detected_Time_L, 2, &value)){
+        LOG_ERR("Failed to reset Sound Detected Time for ID: " + String(id));
+        return false;
     }
-    LOG_ERR("Failed to reset Sound Detected Time for ID: " + String(id));
-    return false;
+    return true;
 }
-
-
 
 // Play a tone on the sensor's buzzer
 bool AXS1Sensor::playTone(uint8_t note, uint8_t duration) {
@@ -344,9 +315,7 @@ bool AXS1Sensor::playTone(uint8_t note, uint8_t duration) {
 
 // Play a melody on the sensor's buzzer
 bool AXS1Sensor::playMelody(uint8_t melody) {
-
     uint8_t duration = 255;  // Set duration to 255 for melody
-
     if (melody > 26) {
         LOG_ERR("Invalid melody value: " + String(melody));
         return false;
@@ -365,9 +334,7 @@ bool AXS1Sensor::playMelody(uint8_t melody) {
 
 // Start a continuous tone on the sensor's buzzer
 bool AXS1Sensor::startTone(uint8_t note) {
-
     uint8_t duration = 254;  // value to start continuous tone
-
     if (note > 51) {
         LOG_ERR("Invalid note value: " + String(note));
         return false;
@@ -386,9 +353,7 @@ bool AXS1Sensor::startTone(uint8_t note) {
 
 // Stop the continuous tone on the sensor's buzzer
 bool AXS1Sensor::stopTone() {
-
     uint8_t duration = 0;  // value to stop continuous tone
-
     if (!servo->writeRegister(id, AXS1_Buzzer_Data_1, 1, &duration)) {
         LOG_ERR("Failed to stop tone for ID: " + String(id));
         return false;
@@ -399,36 +364,33 @@ bool AXS1Sensor::stopTone() {
 // Check if the remote control data has arrived
 bool AXS1Sensor::RemoconArrived() {         //TODO: validation using remote to be done.
     uint32_t val = 0;
-    if (servo->readRegister(id, AXS1_IR_Remocon_Arrived, 1, &val)) {
-        return (val != 0);  // Return true if data is received
+    if (!servo->readRegister(id, AXS1_IR_Remocon_Arrived, 1, &val)) {
+        LOG_ERR("Failed to read Remote Control Data for ID: " + String(id));
+        return false;  // Return false if reading fails        
     }
-    LOG_ERR("Failed to read Remote Control Data for ID: " + String(id));
-    return false;  // Return false if reading fails
+    return (val != 0);  // Return true if data is received
 }
 
 // Get the remote control RX data
 int AXS1Sensor::getRemoconRX() {
-    uint32_t val_l = 0;
-    uint32_t val_h = 0;
-    if (servo->readRegister(id, AXS1_Remocon_RX_Data_0, 1, &val_l) &&
-        servo->readRegister(id, AXS1_Remocon_RX_Data_1, 1, &val_h)) {
-        return static_cast<int>((val_h << 8) | val_l);  // Combine high and low bytes to get full RX data
+    uint32_t val = 0;
+    if (!servo->readRegister(id, AXS1_Remocon_RX_Data_0, 2, &val)) {
+        LOG_ERR("Failed to read Remote Control RX Data for ID: " + String(id));
+        return false;  // return false if reading fails       
     }
-    LOG_ERR("Failed to read Remote Control RX Data for ID: " + String(id));
-    return false;  // return false if reading fails
+    return static_cast<int>(val);
 }
  
 
 // Get the remote control TX data
 int AXS1Sensor::getRemoconTX() {
-    uint32_t val_l = 0;
-    uint32_t val_h = 0;
-    if (servo->readRegister(id, AXS1_Remocon_TX_Data_0, 1, &val_l) &&
-        servo->readRegister(id, AXS1_Remocon_TX_Data_1, 1, &val_h)) {
-        return static_cast<int>((val_h << 8) | val_l);  // Combine high and low bytes to get full TX data
+    uint32_t val = 0;
+    
+    if (!servo->readRegister(id, AXS1_Remocon_TX_Data_0, 2, &val)){
+        LOG_ERR("Failed to read Remote Control TX Data for ID: " + String(id));
+        return false;  // return false if reading fails   
     }
-    LOG_ERR("Failed to read Remote Control TX Data for ID: " + String(id));
-    return false;  // return false if reading fails
+    return static_cast<int>(val);  // Combine high and low bytes to get full TX data
 }
 
 // Set the remote control TX data
@@ -439,22 +401,23 @@ bool AXS1Sensor::setRemoconTX(uint16_t value) {
         return false;
     }
 
-    uint8_t value_l = value & 0xFF;        
-    uint8_t value_h = (value >> 8) & 0xFF;
-
-    if (servo->writeRegister(id, AXS1_Remocon_TX_Data_0, 1, &value_l) &&
-        servo->writeRegister(id, AXS1_Remocon_TX_Data_1, 1, &value_h)) {
-        return true;
+    if (!servo->writeRegister(id, AXS1_Remocon_TX_Data_0, 2, &value)) {
+        LOG_ERR("Failed to set Remote Control TX value for ID: " + String(id));
+        return false;
     }
-    LOG_ERR("Failed to set Remote Control TX value for ID: " + String(id));
-    return false;
+    return true;
 }
 
 // Print the status of the sensor
 void AXS1Sensor::printStatus() {
+    uint32_t model_number = 0;
+    getModelNumber(&model_number);
+    uint8_t od = ObstacleDetected();
+    uint8_t ld = LightDetected();
+
     PRINTLN("AXS1 Sensor Status:");
     PRINTLN("AXS1 Sensor ID      : " + String(getID()));
-    PRINTLN("Model Number        : " + String(getModelNumber()));
+    PRINTLN("Model Number        : " + String(model_number));
     PRINTLN("Firmware Version    : " + String(getFirmwareVersion()));
     PRINTLN("Baud Rate           : " + String(getBaudRate()));
     PRINTLN("Return Delay Time   : " + String(getReturnDelayTime()));
@@ -463,12 +426,10 @@ void AXS1Sensor::printStatus() {
     PRINTLN("Light Compare       : " + String(getLightCompare()));
     PRINTLN("Distance            : L = " + String(getDistanceLeft()) + " C = " + String(getDistanceCenter()) + " R = " + String(getDistanceRight()));
     PRINTLN("IR                  : L = " + String(getIRLeft()) + " C = " + String(getIRCenter()) + " R = " + String(getIRRight()));
-    uint8_t od = ObstacleDetected();
     PRINTLN("Obstacle Detected   : L = " + 
             String(((od&1)==1)? "On " : "Off") + " C = " + 
             String(((od&2)==2)? "On " : "Off") + " R = " + 
             String(((od&4)==4)? "On " : "Off"));
-    uint8_t ld = LightDetected();
     PRINTLN("Light Detected      : L = " + 
             String(((ld&1)==1)? "On " : "Off") + " C = " + 
             String(((ld&2)==2)? "On " : "Off") + " R = " + 
@@ -741,6 +702,7 @@ bool AXS1Sensor::runConsoleCommands(const String& cmd, const String& args) {
 void AXS1Sensor::printConsoleHelp() {
     PRINTLN("Sensor Commands (AXS1):");
     PRINTLN("  ap               - Ping sensor (connectivity test)");
+    PRINTLN("  as               - Print Sensor status");
     PRINTLN("");
     PRINTLN("  ad               - Read Distance sensors (left, center, right)");
     PRINTLN("  air              - Read IR light sensors (left, center, right)");
@@ -769,7 +731,6 @@ void AXS1Sensor::printConsoleHelp() {
     PRINTLN("  arxa             - Check if Remote Control data has arrived");
     PRINTLN("  astx [value]     - Set Remote Control TX data (0-65535)");
     PRINTLN("");
-    PRINTLN("  as               - Print Sensor status");
     PRINTLN("  a?               - Show this help message");
     PRINTLN("");
 }

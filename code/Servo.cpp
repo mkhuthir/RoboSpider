@@ -173,9 +173,8 @@ bool Servo::syncWrite(uint8_t index, uint8_t *id, uint8_t id_num, int32_t *data,
 //------------------------------------------------------------------------
 // Ping a servo to check if it is connected, ping is required before you can use a servo.
 bool Servo::ping(uint8_t dxl_id) {
-
-    uint16_t model_number = 0;
-    if (!dxl.ping(dxl_id, &model_number, &log))
+    
+    if (!dxl.ping(dxl_id, &log))
     {
         LOG_ERR(log);
         return false;
@@ -198,15 +197,9 @@ const char * Servo::getModelName(uint8_t id) {
 }
 
 // Get the model number of a servo
-uint16_t Servo::getModelNumber(uint8_t id) {
-    uint16_t model_number = 0;
-    model_number = dxl.getModelNumber(id, &log);
-    if (model_number == 0)
-    {
-        LOG_ERR(log);
-        return 0;
-    }
-    return model_number;
+bool Servo::getModelNumber(uint8_t id, int32_t* model_number) {
+    if (!readRegister(id, "Model_Number", model_number)) return false;
+    return true;
 }
 
 // Get the present position data of a servo in value
@@ -357,11 +350,23 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
     }
 
     if (cmd == "ss") {
-        printStatus(id);
+        if (arg2 > 0 && arg2 > id && arg2 < 253) {
+            for (int i = id; i <= arg2; i++) {
+                printStatus(i);
+            }
+        } else {
+            printStatus(id);
+        }
         return true;
 
     } else if (cmd == "sp") {
-        PRINTLN("Servo ID " + String(id) + " ping: " + String(ping((uint8_t)id) ? "SUCCESS" : "FAILED"));
+        if (arg2 > 0 && arg2 > id && arg2 < 253) {
+            for (int i = id; i <= arg2; i++) {
+                PRINTLN("Servo ID " + String(i) + " ping: " + String(ping((uint8_t)i) ? "SUCCESS" : "FAILED"));
+            }
+        } else {
+            PRINTLN("Servo ID " + String(id) + " ping: " + String(ping((uint8_t)id) ? "SUCCESS" : "FAILED"));
+        }
         return true;
 
     } else if (cmd == "sgal") {
@@ -470,7 +475,8 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
 
 // Print the status of a servo for debugging
 bool Servo::printStatus(uint8_t id) {
-    
+
+    int32_t model_number = 0;
     int32_t position = 0;
     int32_t speed = 0;
     int32_t load = 0;
@@ -478,6 +484,7 @@ bool Servo::printStatus(uint8_t id) {
     int32_t temperature = 0;
     int32_t CW_angle = 0, CCW_angle = 0;
 
+    getModelNumber(id, &model_number);
     getPosition(id, &position);
     getAngleLimits(id, &CW_angle, &CCW_angle);
     getSpeed(id, &speed);
@@ -487,7 +494,7 @@ bool Servo::printStatus(uint8_t id) {
 
     PRINTLN("\nServo Status:");
     PRINTLN("Servo ID     : " + String(id));                         // Print the ID of the servo
-    PRINTLN("Model Number : " + String(getModelNumber(id)));
+    PRINTLN("Model Number : " + String(model_number));
     PRINTLN("Model Name   : " + String(getModelName(id)));
     PRINTLN("Position     : " + String(position));
     PRINTLN("Angle Limits : CW " + String(CW_angle) + " ~ CCW " + String(CCW_angle));
@@ -504,8 +511,8 @@ bool Servo::printStatus(uint8_t id) {
 // Print servo-specific help information
 bool Servo::printConsoleHelp() {
     PRINTLN("Servo Commands:");
-    PRINTLN("  ss [id]              - Show servo status (default id=1)");
-    PRINTLN("  sp [id]              - Ping servo (default id=1)");
+    PRINTLN("  ss [id] [id]         - Show servo status for range of id's (default id=1)");
+    PRINTLN("  sp [id] [id]         - Ping servo for range of id's (default id=1)");
     PRINTLN("");
     PRINTLN("  sgp [id]             - Get servo position (default id=1)");
     PRINTLN("  sgs [id]             - Get servo speed (default id=1)");

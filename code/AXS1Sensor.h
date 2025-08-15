@@ -53,7 +53,7 @@
         bool ping();
 
         // EEPROM Read Functions
-        int getModelNumber();
+        bool getModelNumber(uint32_t* model_number);
         int getFirmwareVersion();
         int getID();
         int getBaudRate();
