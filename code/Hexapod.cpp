@@ -29,14 +29,19 @@ bool Hexapod::begin(Servo* servo) {
     return false;
   }
 
-  moveStandUp();                                    // Move Hexapod to standing position
+  if (!moveStandUp()) {                                    // Move Hexapod to standing position
+    LOG_ERR("Failed to move Hexapod to standing position");
+    return false;
+  }
+
   LOG_INF("Hexapod initialized successfully.");
   return true;                                      // Initialization successful
 }
+
 // Move Hexapod
 bool Hexapod::move(uint8_t *ids, uint8_t num_servos, int32_t *positions) {
   const uint8_t num_positions   = 1;
-  servo->syncWrite(handler_index, ids, num_servos, positions, num_positions);
+  return servo->syncWrite(handler_index, ids, num_servos, positions, num_positions);
 }
 
 // Check if any leg is currently moving
@@ -51,12 +56,20 @@ bool Hexapod::isMoving() {
 
 // Move Hexapod Up
 bool Hexapod::moveStandUp() {
-  move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandUP);
+  if (!move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandUP)) {
+    LOG_ERR("Failed to move Hexapod to standing position");
+    return false;
+  }
+  return true;
 }
 
 // Move Hexapod Down
 bool Hexapod::moveStandDown() {
-  move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandDown);
+  if (!move(poseHexapodIDs, HEXAPOD_SERVOS, poseHexapodStandDown)) {
+    LOG_ERR("Failed to move Hexapod to sitting position");
+    return false;
+  }
+  return true;
 }
 
 // Print the status of all legs
@@ -73,14 +86,13 @@ void Hexapod::printStatus() {
 // Process console commands for hexapod control
 bool Hexapod::runConsoleCommands(const String& cmd, const String& args) {
     if (cmd == "hsu") {
-        moveStandUp();
-        LOG_INF("Hexapod standing up");
+        if (moveStandUp()) LOG_INF("Hexapod standing up");
         return true;
 
     } else if (cmd == "hsd") {
-        moveStandDown();
-        LOG_INF("Hexapod standing down");
+        if (moveStandDown()) LOG_INF("Hexapod standing down");
         return true;
+
     } else if (cmd == "hs") {
         printStatus();
         return true;

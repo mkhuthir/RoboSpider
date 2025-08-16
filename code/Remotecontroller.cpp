@@ -7,8 +7,8 @@
 Remotecontroller::Remotecontroller() {}
 
 bool Remotecontroller::begin(int serial_port, Hexapod* hexapod, Turret* turret, GaitController* gc, Microcontroller* mc) {
-    
-    rc.begin(serial_port);      // Initialize the remote controller with the specified serial port
+
+    rc.begin(serial_port);      // Initialize the RC100 remote controller
 
     this->hexapod   = hexapod;  // Store the hexapod instance
     this->turret    = turret;   // Store the turret instance
@@ -20,7 +20,7 @@ bool Remotecontroller::begin(int serial_port, Hexapod* hexapod, Turret* turret, 
 
 }
 
-void Remotecontroller::update() {
+bool Remotecontroller::update() {
     if (rc.available()) {
         switch (rc.readData()) {
             case 00:
@@ -77,6 +77,11 @@ void Remotecontroller::update() {
                 LOG_DBG("RC Button 6 pressed");
                 turret->moveHome(); // Move turret to home position
                 break;
+
+            default:
+                LOG_WRN("Unknown RC button pressed");
+                return false;
         }
     }
-}   
+    return true;
+}
