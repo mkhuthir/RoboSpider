@@ -22,7 +22,7 @@ bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
     if (!resetSoundDetectedCount()) return false;                   // Reset sound detected count
     if (!resetSoundDetectedTime()) return false;                    // Reset sound detected time
 
-    LOG_INF("AXS1Sensor initialized successfully. (ID: " + String(id) + ")");
+    LOG_INF("AX-S1 Sensor initialized successfully. (ID: " + String(id) + ")");
     return true;
 }
 
@@ -89,69 +89,57 @@ bool AXS1Sensor::getStatusReturnLevel(uint8_t* status_return) {
 }
 
 // Get the distance data from the IR left side sensor
-int AXS1Sensor::getDistanceLeft() {
-
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Left_Distance_Data, 1, &val)) {
+bool AXS1Sensor::getDistanceLeft(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Left_Distance_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Left Distance Data for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the distance data from the IR center sensor
-int AXS1Sensor::getDistanceCenter() {
-
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Center_Distance_Data, 1, &val)) {
+bool AXS1Sensor::getDistanceCenter(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Center_Distance_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Center Distance Data for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the distance data from the IR right side sensor
-int AXS1Sensor::getDistanceRight() {
-
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Right_Distance_Data, 1, &val)) {
+bool AXS1Sensor::getDistanceRight(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Right_Distance_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Right Distance Data for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the IR light left side sensor data
-int AXS1Sensor::getIRLeft() {
-
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Light_Left_Data, 1, &val)) {
+bool AXS1Sensor::getIRLeft(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Light_Left_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Left Data for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the IR light center sensor data
-int AXS1Sensor::getIRCenter() {
-
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Light_Center_Data, 1, &val)) {
+bool AXS1Sensor::getIRCenter(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Light_Center_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Center Data for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the IR light right side sensor data
-int AXS1Sensor::getIRRight() {
-
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Light_Right_Data, 1, &val)) {
+bool AXS1Sensor::getIRRight(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Light_Right_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Right Data for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Set the obstacle detection comparison value
@@ -396,7 +384,15 @@ bool AXS1Sensor::printStatus() {
     uint8_t     baud_rate = 0;
     uint8_t     return_delay = 0;
     uint8_t     status_return = 0;
-    
+
+    uint8_t     distance_left = 0;
+    uint8_t     distance_center = 0;
+    uint8_t     distance_right = 0;
+
+    uint8_t     light_left = 0;
+    uint8_t     light_center = 0;
+    uint8_t     light_right = 0;
+
     uint8_t     obstacle_compare = 0;
     uint8_t     light_compare = 0;
     uint8_t     od = 0;
@@ -416,6 +412,14 @@ bool AXS1Sensor::printStatus() {
     if (!getBaudRate(&baud_rate)) return false;
     if (!getReturnDelayTime(&return_delay)) return false;
     if (!getStatusReturnLevel(&status_return)) return false;
+
+    if (!getDistanceLeft(&distance_left)) return false;
+    if (!getDistanceCenter(&distance_center)) return false;
+    if (!getDistanceRight(&distance_right)) return false;
+
+    if (!getIRLeft(&light_left)) return false;
+    if (!getIRCenter(&light_center)) return false;
+    if (!getIRRight(&light_right)) return false;
 
     if (!getObstacleCompare(&obstacle_compare)) return false;
     if (!getLightCompare(&light_compare)) return false;
@@ -442,13 +446,13 @@ bool AXS1Sensor::printStatus() {
     PRINTLN("Return Delay Time   : " + String(return_delay * 2) + " us");
     PRINTLN("Status Return Level : " + String(status_return));
 
-    PRINTLN("Distance            : L = " + String(getDistanceLeft()) + 
-                                 " C = " + String(getDistanceCenter()) + 
-                                 " R = " + String(getDistanceRight()));
+    PRINTLN("Distance            : L = " + String(distance_left) + 
+                                 " C = " + String(distance_center) + 
+                                 " R = " + String(distance_right));
 
-    PRINTLN("IR                  : L = " + String(getIRLeft()) + 
-                                 " C = " + String(getIRCenter()) + 
-                                 " R = " + String(getIRRight()));
+    PRINTLN("IR                  : L = " + String(light_left) + 
+                                 " C = " + String(light_center) + 
+                                 " R = " + String(light_right));
 
     PRINTLN("Obstacle Compare    : " + String(obstacle_compare));
     PRINTLN("Light Compare       : " + String(light_compare));
@@ -481,16 +485,30 @@ bool AXS1Sensor::runConsoleCommands(const String& cmd, const String& args) {
         PRINTLN("Sensor ping: " + String(result ? "SUCCESS" : "FAILED"));
         return true;
 
+    } else if (cmd == "as") {
+        printStatus();
+        return true;
+
     } else if (cmd == "ad") {
-        PRINTLN("Distance - Left: " + String(getDistanceLeft()) + 
-                   ", Center: " + String(getDistanceCenter()) + 
-                   ", Right: " + String(getDistanceRight()));
+        uint8_t distance_left = 0 , distance_center = 0 , distance_right = 0;
+        if (!getDistanceLeft(&distance_left) || !getDistanceCenter(&distance_center) || !getDistanceRight(&distance_right)) {
+            LOG_ERR("Failed to read distance data");
+        } else {
+            PRINTLN("Distance - Left: " + String(distance_left) + 
+                   ", Center: " + String(distance_center) + 
+                   ", Right: " + String(distance_right));
+        }
         return true;
 
     } else if (cmd == "air") {
-        PRINTLN("IR light - Left: " + String(getIRLeft()) + 
-                   ", Center: " + String(getIRCenter()) + 
-                   ", Right: " + String(getIRRight()));
+        uint8_t light_left = 0 , light_center = 0 , light_right = 0;
+        if (!getIRLeft(&light_left) || !getIRCenter(&light_center) || !getIRRight(&light_right)) {
+            LOG_ERR("Failed to read IR light data");
+        } else {
+            PRINTLN("IR light - Left: " + String(light_left) + 
+                   ", Center: " + String(light_center) + 
+                   ", Right: " + String(light_right));
+        }
         return true;
 
     } else if (cmd == "asoc") {
@@ -712,13 +730,10 @@ bool AXS1Sensor::runConsoleCommands(const String& cmd, const String& args) {
         }
         return true;
 
-    } else if (cmd == "as") {
-              
-        printStatus();
-        return true;
-        
     } else if (cmd == "a?") {
-        printConsoleHelp();  // Print help information for sensor commands
+        if (!printConsoleHelp()) {  
+            LOG_ERR("Failed to print console help");
+        }
         return true;
     
     }
@@ -733,10 +748,12 @@ bool AXS1Sensor::printConsoleHelp() {
     PRINTLN("");
     PRINTLN("  ad               - Read Distance sensors (left, center, right)");
     PRINTLN("  air              - Read IR light sensors (left, center, right)");
+    PRINTLN("");
     PRINTLN("  asoc [value]     - Set Obstacle Detection Compare value (0-255)");
     PRINTLN("  agoc             - Read Obstacle Detection Compare value");
     PRINTLN("  aslc [value]     - Set Light Detection Compare value (0-255)");
     PRINTLN("  aglc             - Read Light Detection Compare value");
+    PRINTLN("");
     PRINTLN("  aod              - Read Obstacle Detection (left, center, right)");
     PRINTLN("  ald              - Read Light Detection (left, center, right)");
     PRINTLN("");

@@ -60,19 +60,22 @@
         bool getReturnDelayTime(uint8_t* return_delay);
         bool getStatusReturnLevel(uint8_t* status_return);
 
-        // IR Sensors
-        int getDistanceLeft();
-        int getDistanceCenter();
-        int getDistanceRight();
+        // IR Sensors Distance
+        bool getDistanceLeft(uint8_t* value);
+        bool getDistanceCenter(uint8_t* value);
+        bool getDistanceRight(uint8_t* value);
 
-        int getIRLeft();
-        int getIRCenter();
-        int getIRRight();
+        // IR Sensors Light
+        bool getIRLeft(uint8_t* value);
+        bool getIRCenter(uint8_t* value);
+        bool getIRRight(uint8_t* value);
 
+        // Obstacle Detection
         bool setObstacleCompare(uint8_t value);
         bool getObstacleCompare(uint8_t* value);
         bool ObstacleDetected(uint8_t* value);
 
+        // Light Detection
         bool setLightCompare(uint8_t value);
         bool getLightCompare(uint8_t* value);
         bool LightDetected(uint8_t* value);
