@@ -31,10 +31,6 @@ bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
 // Update method to refresh sensor data
 bool AXS1Sensor::update() {
 
-    if (ObstacleDetected()) {           // Check if obstacle is detected
-        playTone(40, 1);
-    }
-
     return true;
 }
 
