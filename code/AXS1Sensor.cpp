@@ -210,43 +210,39 @@ bool AXS1Sensor::LightDetected(uint8_t* value) {
 }
 
 // Get the sound data from the sensor
-int AXS1Sensor::getSoundData() {
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Sound_Data, 1, &val)) {
+bool AXS1Sensor::getSoundData(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Sound_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Sound Data for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the maximum hold sound data from the sensor
-int AXS1Sensor::getSoundDataMaxHold() {
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Sound_Data_Max_Hold, 1, &val)) {
+bool AXS1Sensor::getSoundDataMaxHold(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Sound_Data_Max_Hold, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Sound Data Max Hold for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the count of sound detected by the sensor
-int AXS1Sensor::getSoundDetectedCount() {
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Sound_Detected_Count, 1, &val)){
+bool AXS1Sensor::getSoundDetectedCount(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Sound_Detected_Count, 1, (uint32_t*)value)){
         LOG_ERR("Failed to read Sound Detected Count for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the time of sound detected by the sensor
-int AXS1Sensor::getSoundDetectedTime() {
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Sound_Detected_Time_L, 2, &val)) {
+bool AXS1Sensor::getSoundDetectedTime(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Sound_Detected_Time_L, 2, (uint32_t*)value)) {
         LOG_ERR("Failed to read Sound Detected Time for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Reset the maximum hold sound data
@@ -406,6 +402,11 @@ bool AXS1Sensor::printStatus() {
     uint8_t     od = 0;
     uint8_t     ld = 0;
     
+    uint8_t     sound_data = 0;
+    uint8_t     sound_data_max_hold = 0;
+    uint8_t     sound_detected_count = 0;
+    uint8_t     sound_detected_time = 0;
+
     uint16_t    remocon_rx = 0;
     uint16_t    remocon_tx = 0;
 
@@ -421,10 +422,15 @@ bool AXS1Sensor::printStatus() {
     if (!ObstacleDetected(&od)) return false;
     if (!LightDetected(&ld)) return false;
 
+    if (!getSoundData(&sound_data)) return false;
+    if (!getSoundDataMaxHold(&sound_data_max_hold)) return false;
+    if (!getSoundDetectedCount(&sound_detected_count)) return false;
+    if (!getSoundDetectedTime(&sound_detected_time)) return false;
+
     if (!getRemoconRX(&remocon_rx)) return false;
     if (!getRemoconTX(&remocon_tx)) return false;
     
-
+    // FIXME: should be moved to first section
     if (!getModelNumber(&model_number)) return false; //FIXME: number is getting reset by another function!!
     LOG_DBG("Model Number: " + String(model_number)); //FIXME:
 
@@ -457,10 +463,11 @@ bool AXS1Sensor::printStatus() {
             String(((ld&2)==2)? "On " : "Off") + " R = " + 
             String(((ld&4)==4)? "On " : "Off"));
 
-    PRINTLN("Sound Data          : " + String(getSoundData()));
-    PRINTLN("Sound Data Max Hold : " + String(getSoundDataMaxHold()));
-    PRINTLN("Sound Detected Count: " + String(getSoundDetectedCount()));
-    PRINTLN("Sound Detected Time : " + String(getSoundDetectedTime()));
+    PRINTLN("Sound Data          : " + String(sound_data));
+    PRINTLN("Sound Data Max Hold : " + String(sound_data_max_hold));
+    PRINTLN("Sound Detected Count: " + String(sound_detected_count));
+    PRINTLN("Sound Detected Time : " + String(sound_detected_time));
+
     PRINTLN("Remocon RX          : " + String(remocon_rx));
     PRINTLN("Remocon TX          : " + String(remocon_tx));
     PRINTLN("Remocon Arrived     : " + String(RemoconArrived() ? "Yes" : "No"));
@@ -551,51 +558,42 @@ bool AXS1Sensor::runConsoleCommands(const String& cmd, const String& args) {
         return true;
 
     } else if (cmd == "agsd") {
-
-        int soundData = getSoundData();
-
-        if (soundData == -1) {
+        uint8_t sound_data = 0;
+        if (!getSoundData(&sound_data)) {
             LOG_ERR("Failed to read Sound Detected data");
         } else {
-            PRINTLN("Sound Detected Data: " + String(soundData));
+            PRINTLN("Sound Detected Data: " + String(sound_data));
         }
         return true;
 
     } else if (cmd == "agsdmh") {
-        
-        int soundDataMaxHold = getSoundDataMaxHold();
-
-        if (soundDataMaxHold == -1) {
+        uint8_t sound_data_max_hold = 0;
+        if (!getSoundDataMaxHold(&sound_data_max_hold)) {
             LOG_ERR("Failed to read Sound Data Max Hold data");
         } else {
-            PRINTLN("Sound Data Max Hold Data: " + String(soundDataMaxHold));
+            PRINTLN("Sound Data Max Hold Data: " + String(sound_data_max_hold));
         }
         return true;
 
     } else if (cmd == "agsdc") {
-
-        int soundDetectedCount = getSoundDetectedCount();
-
-        if (soundDetectedCount == -1) {
+        uint8_t sound_detected_count = 0;
+        if (!getSoundDetectedCount(&sound_detected_count)) {
             LOG_ERR("Failed to read Sound Detected Count data");
         } else {
-            PRINTLN("Sound Detected Count Data: " + String(soundDetectedCount));
+            PRINTLN("Sound Detected Count Data: " + String(sound_detected_count));
         }
         return true;
 
     } else if (cmd == "agsdt") {
-
-        int soundDetectedTime = getSoundDetectedTime();
-
-        if (soundDetectedTime == -1) {
+        uint8_t sound_detected_time = 0;
+        if (!getSoundDetectedTime(&sound_detected_time)) {
             LOG_ERR("Failed to read Sound Detected Time data");
         } else {
-            PRINTLN("Sound Detected Time Data: " + String(soundDetectedTime));
+            PRINTLN("Sound Detected Time Data: " + String(sound_detected_time));
         }
         return true;
 
     } else if (cmd == "arsdmh") {
-
         if (!resetSoundDataMaxHold()) {
             LOG_ERR("Failed to reset Sound Data Max Hold");
         } else {
@@ -604,7 +602,6 @@ bool AXS1Sensor::runConsoleCommands(const String& cmd, const String& args) {
         return true;
 
     } else if (cmd == "arsdc") {
-
         if (!resetSoundDetectedCount()) {
             LOG_ERR("Failed to reset Sound Detected Count");
         } else {
@@ -613,7 +610,6 @@ bool AXS1Sensor::runConsoleCommands(const String& cmd, const String& args) {
         return true;
 
     } else if (cmd == "arsdt") {
-
         if (!resetSoundDetectedTime()) {
             LOG_ERR("Failed to reset Sound Detected Time");
         } else {

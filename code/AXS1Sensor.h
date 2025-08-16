@@ -78,10 +78,10 @@
         bool LightDetected(uint8_t* value);
 
         // Sound Detection
-        int getSoundData();
-        int getSoundDataMaxHold();
-        int getSoundDetectedCount();
-        int getSoundDetectedTime();
+        bool getSoundData(uint8_t* value);
+        bool getSoundDataMaxHold(uint8_t* value);
+        bool getSoundDetectedCount(uint8_t* value);
+        bool getSoundDetectedTime(uint8_t* value);
 
         bool resetSoundDataMaxHold();
         bool resetSoundDetectedCount();
