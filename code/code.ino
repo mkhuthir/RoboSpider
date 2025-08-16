@@ -40,6 +40,7 @@ Console             con(    DEBUG_SERIAL,       // Initialize console with debug
 // Setup function to initialize the robot components
 void setup() {
 
+    con.begin();
     mc.begin();
     servo.begin( DXL_SERIAL,DXL_BAUD_RATE, DXL_PROTOCOL_VERSION);            
     hexapod.begin(&servo);
@@ -48,7 +49,7 @@ void setup() {
     gc.begin(&hexapod);
     rc.begin(RC100_SERIAL,&hexapod,&turret,&gc,&mc);
 
-    con.begin();
+    con.startShell();  // Start the console shell
 }
 
 // Loop function to handle remote controller input and control the robot

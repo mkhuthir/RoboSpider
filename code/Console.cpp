@@ -17,13 +17,10 @@ Console::Console(   Stream& stream,
                     Remotecontroller* rc
                     ){
 
-
-
     logStream = &stream;                // Set the log stream to the same stream
 
     if (logStream == &Serial) {
         Serial.begin(baud);
-        while (!Serial);                // Wait for Serial if using USB
     }
     
     this->mc        = mc;               // Store the Microcontroller instance
@@ -37,14 +34,23 @@ Console::Console(   Stream& stream,
     shell           = "$";              // Default shell prompt
     cursorPos       = 0;                // Start cursor at position 0
     insertMode      = true;             // Default to insert mode
-
 }
 
 // Initialize the console with a baud rate and instances of components
 bool Console::begin() {
-    commandHistory.resetToEnd();        // Reset command history to end
-    PRINT("\033[2J\033[H");             // Clear the console screen and move cursor to home position
+    
+    if (logStream == &Serial) {
+        while (!Serial);                // Wait for Serial if using USB
+    }
+    LOG_INF("\n\rConsole initialized.");
+    return true;
+}
+
+// Start the shell
+bool Console::startShell() {
+    PRINTLN("Starting shell...");
     PRINTLN("Type '?' for help.");      // Print help message
+    commandHistory.resetToEnd();        // Reset command history to end
     PRINT(shell);                       // Print the shell prompt
     return true;
 }

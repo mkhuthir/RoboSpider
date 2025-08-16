@@ -63,7 +63,7 @@
         );
 
         bool begin();                                           // Initialize the console
-
+        bool startShell();                                      // Start the shell
         void update();                                          // Call in loop()
 
         // Static methods for managing console state
