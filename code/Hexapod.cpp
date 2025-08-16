@@ -73,7 +73,7 @@ bool Hexapod::moveStandDown() {
 }
 
 // Print the status of all legs
-void Hexapod::printStatus() {
+bool Hexapod::printStatus() {
   PRINTLN("\nHexapod Legs Status:");
   for (int i = 0; i < 6; i++) {
     PRINT("Leg ");
@@ -81,6 +81,7 @@ void Hexapod::printStatus() {
     PRINT(": ");
     legs[i].printStatus();  // Print leg angles of each leg
   }
+  return true;
 }
 
 // Process console commands for hexapod control
@@ -107,13 +108,14 @@ bool Hexapod::runConsoleCommands(const String& cmd, const String& args) {
 }
 
 // Print hexapod-specific help information
-void Hexapod::printConsoleHelp() {
-    PRINTLN("Hexapod Commands:");
+bool Hexapod::printConsoleHelp() {
+    PRINTLN("Hexapod Commands:\n\r");
+    PRINTLN("  hs               - Print hexapod legs status");
     PRINTLN("  hsu              - Hexapod stand up");
     PRINTLN("  hsd              - Hexapod stand down");
-    PRINTLN("  hs               - Print hexapod legs status");
     PRINTLN("  h?               - Print this help information");
     PRINTLN("");
+    return true;
 }
 
 

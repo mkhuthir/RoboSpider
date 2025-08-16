@@ -15,15 +15,12 @@
 
       bool move(uint8_t *ids, uint8_t num_servos, int32_t *positions);  // Move Hexapod
       bool isMoving();                                                  // Check if any leg is currently moving
-
       bool moveStandUp();                                               // Move Hexapod Up
       bool moveStandDown();                                             // Move Hexapod Down
       
-      void printStatus();                                               // Print the status of all legs
-   
-      
+      bool printStatus();                                               // Print the status of all legs
       bool runConsoleCommands(const String& cmd, const String& args);   // Process console commands for hexapod control
-      void printConsoleHelp();                                          // Print hexapod-specific help information
+      bool printConsoleHelp();                                          // Print hexapod-specific help information
       
       Leg     legs[HEXAPOD_LEGS];                                       // Array of legs
 
