@@ -53,13 +53,13 @@
         bool ping();
 
         // EEPROM Read Functions
-        bool getModelNumber(uint32_t* model_number);
-        int getFirmwareVersion();
-        int getID();
-        int getBaudRate();
-        int getReturnDelayTime();
-        int getStatusReturnLevel();
-        
+        bool getModelNumber(uint16_t* model_number);
+        bool getFirmwareVersion(uint8_t* version);
+        bool getID(uint8_t* id);
+        bool getBaudRate(uint8_t* baud_rate);
+        bool getReturnDelayTime(uint8_t* return_delay);
+        bool getStatusReturnLevel(uint8_t* status_return);
+
         // IR Sensors
         int getDistanceLeft();
         int getDistanceCenter();
@@ -82,6 +82,7 @@
         int getSoundDataMaxHold();
         int getSoundDetectedCount();
         int getSoundDetectedTime();
+
         bool resetSoundDataMaxHold();
         bool resetSoundDetectedCount();
         bool resetSoundDetectedTime();
@@ -94,14 +95,14 @@
 
         // Remote Control
         bool RemoconArrived();
-        int getRemoconRX();
-        int getRemoconTX();
-        bool setRemoconTX(uint32_t value);
+        bool getRemoconRX(uint16_t* value);
+        bool getRemoconTX(uint16_t* value);
+        bool setRemoconTX(uint16_t value);
 
         // Status and Helper Functions
-        void printStatus();
+        bool printStatus();
         bool runConsoleCommands(const String& cmd, const String& args);  // Process console commands for sensor control
-        void printConsoleHelp();                                                // Print sensor-specific help information
+        bool printConsoleHelp();                                                // Print sensor-specific help information
 
     private:
         Servo*      servo;                     // Pointer to Servo instance
