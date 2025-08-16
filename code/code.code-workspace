@@ -3,14 +3,6 @@
 		{
 			"name": "code",
 			"path": "."
-		},
-		{
-			"name": "DynamixelSDK",
-			"path": "../../../Downloads/DynamixelSDK"
-		},
-		{
-			"name": "DynamixelWorkbench",
-			"path": "../../../Downloads/DynamixelWorkbench"
 		}
 	],
 	"settings": {}
