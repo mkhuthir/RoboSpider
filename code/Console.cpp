@@ -6,22 +6,18 @@ DebugLevel  Console::debugLevel      = DEBUG_INF;    // Default debug level
 bool        Console::colorEnabled    = true;         // Default color enabled
 
 // Constructor for Console class
-Console::Console(){
-    shell           = "$";                  // Default shell prompt
-    cursorPos       = 0;                    // Start cursor at position 0
-    insertMode      = true;                 // Default to insert mode
-    logStream       = &Serial;              // Default log stream is Serial
-}
-
-// Initialize the console with a baud rate and instances of components
-bool Console::begin(Stream& stream,
+Console::Console(   Stream& stream,
                     unsigned long baud,
+                    Microcontroller* mc,
                     Servo* servo,
                     Hexapod* hexapod,
                     Turret* turret,
                     AXS1Sensor* sensor,
                     GaitController* gc,
-                    Microcontroller* mc) {
+                    Remotecontroller* rc
+                    ){
+
+
 
     logStream = &stream;                // Set the log stream to the same stream
 
@@ -30,13 +26,22 @@ bool Console::begin(Stream& stream,
         while (!Serial);                // Wait for Serial if using USB
     }
     
+    this->mc        = mc;               // Store the Microcontroller instance
     this->servo     = servo;            // Store the Servo instance
     this->hexapod   = hexapod;          // Store the hexapod instance
     this->turret    = turret;           // Store the turret instance
     this->sensor    = sensor;           // Store the AXS1Sensor instance
     this->gc        = gc;               // Store the GaitController instance
-    this->mc        = mc;               // Store the Microcontroller instance
+    this->rc        = rc;               // Store the RemoteController instance
 
+    shell           = "$";              // Default shell prompt
+    cursorPos       = 0;                // Start cursor at position 0
+    insertMode      = true;             // Default to insert mode
+
+}
+
+// Initialize the console with a baud rate and instances of components
+bool Console::begin() {
     commandHistory.resetToEnd();        // Reset command history to end
     PRINT("\033[2J\033[H");             // Clear the console screen and move cursor to home position
     PRINTLN("Type '?' for help.");      // Print help message

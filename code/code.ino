@@ -17,52 +17,38 @@
 
 // Global variables and instances
 
-Console             con;       
-Microcontroller     mc;
-Servo               servo;  
-Hexapod             hexapod;
-Turret              turret; 
-AXS1Sensor          axs1;   
-GaitController      gc;     
-Remotecontroller    rc;     
+Microcontroller     mc;                         // Microcontroller instance
+Servo               servo;                      // Servo instance
+Hexapod             hexapod;                    // Hexapod instance
+Turret              turret;                     // Turret instance
+AXS1Sensor          axs1;                       // AX-S1 Sensor instance
+GaitController      gc;                         // Gait Controller instance
+Remotecontroller    rc;                         // Remote Controller instance
 
-bool                errorFlag = false;  // Global error flag to indicate if an error has occurred
-
-// Setup function to initialize the robot components
-void setup() {
-
-    errorFlag = !con.begin( DEBUG_SERIAL,       // Initialize console with debug serial stream
+// Initialize console with all necessary components
+Console             con(    DEBUG_SERIAL,       // Initialize console with debug serial stream
                             DEBUG_BAUD_RATE,    // Set baud rate for console communication
+                            &mc,                // Pass the Microcontroller instance
                             &servo,             // Pass the Servo instance for Dynamixel control
                             &hexapod,           // Pass the Hexapod instance
                             &turret,            // Pass the Turret instance
                             &axs1,              // Pass the AXS1Sensor instance
                             &gc,                // Pass the GaitController instance
-                            &mc);               // Pass the Microcontroller instance
+                            &rc                 // Pass the RemoteController instance
+                        );  
 
-    if (!errorFlag) { errorFlag = !mc.begin(); }                                // Initialize the microcontroller if no error has occurred
+// Setup function to initialize the robot components
+void setup() {
 
-    if (!errorFlag) { errorFlag = !servo.begin( DXL_SERIAL,                     // Initialize Dynamixel controller with specified serial port and baud rate
-                                                DXL_BAUD_RATE, 
-                                                DXL_PROTOCOL_VERSION); }            
+    mc.begin();
+    servo.begin( DXL_SERIAL,DXL_BAUD_RATE, DXL_PROTOCOL_VERSION);            
+    hexapod.begin(&servo);
+    turret.begin(&servo);
+    axs1.begin(&servo, AXS1_SENSOR_ID);
+    gc.begin(&hexapod);
+    rc.begin(RC100_SERIAL,&hexapod,&turret,&gc,&mc);
 
-    if (!errorFlag) { errorFlag = !hexapod.begin(&servo); }                     // Initialize the hexapod
-    if (!errorFlag) { errorFlag = !turret.begin(&servo); }                      // Initialize the turret
-    if (!errorFlag) { errorFlag = !axs1.begin(&servo, AXS1_SENSOR_ID); }        // Initialize the AX-S1 sensor
-    if (!errorFlag) { errorFlag = !gc.begin(&hexapod); }                        // Initialize the gait controller with the hexapod instance
-    
-    if (!errorFlag) { errorFlag = !rc.begin(RC100_SERIAL,                       // Initialize the remote controller with the turret instance
-                                            &hexapod,
-                                            &turret,
-                                            &gc,
-                                            &mc); }   
-
-    if (errorFlag) {
-        LOG_ERR("Initialization failed!");                                      // Print error message if initialization fails
-        //while (1);                                                            // Stop execution
-    } else {
-        LOG_INF("All modules initialized successfully.");
-    }
+    con.begin();
 }
 
 // Loop function to handle remote controller input and control the robot

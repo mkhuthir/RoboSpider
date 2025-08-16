@@ -3,12 +3,14 @@
 
     #include <Arduino.h>
     
-    #include "Turret.h"             // Include Turret class for managing the sensor turret
-    #include "GaitController.h"     // Include GaitController for movement control
-    #include "Hexapod.h"            // Include Hexapod class for managing the hexapod robot
-    #include "Microcontroller.h"    // Include Microcontroller class for managing the microcontroller
     #include "CommandHistory.h"     // Include CommandHistory class for command history management
+    #include "Servo.h"               // Include Servo class for managing servo motors
+    #include "Microcontroller.h"    // Include Microcontroller class for managing the microcontroller
+    #include "Hexapod.h"            // Include Hexapod class for managing the hexapod robot
+    #include "Turret.h"             // Include Turret class for managing the sensor turret
     #include "AXS1Sensor.h"         // Include AXS1Sensor class for sensor management
+    #include "GaitController.h"     // Include GaitController for movement control
+    #include "Remotecontroller.h"   // Include RemoteController class for remote control input
 
     // EEPROM addresses for storing settings
     #define EEPROM_ADDR_DEBUG_LEVEL     0
@@ -48,17 +50,19 @@
 
     class Console {
     public:
-        Console();                                              // Constructor with default stream
-        bool begin( Stream&             stream,                 // Initialize the console with a stream
+        Console(    Stream&             stream,                 // Initialize the console with a stream
                     unsigned long       baud,                   // Baud rate for serial communication
-                    
+                    Microcontroller*    mc      = nullptr,      // Pointer to Microcontroller instance
                     Servo*              servo   = nullptr,      // Pointer to Servo instance
                     Hexapod*            hexapod = nullptr,      // Pointer to Hexapod instance
                     Turret*             turret  = nullptr,      // Pointer to Turret instance
                     AXS1Sensor*         sensor  = nullptr,      // Pointer to AXS1Sensor instance
                     GaitController*     gc      = nullptr,      // Pointer to GaitController instance
-                    Microcontroller*    mc      = nullptr       // Pointer to Microcontroller instance
+                    Remotecontroller*   rc      = nullptr       // Pointer to RemoteController instance
+                    
         );
+
+        bool begin();                                           // Initialize the console
 
         void update();                                          // Call in loop()
 
@@ -93,12 +97,13 @@
         static bool         colorEnabled;                       // Color output enabled flag
         
         // Pointers to instances
+        Microcontroller*    mc;                                 // Pointer to Microcontroller instance
         Servo*              servo;                              // Pointer to Servo instance for Dynamixel control
         Hexapod*            hexapod;                            // Pointer to hexapod instance
         Turret*             turret;                             // Pointer to turret instance  
         AXS1Sensor*         sensor;                             // Pointer to AXS1Sensor instance (can be nullptr)
         GaitController*     gc;                                 // Pointer to GaitController instance
-        Microcontroller*    mc;                                 // Pointer to Microcontroller instance
+        Remotecontroller*   rc;                                 // Pointer to RemoteController instance
 
         // Input processing methods
         void processInput(const String& input);                 // Process the input entered by the user
