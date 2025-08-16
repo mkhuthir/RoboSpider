@@ -69,13 +69,15 @@ bool Turret::printStatus() {
 
 // Print turret-specific help information
 bool Turret::printConsoleHelp() {
-    PRINTLN("Turret Commands:");
+    PRINTLN("Turret Commands:\n\r");
+    PRINTLN("  ts               - Print current turret angles");
+    PRINTLN("");
     PRINTLN("  tu               - Move turret up");
     PRINTLN("  td               - Move turret down");
     PRINTLN("  tl               - Move turret left");
     PRINTLN("  tr               - Move turret right");
     PRINTLN("  th               - Move turret to home position");
-    PRINTLN("  ts               - Print current turret angles");
+    PRINTLN("");
     PRINTLN("  t?               - Print this help message");
     PRINTLN("");
     return true;
