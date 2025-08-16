@@ -39,16 +39,24 @@ Console::Console(   Stream& stream,
 // Initialize the console with a baud rate and instances of components
 bool Console::begin() {
     
-    if (logStream == &Serial) {
-        while (!Serial);                // Wait for Serial if using USB
+    if (logStream == nullptr) {
+        LOG_ERR("Log stream is not initialized.");
+        return false;
     }
-    LOG_INF("\n\rConsole initialized.");
+
+    if (logStream == &Serial) {
+        while (!Serial);                            // Wait for Serial if using USB
+    }
+
+    PRINT("\033[2J\033[H");                         // ANSI escape code: clear screen and move cursor to top-left
+    PRINTLN("SpiderBot Firmware v1.0 (c) 2025");
+    LOG_INF("Console initialized successfully.");   // Log initialization message
     return true;
 }
 
 // Start the shell
 bool Console::startShell() {
-    PRINTLN("Starting shell...");
+    PRINTLN("Starting SpiderBot control shell...");
     PRINTLN("Type '?' for help.");      // Print help message
     commandHistory.resetToEnd();        // Reset command history to end
     PRINT(shell);                       // Print the shell prompt

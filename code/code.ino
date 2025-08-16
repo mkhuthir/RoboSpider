@@ -40,16 +40,24 @@ Console             con(    DEBUG_SERIAL,       // Initialize console with debug
 // Setup function to initialize the robot components
 void setup() {
 
-    con.begin();
-    mc.begin();
-    servo.begin( DXL_SERIAL,DXL_BAUD_RATE, DXL_PROTOCOL_VERSION);            
-    hexapod.begin(&servo);
-    turret.begin(&servo);
-    axs1.begin(&servo, AXS1_SENSOR_ID);
-    gc.begin(&hexapod);
-    rc.begin(RC100_SERIAL,&hexapod,&turret,&gc,&mc);
+    bool success = true;
 
-    con.startShell();  // Start the console shell
+    // Initialize all components
+    success &= con.begin();
+    success &= mc.begin();
+    success &= servo.begin( DXL_SERIAL,DXL_BAUD_RATE, DXL_PROTOCOL_VERSION);
+    success &= hexapod.begin(&servo);
+    success &= turret.begin(&servo);
+    success &= axs1.begin(&servo, AXS1_SENSOR_ID);
+    success &= gc.begin(&hexapod);
+    success &= rc.begin(RC100_SERIAL,&hexapod,&turret,&gc,&mc);
+
+    if (!success) {
+        LOG_ERR("Failed to initialize components.");
+    } else {
+        LOG_INF("All components initialized successfully.");
+        con.startShell();
+    }
 }
 
 // Loop function to handle remote controller input and control the robot
