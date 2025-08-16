@@ -69,13 +69,13 @@
         int getIRCenter();
         int getIRRight();
 
-        int setObstacleCompare(uint8_t value);
-        int getObstacleCompare();
-        int ObstacleDetected();
-        
-        int setLightCompare(uint8_t value);
-        int getLightCompare();
-        int LightDetected();
+        bool setObstacleCompare(uint8_t value);
+        bool getObstacleCompare(uint8_t* value);
+        bool ObstacleDetected(uint8_t* value);
+
+        bool setLightCompare(uint8_t value);
+        bool getLightCompare(uint8_t* value);
+        bool LightDetected(uint8_t* value);
 
         // Sound Detection
         int getSoundData();

@@ -11,18 +11,16 @@ AXS1Sensor::AXS1Sensor(){
 
 // Begin method to initialize the sensor with a Servo instance and sensor ID
 bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
-    if (servo == nullptr) {
-        return false;               
-    }
-
+    
+    if (servo == nullptr) return false;
     this->servo = servo;
     this->id    = sensor_id;
 
-    setObstacleCompare(AXS1_OBSTACLE_DETECTED);     // Set default obstacle detection threshold
-    setLightCompare(AXS1_LIGHT_DETECTED);           // Set default light detection threshold
-
-    resetSoundDataMaxHold();
-    resetSoundDetectedCount();
+    if (!setObstacleCompare(AXS1_OBSTACLE_DETECTED)) return false;  // Set default obstacle detection threshold
+    if (!setLightCompare(AXS1_LIGHT_DETECTED)) return false;        // Set default light detection threshold
+    if (!resetSoundDataMaxHold()) return false;                     // Reset sound data max hold
+    if (!resetSoundDetectedCount()) return false;                   // Reset sound detected count
+    if (!resetSoundDetectedTime()) return false;                    // Reset sound detected time
 
     LOG_INF("AXS1Sensor initialized successfully. (ID: " + String(id) + ")");
     return true;
@@ -157,63 +155,58 @@ int AXS1Sensor::getIRRight() {
 }
 
 // Set the obstacle detection comparison value
-int AXS1Sensor::setObstacleCompare(uint8_t value) {
+bool AXS1Sensor::setObstacleCompare(uint8_t value) {
 
     if (!servo->writeRegister(id, AXS1_IR_Obstacle_Detect_Compare, 1, &value)) {
         LOG_ERR("Failed to set Obstacle Compare for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(value);
+    return true;
 }
 
 // Get the obstacle detection comparison value
-int AXS1Sensor::getObstacleCompare() {
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_IR_Obstacle_Detect_Compare, 1, &val)) {
+bool AXS1Sensor::getObstacleCompare(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_IR_Obstacle_Detect_Compare, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Obstacle Compare Data for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the obstacle detected status
-int AXS1Sensor::ObstacleDetected() {
-    uint32_t val = 0;
-    if (!servo->readRegister(this->id, AXS1_IR_Obstacle_Detected, 1, &val)) {
+bool AXS1Sensor::ObstacleDetected(uint8_t* value) {
+    if (!servo->readRegister(this->id, AXS1_IR_Obstacle_Detected, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Obstacle Detected Data for ID: " + String(this->id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Set the light detection comparison value
-int AXS1Sensor::setLightCompare(uint8_t value) {
-
+bool AXS1Sensor::setLightCompare(uint8_t value) {
     if (!servo->writeRegister(id, AXS1_Light_Detect_Compare, 1, &value)) {
         LOG_ERR("Failed to set Light Compare for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(value);
+    return true;
 }
 
 // Get the light detection comparison value
-int AXS1Sensor::getLightCompare() {
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Light_Detect_Compare,  1, &val)) {
+bool AXS1Sensor::getLightCompare(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Light_Detect_Compare, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Light Compare Data for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the light detected status
-int AXS1Sensor::LightDetected() {
-    uint32_t val = 0;
-    if (!servo->readRegister(id, AXS1_Light_Detected, 1, &val)) {
+bool AXS1Sensor::LightDetected(uint8_t* value) {
+    if (!servo->readRegister(id, AXS1_Light_Detected, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Light Detected Data for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(val);
+    return true;
 }
 
 // Get the sound data from the sensor
@@ -402,29 +395,38 @@ bool AXS1Sensor::setRemoconTX(uint16_t value) {
 // Print the status of the sensor
 bool AXS1Sensor::printStatus() {
     uint8_t     servoID = 0;
-    uint16_t    model_number = 0; //FIXME: number is getting reset by another function!!
+    uint16_t    model_number = 0;       //FIXME: number is getting reset by another function!!
     uint8_t     firmware_version = 0;
     uint8_t     baud_rate = 0;
     uint8_t     return_delay = 0;
     uint8_t     status_return = 0;
+    
+    uint8_t     obstacle_compare = 0;
+    uint8_t     light_compare = 0;
+    uint8_t     od = 0;
+    uint8_t     ld = 0;
+    
     uint16_t    remocon_rx = 0;
     uint16_t    remocon_tx = 0;
 
+
     if (!getID(&servoID)) return false;
-    
     if (!getFirmwareVersion(&firmware_version)) return false;
     if (!getBaudRate(&baud_rate)) return false;
     if (!getReturnDelayTime(&return_delay)) return false;
     if (!getStatusReturnLevel(&status_return)) return false;
+
+    if (!getObstacleCompare(&obstacle_compare)) return false;
+    if (!getLightCompare(&light_compare)) return false;
+    if (!ObstacleDetected(&od)) return false;
+    if (!LightDetected(&ld)) return false;
+
     if (!getRemoconRX(&remocon_rx)) return false;
     if (!getRemoconTX(&remocon_tx)) return false;
-
-
-    uint8_t od = ObstacleDetected();
-    uint8_t ld = LightDetected();
     
+
     if (!getModelNumber(&model_number)) return false; //FIXME: number is getting reset by another function!!
-    LOG_DBG("Model Number: " + String(model_number));
+    LOG_DBG("Model Number: " + String(model_number)); //FIXME:
 
     PRINTLN("AXS1 Sensor Status:");
     PRINTLN("AXS1 Sensor ID      : " + String(servoID));
@@ -434,18 +436,27 @@ bool AXS1Sensor::printStatus() {
     PRINTLN("Return Delay Time   : " + String(return_delay * 2) + " us");
     PRINTLN("Status Return Level : " + String(status_return));
 
-    PRINTLN("Obstacle Compare    : " + String(getObstacleCompare()));
-    PRINTLN("Light Compare       : " + String(getLightCompare()));
-    PRINTLN("Distance            : L = " + String(getDistanceLeft()) + " C = " + String(getDistanceCenter()) + " R = " + String(getDistanceRight()));
-    PRINTLN("IR                  : L = " + String(getIRLeft()) + " C = " + String(getIRCenter()) + " R = " + String(getIRRight()));
+    PRINTLN("Distance            : L = " + String(getDistanceLeft()) + 
+                                 " C = " + String(getDistanceCenter()) + 
+                                 " R = " + String(getDistanceRight()));
+
+    PRINTLN("IR                  : L = " + String(getIRLeft()) + 
+                                 " C = " + String(getIRCenter()) + 
+                                 " R = " + String(getIRRight()));
+
+    PRINTLN("Obstacle Compare    : " + String(obstacle_compare));
+    PRINTLN("Light Compare       : " + String(light_compare));
+
     PRINTLN("Obstacle Detected   : L = " + 
             String(((od&1)==1)? "On " : "Off") + " C = " + 
             String(((od&2)==2)? "On " : "Off") + " R = " + 
             String(((od&4)==4)? "On " : "Off"));
+
     PRINTLN("Light Detected      : L = " + 
             String(((ld&1)==1)? "On " : "Off") + " C = " + 
             String(((ld&2)==2)? "On " : "Off") + " R = " + 
             String(((ld&4)==4)? "On " : "Off"));
+
     PRINTLN("Sound Data          : " + String(getSoundData()));
     PRINTLN("Sound Data Max Hold : " + String(getSoundDataMaxHold()));
     PRINTLN("Sound Detected Count: " + String(getSoundDetectedCount()));
@@ -488,13 +499,13 @@ bool AXS1Sensor::runConsoleCommands(const String& cmd, const String& args) {
         return true;
 
     } else if (cmd == "agoc") {
-        int compareValue = getObstacleCompare();
-        if (compareValue == -1) {
+        uint8_t obstacle_compare = 0;
+        if (!getObstacleCompare(&obstacle_compare)) {
             LOG_ERR("Failed to get Obstacle Compare value");
         } else {
-            PRINTLN("Obstacle Compare value: " + String(compareValue));
+            PRINTLN("Obstacle Compare value: " + String(obstacle_compare));
         }
-        return true;    
+        return true;
 
     } else if (cmd == "aslc") {
         uint8_t value = 0;
@@ -509,8 +520,8 @@ bool AXS1Sensor::runConsoleCommands(const String& cmd, const String& args) {
         return true;
 
     } else if (cmd == "aglc") {
-        int compareValue = getLightCompare();
-        if (compareValue == -1) {
+        uint8_t compareValue = 0;
+        if (!getLightCompare(&compareValue)) {
             LOG_ERR("Failed to get Light Compare value");
         } else {
             PRINTLN("Light Compare value: " + String(compareValue));
@@ -518,17 +529,25 @@ bool AXS1Sensor::runConsoleCommands(const String& cmd, const String& args) {
         return true;
 
     } else if (cmd == "aod") {
-        uint8_t od = ObstacleDetected();
-        PRINTLN("Obstacle Detected - Left: " + String((od & 1) == 1 ? "On" : "Off") + 
-                   ", Center: " + String((od & 2) == 2 ? "On" : "Off") +
-                   ", Right: " + String((od & 4) == 4 ? "On" : "Off"));
+        uint8_t od = 0;
+        if (!ObstacleDetected(&od)) {
+            LOG_ERR("Failed to read Obstacle Detected data");
+        } else {
+            PRINTLN("Obstacle Detected - Left: " + String((od & 1) == 1 ? "On" : "Off") + 
+                    ", Center: " + String((od & 2) == 2 ? "On" : "Off") +
+                    ", Right: " + String((od & 4) == 4 ? "On" : "Off"));
+        }
         return true;
 
     } else if (cmd == "ald") {
-        uint8_t ld = LightDetected();
-        PRINTLN("Light Detected - Left: " + String((ld & 1) == 1 ? "On" : "Off") + 
-                   ", Center: " + String((ld & 2) == 2 ? "On" : "Off") +
-                   ", Right: " + String((ld & 4) == 4 ? "On" : "Off"));
+        uint8_t ld = 0;
+        if (!LightDetected(&ld)) {
+            LOG_ERR("Failed to read Light Detected data");
+        } else {
+            PRINTLN("Light Detected - Left: " + String((ld & 1) == 1 ? "On" : "Off") + 
+                    ", Center: " + String((ld & 2) == 2 ? "On" : "Off") +
+                    ", Right: " + String((ld & 4) == 4 ? "On" : "Off"));
+        }
         return true;
 
     } else if (cmd == "agsd") {
