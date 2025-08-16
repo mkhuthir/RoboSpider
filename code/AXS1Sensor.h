@@ -53,7 +53,7 @@
         bool ping();
 
         // EEPROM Read Functions
-        bool getID(uint8_t* id);
+        bool getID(uint8_t* sensorID);
         bool getModelNumber(uint16_t* model_number);
         bool getFirmwareVersion(uint8_t* version);
         bool getBaudRate(uint8_t* baud_rate);

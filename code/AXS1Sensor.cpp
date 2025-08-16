@@ -40,12 +40,12 @@ bool AXS1Sensor::update() {
 
 // Ping method to check connectivity with the sensor
 bool AXS1Sensor::ping() {
-  return servo->ping(id);
+  return servo->ping(this->id);
 }
 
 // Get the ID of the sensor
-bool AXS1Sensor::getID(uint8_t* id) {
-    *id = this->id;
+bool AXS1Sensor::getID(uint8_t* sensorID) {
+    *sensorID = this->id;
     return true;
 }
 
