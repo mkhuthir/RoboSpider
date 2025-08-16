@@ -43,10 +43,16 @@ bool AXS1Sensor::ping() {
   return servo->ping(id);
 }
 
+// Get the ID of the sensor
+bool AXS1Sensor::getID(uint8_t* id) {
+    *id = this->id;
+    return true;
+}
+
 // Get the model number of the sensor
 bool AXS1Sensor::getModelNumber(uint16_t* model_number) {
-    if (!servo->readRegister(id, AXS1_Model_Number_L, 2, (uint32_t*)model_number)) {
-        LOG_ERR("Failed to read Model Number for ID: " + String(id));
+    if (!servo->readRegister(this->id, AXS1_Model_Number_L, 2, (uint32_t*)model_number)) {
+        LOG_ERR("Failed to read Model Number for ID: " + String(this->id));
         return false;
     }
     return true;
@@ -61,46 +67,31 @@ bool AXS1Sensor::getFirmwareVersion(uint8_t* version) {
     return true;
 }
 
-// Get the ID of the sensor
-bool AXS1Sensor::getID(uint8_t* id) {
-    if (!servo->readRegister(id, AXS1_ID, 1, (uint32_t*)id)) {
-        LOG_ERR("Failed to read ID for ID: " + String(id));
+// Get the baud rate of the sensor
+bool AXS1Sensor::getBaudRate(uint8_t* baud_rate) {
+    if (!servo->readRegister(id, AXS1_Baud_Rate, 1, (uint32_t*)baud_rate)) {
+        LOG_ERR("Failed to read Baud Rate for ID: " + String(id));
         return false;
     }
     return true;
 }
 
-// Get the baud rate of the sensor
-int AXS1Sensor::getBaudRate() {
-    uint32_t baud_rate = 0;  // Variable to hold the baud rate
-
-    if (!servo->readRegister(id, AXS1_Baud_Rate, 1, &baud_rate)) {
-        LOG_ERR("Failed to read Baud Rate for ID: " + String(id));
-        return false;
-    }
-    return static_cast<int>(baud_rate);
-}
-
 // Get the return delay time of the sensor
-int AXS1Sensor::getReturnDelayTime() {
-    uint32_t return_delay = 0;  // Variable to hold the return delay time
-
-    if (!servo->readRegister(id, AXS1_Return_Delay_Time, 1, &return_delay)) {
+bool AXS1Sensor::getReturnDelayTime(uint8_t* return_delay) {
+    if (!servo->readRegister(id, AXS1_Return_Delay_Time, 1, (uint32_t*)return_delay)) {
         LOG_ERR("Failed to read Return Delay Time for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(return_delay);
+    return true;
 }
 
 // Get the status return level of the sensor
-int AXS1Sensor::getStatusReturnLevel() {
-    uint32_t status_return = 0;  // Variable to hold the status return level
-
-    if (!servo->readRegister(id, AXS1_Status_Return_Level, 1, &status_return)) {
+bool AXS1Sensor::getStatusReturnLevel(uint8_t* status_return) {
+    if (!servo->readRegister(id, AXS1_Status_Return_Level, 1, (uint32_t*)status_return)) {
         LOG_ERR("Failed to read Status Return Level for ID: " + String(id));
         return false;
     }
-    return static_cast<int>(status_return);
+    return true;
 }
 
 // Get the distance data from the IR left side sensor
@@ -414,24 +405,39 @@ bool AXS1Sensor::setRemoconTX(uint16_t value) {
 
 // Print the status of the sensor
 bool AXS1Sensor::printStatus() {
-    uint16_t model_number = 0;
-    uint16_t remocon_rx = 0;
-    uint16_t remocon_tx = 0;
+    uint8_t     servoID = 0;
+    uint16_t    model_number = 0; //FIXME: number is getting reset by another function!!
+    uint8_t     firmware_version = 0;
+    uint8_t     baud_rate = 0;
+    uint8_t     return_delay = 0;
+    uint8_t     status_return = 0;
+    uint16_t    remocon_rx = 0;
+    uint16_t    remocon_tx = 0;
+
+    if (!getID(&servoID)) return false;
     
-    getModelNumber(&model_number);
-    getRemoconRX(&remocon_rx);
-    getRemoconTX(&remocon_tx);
+    if (!getFirmwareVersion(&firmware_version)) return false;
+    if (!getBaudRate(&baud_rate)) return false;
+    if (!getReturnDelayTime(&return_delay)) return false;
+    if (!getStatusReturnLevel(&status_return)) return false;
+    if (!getRemoconRX(&remocon_rx)) return false;
+    if (!getRemoconTX(&remocon_tx)) return false;
+
 
     uint8_t od = ObstacleDetected();
     uint8_t ld = LightDetected();
+    
+    if (!getModelNumber(&model_number)) return false; //FIXME: number is getting reset by another function!!
+    LOG_DBG("Model Number: " + String(model_number));
 
     PRINTLN("AXS1 Sensor Status:");
-    PRINTLN("AXS1 Sensor ID      : " + String(getID()));
+    PRINTLN("AXS1 Sensor ID      : " + String(servoID));
     PRINTLN("Model Number        : " + String(model_number));
-    PRINTLN("Firmware Version    : " + String(getFirmwareVersion()));
-    PRINTLN("Baud Rate           : " + String(getBaudRate()));
-    PRINTLN("Return Delay Time   : " + String(getReturnDelayTime()));
-    PRINTLN("Status Return Level : " + String(getStatusReturnLevel()));
+    PRINTLN("Firmware Version    : " + String(firmware_version));
+    PRINTLN("Baud Rate           : " + String(2000000 / (baud_rate+1)) + " bps"); 
+    PRINTLN("Return Delay Time   : " + String(return_delay * 2) + " us");
+    PRINTLN("Status Return Level : " + String(status_return));
+
     PRINTLN("Obstacle Compare    : " + String(getObstacleCompare()));
     PRINTLN("Light Compare       : " + String(getLightCompare()));
     PRINTLN("Distance            : L = " + String(getDistanceLeft()) + " C = " + String(getDistanceCenter()) + " R = " + String(getDistanceRight()));
