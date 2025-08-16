@@ -50,7 +50,7 @@ void setup() {
     success &= turret.begin(&servo);
     success &= axs1.begin(&servo, AXS1_SENSOR_ID);
     success &= gc.begin(&hexapod);
-    success &= rc.begin(RC100_SERIAL,&hexapod,&turret,&gc,&mc);
+    success &= rc.begin(RC100_SERIAL,&mc,&hexapod,&turret,&gc);
 
     if (!success) {
         LOG_ERR("Failed to initialize components.");

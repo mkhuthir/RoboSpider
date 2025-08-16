@@ -9,13 +9,8 @@
     
     class Remotecontroller {
         public:
-            Remotecontroller();
-            bool begin( int                 serial_port, 
-                        Hexapod*            hexapod, 
-                        Turret*             turret, 
-                        GaitController*     gc, 
-                        Microcontroller*    mc);                
-
+            Remotecontroller();             // Constructor
+            bool begin(int serial_port, Microcontroller* mc, Hexapod* hexapod, Turret* turret, GaitController* gc);                
             bool update();                  // Update the remote controller state
 
         private:
