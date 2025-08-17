@@ -1,4 +1,4 @@
-#include "Logger.h"
+#include "Log.h"
 
 // Static members initialization
 Stream*     log::logStream       = &Serial;      // Default to Serial for logging
