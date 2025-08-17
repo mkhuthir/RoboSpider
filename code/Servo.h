@@ -31,27 +31,52 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
             const char *        getModelName(uint8_t id);                                   // get the model name of a servo by its ID
-            bool                getModelNumber(uint8_t id, int32_t* model_number);          // get the model number of a servo by its ID
-
-            bool                getPosition(uint8_t id, int32_t* pos);                      // get the present position of a servo
-            bool                getSpeed(uint8_t id, int32_t* speed);                       // get the present speed of a servo
-            bool                getLoad(uint8_t id, int32_t* load);                         // get the present load of a servo
-            bool                getVoltage(uint8_t id, int32_t* voltage);                   // get the present voltage of a servo
-            bool                getTemperature(uint8_t id, int32_t* temperature);           // get the present temperature of a servo
-            bool                getAngleLimits(uint8_t id, int32_t* CW_angle, int32_t* CCW_angle);
-
-            bool                setPosition(uint8_t id, int32_t position);                  // set the position of a servo
-            bool                setSpeed(uint8_t id, int32_t speed);                        // set the speed of a servo
+            
+            // EEPROM Area
+            bool                getModelNumber(uint8_t id, int16_t* model_number);          // get the model number of a servo by its ID
+            bool                getFirmwareVersion(uint8_t id, int8_t* version);
+            bool                getBaudRate(uint8_t id, int8_t* baud_rate);
+            bool                getReturnDelayTime(uint8_t id, int8_t* delay_time);
+            bool                getAngleLimits(uint8_t id, int16_t* CW_angle, int16_t* CCW_angle);
             bool                setAngleLimits(uint8_t id, int32_t CW_angle, int32_t CCW_angle);
+            bool                getTemperatureLimit(uint8_t id, int8_t* max_temp);
+            bool                getVoltageLimit(uint8_t id, int8_t* min_voltage, int8_t* max_voltage);
+            bool                getMaxTorque(uint8_t id, int16_t* max_torque);
+            bool                getStatusReturnLevel(uint8_t id, int8_t* level);
+            bool                getAlarmLED(uint8_t id, int8_t* alarm_led);
+            bool                getShutdown(uint8_t id, int8_t* shutdown);    
 
-            bool                isMoving(uint8_t id);                                       // check if a servo is currently moving
+            // RAM Area
             bool                isTorqueOn(uint8_t id);                                     // check if the torque is enabled for a servo
-            bool                isLedOn(uint8_t id);                                        // check if the LED is enabled for a servo
-
             bool                torqueOn(uint8_t id);                                       // turn on the torque of a servo
             bool                torqueOff(uint8_t id);                                      // turn off the torque of a servo
+            bool                isLedOn(uint8_t id);                                        // check if the LED is enabled for a servo
             bool                ledOn(uint8_t dxl_id);                                      // turn on the LED of a servo
             bool                ledOff(uint8_t dxl_id);                                     // turn off the LED of a servo
+
+            bool                getComplianceMargin(uint8_t id, int8_t* CW_margin, int8_t* CCW_margin);           // get the compliance margin of a servo
+            bool                setComplianceMargin(uint8_t id, int8_t CW_margin, int8_t CCW_margin);              // set the compliance margin of a servo
+            bool                getComplianceSlope(uint8_t id, int8_t* CW_slope, int8_t* CCW_slope);                // get the compliance slope of a servo
+            bool                setComplianceSlope(uint8_t id, int8_t CW_slope, int8_t CCW_slope);                // set the compliance slope of a servo
+
+            bool                setGoalPosition(uint8_t id, int32_t position);                  // set the position of a servo
+            bool                setGoalSpeed(uint8_t id, int32_t speed);                        // set the speed of a servo
+
+            bool                getTorqueLimit(uint8_t id, int16_t* torque_limit);              // get the torque limit of a servo
+            bool                setTorqueLimit(uint8_t id, int16_t torque_limit);              // set the torque limit of a servo
+
+            bool                getPresentPosition(uint8_t id, int32_t* pos);                      // get the present position of a servo
+            bool                getPresentSpeed(uint8_t id, int32_t* speed);                       // get the present speed of a servo
+            bool                getPresentLoad(uint8_t id, int32_t* load);                         // get the present load of a servo
+            bool                getPresentVoltage(uint8_t id, int32_t* voltage);                   // get the present voltage of a servo
+            bool                getPresentTemperature(uint8_t id, int32_t* temperature);           // get the present temperature of a servo
+
+            bool                isMoving(uint8_t id);                                       // check if a servo is currently moving
+
+
+
+
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             bool                init(   uint8_t dxl_id,                                     // initialize a servo with default settings            
                                         int32_t speed,
