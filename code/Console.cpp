@@ -315,14 +315,14 @@ void Console::handleArrowDown() {
 
 void Console::handleArrowRight() {
     if (cursorPos < (int)inputBuffer.length()) {
-        print("\033[C");
+    log::print("\033[C");
         cursorPos++;
     }
 }
 
 void Console::handleArrowLeft() {
     if (cursorPos > 0) {
-        print("\033[D");
+    log::print("\033[D");
         cursorPos--;
     }
 }
@@ -330,14 +330,14 @@ void Console::handleArrowLeft() {
 // Navigation key handlers
 void Console::handleHome() {
     while (cursorPos > 0) {
-        print("\033[D");
+    log::print("\033[D");
         cursorPos--;
     }
 }
 
 void Console::handleEnd() {
     while (cursorPos < (int)inputBuffer.length()) {
-        print("\033[C");
+    log::print("\033[C");
         cursorPos++;
     }
 }
@@ -346,7 +346,7 @@ void Console::handleEnd() {
 void Console::handleInsertKey() {
     insertMode = !insertMode;
     // Change cursor type based on mode
-    print(insertMode ? "\033[4 q" : "\033[2 q");           // Underline for insert, block for overwrite
+    log::print(insertMode ? "\033[4 q" : "\033[2 q");           // Underline for insert, block for overwrite
 }
 
 void Console::handleDeleteKey() {
@@ -360,13 +360,13 @@ void Console::handleBackspace() {
     if (cursorPos > 0) {
         cursorPos--;
         inputBuffer.remove(cursorPos, 1);
-        print("\b");
+    log::print("\b");
         refreshLineFromCursor();
     }
 }
 
 void Console::handleClearScreen() {
-    print("\033[2J\033[H");                                 // Clear screen and move cursor to home
+    log::print("\033[2J\033[H");                                 // Clear screen and move cursor to home
     inputBuffer = "";
     cursorPos = 0;
     print(shell);
@@ -388,28 +388,28 @@ void Console::handleNewline() {
 void Console::clearAndRedrawLine(const String& newContent) {
     // Move cursor to beginning of input
     while (cursorPos > 0) {
-        print("\b");
+    log::print("\b");
         cursorPos--;
     }
     
     // Clear the entire line content
-    print("\033[K");                                        // Clear from cursor to end of line
+    log::print("\033[K");                                        // Clear from cursor to end of line
     
     // Set new content and redraw
     inputBuffer = newContent;
-    print(inputBuffer);
+    log::print(inputBuffer);
     cursorPos = inputBuffer.length();
 }
 
 // Refresh line after cursor position changes
 void Console::refreshLineFromCursor() {
-    print("\033[K");                                        // Clear from cursor to end
+    log::print("\033[K");                                        // Clear from cursor to end
     String remaining = inputBuffer.substring(cursorPos);
-    print(remaining);
+    log::print(remaining);
 
     // Move cursor back to correct position
     for (int i = 0; i < (int)remaining.length(); i++) {
-        print("\033[D");
+    log::print("\033[D");
     }
 }
 
@@ -419,7 +419,7 @@ void Console::resetInputState() {
     cursorPos = 0;
     commandHistory.resetToEnd();
     insertMode = true;
-    log::print("\033[4 q");                                      // Reset to insert mode cursor
+        log::print("\033[4 q");                                      // Reset to insert mode cursor
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -451,7 +451,7 @@ bool Console::runConsoleCommands(const String& cmd, const String& args) {
             }
 
         } else {
-            log::println("Current debug level: " + String(log::debugLevel));
+            log::println("Current debug level: " + String(log::getDebugLevel()));
         }
         return true;
 
@@ -462,7 +462,7 @@ bool Console::runConsoleCommands(const String& cmd, const String& args) {
         } else if (args == "off" || args == "0" || args == "false") {
             log::setColorEnabled(false);
         } else {
-            log::println("Current color setting: " + String(log::colorEnabled ? "enabled" : "disabled"));
+            log::println("Current color setting: " + String(log::getColorEnabled() ? "enabled" : "disabled"));
         }
         return true;
 
@@ -473,8 +473,8 @@ bool Console::runConsoleCommands(const String& cmd, const String& args) {
     LOG_WRN("This is a warning message");
     LOG_INF("This is an info message");
     LOG_DBG("This is a debug message");
-    log::println("Current debug level: " + String(log::debugLevel));
-    log::println("Color output is " + String(log::colorEnabled ? "enabled" : "disabled"));
+    log::println("Current debug level: " + String(log::getDebugLevel()));
+    log::println("Color output is " + String(log::getColorEnabled() ? "enabled" : "disabled"));
         return true;
 
     } 
@@ -501,7 +501,7 @@ bool Console::runLegCommand(const String& cmd, const String& args) {
 bool Console::printAllHelp() {
 
     log::println("SpiderBot Console - Available Commands:");
-    println("");
+    log::println("");
     
     // Print help for each component
     if (!this->printConsoleHelp()) return false;
@@ -514,7 +514,7 @@ bool Console::printAllHelp() {
     if (!sensor->printConsoleHelp()) return false;
 
     // Show examples for common commands
-    println("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note, 'mlon 3' turns on user LED 3");
+    log::println("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note, 'mlon 3' turns on user LED 3");
 
     return true;
 }
@@ -522,20 +522,20 @@ bool Console::printAllHelp() {
 // Print console-specific help information
 bool Console::printConsoleHelp() {
     log::println("Console Commands:\n\r");
-    println("  ? / h            - Show this help message");
-    println("  ??               - Show all available commands");
-    println("  s?               - Show servo commands");
-    println("  h?               - Show hexapod commands");
-    println("  l?               - Show leg commands");
-    println("  a?               - Show AX-S1 Sensor commands");
-    println("  t?               - Show turret commands");
-    println("  g?               - Show gait controller commands");
-    println("");
-    println("  cls / clear      - Clear the terminal screen");
-    println("  debug [0-4]      - Set debug level (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
-    println("  color [on/off]   - Enable/disable color output");
-    println("  test             - Test all log message types");
-    println("");
+    log::println("  ? / h            - Show this help message");
+    log::println("  ??               - Show all available commands");
+    log::println("  s?               - Show servo commands");
+    log::println("  h?               - Show hexapod commands");
+    log::println("  l?               - Show leg commands");
+    log::println("  a?               - Show AX-S1 Sensor commands");
+    log::println("  t?               - Show turret commands");
+    log::println("  g?               - Show gait controller commands");
+    log::println("");
+    log::println("  cls / clear      - Clear the terminal screen");
+    log::println("  debug [0-4]      - Set debug level (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
+    log::println("  color [on/off]   - Enable/disable color output");
+    log::println("  test             - Test all log message types");
+    log::println("");
     return true;
 }
 

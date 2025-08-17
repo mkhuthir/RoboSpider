@@ -39,6 +39,8 @@
             // Static methods for managing console state
             static void setDebugLevel(DebugLevel level);            // Set the global debug level
             static void setColorEnabled(bool enabled);              // Enable/disable color output
+            static DebugLevel getDebugLevel() { return debugLevel; }
+            static bool getColorEnabled() { return colorEnabled; }
 
             // Static methods for managing log stream
             static void setLogStream(Stream* stream);               // Set the log stream
@@ -65,6 +67,7 @@
 
             // Private logging helper
             static void printLog(DebugLevel level, const String& prefix, const String& color, const String& message);
+
     };
 
 #endif
