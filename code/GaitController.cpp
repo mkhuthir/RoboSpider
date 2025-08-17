@@ -3,8 +3,6 @@
 #include "GaitPoses.h"        // Include gait poses header
 #include "Console.h"        // Add this include for logging macros
 
-
-
 // Constructor for GaitController class
 GaitController::GaitController() {
     hexapod         = nullptr;
@@ -23,13 +21,33 @@ bool GaitController::begin(Hexapod* hexapod){
     return true;
 }
 
-// Set the current gait type    
-void GaitController::setGait(GaitType newGait) {
+// Update the gait controller, called periodically
+bool GaitController::update() {
+    if (gaitType == GAIT_IDLE) return false;  // Do nothing if in idle gait
+
+    switch (gaitType) {
+        case GAIT_WAVE:                 // Perform wave gait
+            doWaveGait();
+            break;
+        case GAIT_RIPPLE:               // Perform ripple gait
+            doRippleGait();
+            break;
+        case GAIT_TRIPOD:               // Perform tripod gait
+            doTripodGait();
+            break;
+        default:                        // If an unknown gait type is set, do nothing               
+            LOG_ERR("Unknown gait type, no action taken.");
+            break;
+    }
+    return true;
+}
+
+// Set the current gait type
+bool GaitController::setGait(GaitType newGait) {
     gaitType        = newGait;      // Set the new gait type
     currentPhase    = 0;            // Reset current phase for the new gait
     currentStep     = 0;            // Reset current step for the new gait
-    hexapod->moveStandUp();              // Reset hexapod position when changing gait
-    
+    hexapod->moveStandUp();         // Reset hexapod position when changing gait
     LOG_DBG("Gait set to: ");
     switch (gaitType) {
         case GAIT_IDLE:
@@ -48,6 +66,7 @@ void GaitController::setGait(GaitType newGait) {
             LOG_DBG("Unknown");
             break;
     }
+    return true;
     
 }
 
@@ -56,30 +75,10 @@ GaitType GaitController::getGait() const {
     return gaitType;
 }
 
-// Update the gait controller, called periodically
-void GaitController::update() {
-    if (gaitType == GAIT_IDLE) return;  // Do nothing if in idle gait
-
-    switch (gaitType) {
-        case GAIT_WAVE:                 // Perform wave gait
-            doWaveGait();
-            break;
-        case GAIT_RIPPLE:               // Perform ripple gait
-            doRippleGait();
-            break;
-        case GAIT_TRIPOD:               // Perform tripod gait
-            doTripodGait();
-            break;
-        default:                        // If an unknown gait type is set, do nothing               
-            LOG_ERR("Unknown gait type, no action taken.");
-            break;
-    }
-}
-
 // Perform the wave gait, one leg swings at a time
-void GaitController::doWaveGait() {
+bool GaitController::doWaveGait() {
 
-    if(hexapod->isMoving()) return;                                                 // If hexapod is already moving, do nothing
+    if(hexapod->isMoving()) return false;      // If hexapod is already moving, do nothing
 
     if (currentPhase == (HEXAPOD_LEGS)) {                                           // if end of the wave gait cycle
         hexapod->moveStandUp();                                                          // Move hexapod to standing position
@@ -98,14 +97,15 @@ void GaitController::doWaveGait() {
         }   
         currentStep     = (currentStep  + 1) % 2;                                   // Toggle between up and down poses
     }
+    return true;                                                                   // Return true to indicate gait was performed
 }
 
 
 // Perform the ripple gait, two legs swing with a phase offset
-void GaitController::doRippleGait() {
+bool GaitController::doRippleGait() {
 
-    if(hexapod->isMoving()) return;                                                 // If hexapod is already moving, do nothing
-    
+    if(hexapod->isMoving()) return false;                                           // If hexapod is already moving, do nothing
+
     if (currentPhase == HEXAPOD_LEGS/2) {                                           // If end of the ripple gait cycle
         hexapod->moveStandUp();                                                     // Move hexapod to standing position
         currentPhase = 0;                                                           // Reset phase for the next cycle
@@ -124,12 +124,13 @@ void GaitController::doRippleGait() {
         }
         currentStep     = (currentStep + 1) % 2;                                    // Toggle between up and down poses
     }
+    return true;
 }
 
 // Perform the tripod gait, three legs swing at a time
-void GaitController::doTripodGait() {
+bool GaitController::doTripodGait() {
 
-    if(hexapod->isMoving()) return;                                                 // If hexapod is already moving, do nothing
+    if(hexapod->isMoving()) return false;                                                 // If hexapod is already moving, do nothing
 
     if (currentPhase == HEXAPOD_LEGS/3) {                                           // If end of the tripod gait cycle
         hexapod->moveStandUp();                                                     // Move hexapod to standing position
@@ -149,12 +150,12 @@ void GaitController::doTripodGait() {
         }
         currentStep     = (currentStep + 1) % 2;                                    // Toggle between up and down poses
     }
-
+    return true;
 }
 
 // Print the current gait status to Serial
-void GaitController::printStatus() {
-    PRINT("\nGaitController Status: ");
+bool GaitController::printStatus() {
+    PRINT("\nGaitController Status: \n\r");
     PRINT("Gait: ");
     switch (gaitType) {
         case GAIT_IDLE:
@@ -177,11 +178,17 @@ void GaitController::printStatus() {
     PRINT((int)currentStep);
     PRINT(" | Phase: ");
     PRINTLN((int)currentPhase);
+    return true;
 }
 
 // Process console commands for gait control
 bool GaitController::runConsoleCommands(const String& cmd, const String& args) {
-    if (cmd == "gw") {
+    
+    if (cmd == "gs") {
+        if(!printStatus()) LOG_ERR("Failed to print status");
+        return true;
+
+    } else if (cmd == "gw") {
         setGait(GAIT_WAVE);
         LOG_INF("Gait set to WAVE");
         return true;
@@ -200,10 +207,6 @@ bool GaitController::runConsoleCommands(const String& cmd, const String& args) {
         setGait(GAIT_IDLE);
         LOG_INF("Gait set to IDLE");
         return true;
-        
-    } else if (cmd == "gs") {
-        printStatus();
-        return true;
 
     } else if (cmd == "g?") {
         printConsoleHelp();
@@ -214,14 +217,17 @@ bool GaitController::runConsoleCommands(const String& cmd, const String& args) {
 }
 
 // Print gait-specific help information
-void GaitController::printConsoleHelp() {
-    PRINTLN("Gait Commands:");
+bool GaitController::printConsoleHelp() {
+    PRINTLN("Gait Commands:\n\r");
+    PRINTLN("  gs               - Show current gait status");
+    PRINTLN("");
     PRINTLN("  gw               - Set wave gait");
     PRINTLN("  gr               - Set ripple gait");
     PRINTLN("  gt               - Set tripod gait");
     PRINTLN("  gi               - Set idle gait");
-    PRINTLN("  gs               - Show current gait status");
+    PRINTLN("");
     PRINTLN("  g?               - Show this help");
     PRINTLN("");
+    return true;
 }
 // GaitController.cpp
