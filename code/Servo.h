@@ -9,6 +9,9 @@
             bool                begin(  const char* device_name,                            // initialize the controller with device name and baudrate
                                         uint32_t baudrate,
                                         float protocol_version);
+
+            bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
+            const char *        getModelName(uint8_t id);                                   // get the model name of a servo by its ID
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             
             // EEPROM Area
@@ -65,7 +68,7 @@
             bool                printConsoleHelp();                                         // Print servo-specific help information
 //---------------------------------------------------------------------------------------------------------------------------------------------------
         private:
-            
+            Driver*             driver;                             // Pointer to Driver instance
     };
 
 #endif // SERVO_H

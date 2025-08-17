@@ -1,6 +1,6 @@
 #include "Driver.h"
 #include "Console.h"
-#include "Log.h"
+#include "Debug.h"
 
 // Constructor for Servo
 Driver::Driver(){}
@@ -172,6 +172,11 @@ bool Driver::syncWrite(uint8_t index, uint8_t *id, uint8_t id_num, int32_t *data
     return true;
 }
 
+// Return the DynamixelWorkbench instance
+DynamixelWorkbench* Driver::getWorkbench()    {
+    return &dxl;
+}
+
 //-----------------------------------------------------------------------------
 
 bool Driver::ping(uint8_t dxl_id) {
@@ -198,4 +203,4 @@ const char * Driver::getModelName(uint8_t id) {
     return model_name;
 }
 
-// end of DXLDriver.cpp
+// end of Driver.cpp

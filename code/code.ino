@@ -6,7 +6,9 @@
 #include "main.h"                    // Include configuration header for constants and settings
 
 #include "Console.h"                    // Include Console class for managing serial console
+#include "Debug.h"                      // Include Debug class for managing debug output
 #include "Microcontroller.h"            // Include Microcontroller class for managing OpenCR1.0 board
+#include "Driver.h"                     // Include Driver class for managing Dynamixel servos
 #include "Servo.h"                      // Include Servo class for managing Dynamixel servos
 #include "Hexapod.h"                    // Include Hexapod class for managing the hexapod robot
 #include "Turret.h"                     // Include Turret class for managing the sensor turret
@@ -18,6 +20,7 @@
 // Global variables and instances
 
 Microcontroller     mc;                         // Microcontroller instance
+Driver              driver;                     // Driver instance
 Servo               servo;                      // Servo instance
 Hexapod             hexapod;                    // Hexapod instance
 Turret              turret;                     // Turret instance
@@ -26,9 +29,10 @@ GaitController      gc;                         // Gait Controller instance
 Remotecontroller    rc;                         // Remote Controller instance
 
 // Initialize console with all necessary components
-Console             con(    &DEBUG_SERIAL,       // Initialize console with debug serial stream
+Console             con(    &DEBUG_SERIAL,      // Initialize console with debug serial stream
                             DEBUG_BAUD_RATE,    // Set baud rate for console communication
                             &mc,                // Pass the Microcontroller instance
+                            &driver,            // Pass the Driver instance for Dynamixel control
                             &servo,             // Pass the Servo instance for Dynamixel control
                             &hexapod,           // Pass the Hexapod instance
                             &turret,            // Pass the Turret instance
@@ -45,7 +49,8 @@ void setup() {
     // Initialize all components
     success &= con.begin();
     success &= mc.begin();
-    success &= servo.begin( DXL_SERIAL,DXL_BAUD_RATE, DXL_PROTOCOL_VERSION);
+    success &= driver.begin( DXL_SERIAL, DXL_BAUD_RATE, DXL_PROTOCOL_VERSION);
+    success &= servo.begin(&driver);
     success &= hexapod.begin(&servo);
     success &= turret.begin(&servo);
     success &= axs1.begin(&servo, AXS1_SENSOR_ID);

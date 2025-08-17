@@ -4,8 +4,8 @@
     #include <Arduino.h>
     
     #include "CommandHistory.h"     // Include CommandHistory class for command history management
-    #include "Debug.h"                  // Include Log class for logging
-    
+    #include "Debug.h"              // Include Log class for logging
+    #include "Driver.h"             // Include Driver class for managing Dynamixel servos
     #include "Servo.h"              // Include Servo class for managing servo motors
     #include "Microcontroller.h"    // Include Microcontroller class for managing the microcontroller
     #include "Hexapod.h"            // Include Hexapod class for managing the hexapod robot
@@ -19,6 +19,7 @@
             Console(    Stream*             stream,                 // Initialize the console with a stream
                         unsigned long       baud,                   // Baud rate for serial communication
                         Microcontroller*    mc      = nullptr,      // Pointer to Microcontroller instance
+                        Driver*             driver  = nullptr,      // Pointer to Driver instance
                         Servo*              servo   = nullptr,      // Pointer to Servo instance
                         Hexapod*            hexapod = nullptr,      // Pointer to Hexapod instance
                         Turret*             turret  = nullptr,      // Pointer to Turret instance
@@ -41,6 +42,7 @@
             
             // Pointers to instances
             Microcontroller*    mc;                                 // Pointer to Microcontroller instance
+            Driver*             driver;                             // Pointer to Driver instance
             Servo*              servo;                              // Pointer to Servo instance for Dynamixel control
             Hexapod*            hexapod;                            // Pointer to hexapod instance
             Turret*             turret;                             // Pointer to turret instance  
