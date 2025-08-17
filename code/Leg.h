@@ -1,5 +1,5 @@
-#ifndef LEG_H
-#define LEG_H
+#ifndef DEBUG_H
+#define DEBUG_H
 
   #include "Servo.h"
   

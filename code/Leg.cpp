@@ -1,7 +1,8 @@
 #include "Servo.h"
+#include "Leg.h"
 #include "LegPoses.h"
 #include "Console.h"
-#include "Leg.h"
+#include "Debug.h"
 
 
 // Default constructor for Leg class

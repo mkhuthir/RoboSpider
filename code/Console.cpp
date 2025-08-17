@@ -1,5 +1,5 @@
 #include "Console.h"
-#include "Log.h"
+#include "Debug.h"
 
 // Constructor for Console class
 Console::Console(   Stream* stream,

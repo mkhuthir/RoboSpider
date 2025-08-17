@@ -1,4 +1,4 @@
-#include "Log.h"
+#include "Debug.h"
 
 // Static method to set the log stream
 void log::setLogStream(Stream* stream) {

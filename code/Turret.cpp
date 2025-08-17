@@ -1,7 +1,7 @@
 #include "Turret.h"
 #include "TurretPoses.h"
 #include "Console.h"        // Add this include for logging macros
-#include "Log.h"
+#include "Debug.h"
 
 
 Turret::Turret(){

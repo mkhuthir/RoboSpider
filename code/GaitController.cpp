@@ -2,7 +2,7 @@
 #include "GaitController.h"
 #include "GaitPoses.h"
 #include "Console.h"
-#include "Log.h"
+#include "Debug.h"
 
 // Constructor for GaitController class
 GaitController::GaitController() {

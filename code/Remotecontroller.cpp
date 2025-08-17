@@ -1,7 +1,7 @@
 
 #include "Remotecontroller.h"
 #include "Console.h"
-#include "Log.h"
+#include "Debug.h"
 
 
 // Constructor for Remotecontroller
