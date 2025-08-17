@@ -20,6 +20,9 @@ bool Turret::begin(Servo* servo) {
 
 // Update turret state
 bool Turret::update() {
+  for (int i = 0; i < TURRET_SERVOS; i++) {
+    servo->update(turret_ids[i]);
+  }
   return true;
 }
 

@@ -63,10 +63,10 @@ void setup() {
 // Main loop function
 void loop() {
     con.update();       // Update console state
-    mc.update();        // Update microcontroller state
-    hexapod.update();   // Update hexapod state
-    turret.update();    // Update turret state
+    mc.update();        // Update Microcontroller state
+    hexapod.update();   // Update Hexapod > Legs > Servos states
+    turret.update();    // Update Turret > Servos state
     axs1.update();      // Update AX-S1 sensor state
-    gc.update();        // Update gait controller state
-    rc.update();        // Update remote controller state
+    gc.update();        // Update Gait Controller state
+    rc.update();        // Update Remote Controller state
 }
