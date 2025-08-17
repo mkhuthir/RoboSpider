@@ -4,7 +4,7 @@
     #include <Arduino.h>
     
     #include "CommandHistory.h"     // Include CommandHistory class for command history management
-    #include "Log.h"                  // Include Log class for logging
+    #include "Debug.h"                  // Include Log class for logging
     
     #include "Servo.h"              // Include Servo class for managing servo motors
     #include "Microcontroller.h"    // Include Microcontroller class for managing the microcontroller
