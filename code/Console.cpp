@@ -64,7 +64,7 @@ bool Console::startShell() {
 }
 
 // Update the console, reading input and processing commands
-void Console::update() {
+bool Console::update() {
     while (logStream->available()) {
         char c = logStream->read();            // Read a character from the console input
 
@@ -74,6 +74,7 @@ void Console::update() {
             handleInputControl(c);      // Control characters and special sequences
         }
     }
+    return true;
 }
 
 // Static method to set debug level
@@ -225,118 +226,6 @@ void Console::processInput(const String& input) {
     }
 }
 
-// System commands (help, cls, status)
-bool Console::runConsoleCommands(const String& cmd, const String& args) {
-    if (cmd == "?" || cmd == "h") {
-        printConsoleHelp();
-        return true;
-    
-    } else if (cmd == "??") {
-        printAllHelp();
-        return true;
-
-    } else if (cmd == "cls" || cmd == "clear") {
-        PRINT("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
-        PRINT(shell);
-        return true;
-
-    } else if (cmd == "debug") {
-        // Set debug level: debug 0-4
-        if (args.length() > 0) {
-            int level = args.toInt();
-            if (level >= DEBUG_NON && level <= DEBUG_DBG) {
-                setDebugLevel((DebugLevel)level);
-                printInfo("Debug level set to: " + String(level));
-            } else {
-                printError("Invalid debug level. Use 0-4 (0=NON, 1=ERR, 2=WRN, 3=INF, 4=DBG)");
-            }
-
-        } else {
-            println("Current debug level: " + String(debugLevel));
-        }
-        return true;
-
-    } else if (cmd == "color") {
-        // Toggle color output: color on/off
-        if (args == "on" || args == "1" || args == "true") {
-            setColorEnabled(true);
-        } else if (args == "off" || args == "0" || args == "false") {
-            setColorEnabled(false);
-        } else {
-            println("Current color setting: " + String(colorEnabled ? "enabled" : "disabled"));
-        }
-        return true;
-
-    } else if (cmd == "test") {
-        // Test all log levels
-        println("This is a normal message");
-        printError("This is an error message");
-        printWarning("This is a warning message");
-        printInfo("This is an info message");
-        printDebug("This is a debug message");
-        println("Current debug level: " + String(debugLevel));
-        println("Color output is " + String(colorEnabled ? "enabled" : "disabled"));
-        return true;
-
-    } 
-    return false;
-}
-
-// Leg control commands (operates on leg 0 by default, could be extended for specific legs)
-bool Console::runLegCommand(const String& cmd, const String& args) {
-    int legIndex = 0; // Default to leg 0
-    
-    // Parse leg number from arguments if provided
-    if (args.length() > 0) {
-        int parsedLeg = args.toInt();
-        if (parsedLeg >= 0 && parsedLeg < 6) { // Assuming 6 legs indexed from 0 to 5
-            legIndex = parsedLeg;
-        }
-    }
-    
-    // Call the specific leg's runConsoleCommands method
-    return hexapod->legs[legIndex].runConsoleCommands(cmd, args, legIndex);
-}
-
-//Print comprehensive help information
-void Console::printAllHelp() {
-    
-    println("SpiderBot Console - Available Commands:");
-    println("");
-    
-    // Print help for each component
-    this->printConsoleHelp();
-    mc->printConsoleHelp();
-    servo->printConsoleHelp();
-    hexapod->printConsoleHelp();
-    hexapod->legs[0].printConsoleHelp();
-    gc->printConsoleHelp();
-    turret->printConsoleHelp();
-    sensor->printConsoleHelp();
-
-
-    // Show examples for common commands
-    println("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note, 'mlon 3' turns on user LED 3");
-}
-
-// Print console-specific help information
-void Console::printConsoleHelp() {
-    println("Console Commands:\n\r");
-    println("  ? / h            - Show this help message");
-    println("  ??               - Show all available commands");
-    println("  s?               - Show servo commands");
-    println("  h?               - Show hexapod commands");
-    println("  l?               - Show leg commands");
-    println("  a?               - Show AX-S1 Sensor commands");
-    println("  t?               - Show turret commands");
-    println("  g?               - Show gait controller commands");
-    println("");
-    println("  cls / clear      - Clear the terminal screen");
-    println("  debug [0-4]      - Set debug level (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
-    println("  color [on/off]   - Enable/disable color output");
-    println("  test             - Test all log message types");
-    println("");
-}
 
 // Handle printable character input and display
 void Console::handlePrintableChar(char c) {
@@ -641,5 +530,122 @@ void Console::resetInputState() {
     commandHistory.resetToEnd();
     insertMode = true;
     print("\033[4 q");                                      // Reset to insert mode cursor
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------
+
+// System commands (help, cls, status)
+bool Console::runConsoleCommands(const String& cmd, const String& args) {
+    if (cmd == "?" || cmd == "h") {
+        printConsoleHelp();
+        return true;
+    
+    } else if (cmd == "??") {
+        printAllHelp();
+        return true;
+
+    } else if (cmd == "cls" || cmd == "clear") {
+        PRINT("\033[2J\033[H");                     // ANSI escape code to clear screen and move cursor to home
+        PRINT(shell);
+        return true;
+
+    } else if (cmd == "debug") {
+        // Set debug level: debug 0-4
+        if (args.length() > 0) {
+            int level = args.toInt();
+            if (level >= DEBUG_NON && level <= DEBUG_DBG) {
+                setDebugLevel((DebugLevel)level);
+                printInfo("Debug level set to: " + String(level));
+            } else {
+                printError("Invalid debug level. Use 0-4 (0=NON, 1=ERR, 2=WRN, 3=INF, 4=DBG)");
+            }
+
+        } else {
+            println("Current debug level: " + String(debugLevel));
+        }
+        return true;
+
+    } else if (cmd == "color") {
+        // Toggle color output: color on/off
+        if (args == "on" || args == "1" || args == "true") {
+            setColorEnabled(true);
+        } else if (args == "off" || args == "0" || args == "false") {
+            setColorEnabled(false);
+        } else {
+            println("Current color setting: " + String(colorEnabled ? "enabled" : "disabled"));
+        }
+        return true;
+
+    } else if (cmd == "test") {
+        // Test all log levels
+        println("This is a normal message");
+        printError("This is an error message");
+        printWarning("This is a warning message");
+        printInfo("This is an info message");
+        printDebug("This is a debug message");
+        println("Current debug level: " + String(debugLevel));
+        println("Color output is " + String(colorEnabled ? "enabled" : "disabled"));
+        return true;
+
+    } 
+    return false;
+}
+
+// Leg control commands (operates on leg 0 by default, could be extended for specific legs)
+bool Console::runLegCommand(const String& cmd, const String& args) {
+    int legIndex = 0; // Default to leg 0
+    
+    // Parse leg number from arguments if provided
+    if (args.length() > 0) {
+        int parsedLeg = args.toInt();
+        if (parsedLeg >= 0 && parsedLeg < 6) { // Assuming 6 legs indexed from 0 to 5
+            legIndex = parsedLeg;
+        }
+    }
+    
+    // Call the specific leg's runConsoleCommands method
+    return hexapod->legs[legIndex].runConsoleCommands(cmd, args, legIndex);
+}
+
+//Print comprehensive help information
+bool Console::printAllHelp() {
+
+    println("SpiderBot Console - Available Commands:");
+    println("");
+    
+    // Print help for each component
+    if (!this->printConsoleHelp()) return false;
+    if (!mc->printConsoleHelp()) return false;
+    if (!servo->printConsoleHelp()) return false;
+    if (!hexapod->printConsoleHelp()) return false;
+    if (!hexapod->legs[0].printConsoleHelp()) return false;
+    if (!gc->printConsoleHelp()) return false;
+    if (!turret->printConsoleHelp()) return false;
+    if (!sensor->printConsoleHelp()) return false;
+
+    // Show examples for common commands
+    println("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note, 'mlon 3' turns on user LED 3");
+
+    return true;
+}
+
+// Print console-specific help information
+bool Console::printConsoleHelp() {
+    println("Console Commands:\n\r");
+    println("  ? / h            - Show this help message");
+    println("  ??               - Show all available commands");
+    println("  s?               - Show servo commands");
+    println("  h?               - Show hexapod commands");
+    println("  l?               - Show leg commands");
+    println("  a?               - Show AX-S1 Sensor commands");
+    println("  t?               - Show turret commands");
+    println("  g?               - Show gait controller commands");
+    println("");
+    println("  cls / clear      - Clear the terminal screen");
+    println("  debug [0-4]      - Set debug level (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
+    println("  color [on/off]   - Enable/disable color output");
+    println("  test             - Test all log message types");
+    println("");
+    return true;
 }
 

@@ -64,7 +64,7 @@
 
         bool begin();                                           // Initialize the console
         bool startShell();                                      // Start the shell
-        void update();                                          // Call in loop()
+        bool update();                                          // Call in loop()
 
         // Static methods for managing console state
         static void setDebugLevel(DebugLevel level);            // Set the global debug level
@@ -105,10 +105,13 @@
         GaitController*     gc;                                 // Pointer to GaitController instance
         Remotecontroller*   rc;                                 // Pointer to RemoteController instance
 
+        // Private logging helper
+        static void printLog(DebugLevel level, const String& prefix, const String& color, const String& message);
+
         // Input processing methods
         void processInput(const String& input);                 // Process the input entered by the user
-        void handleInputControl(char c);                        // Handle all input control operations
         void handlePrintableChar(char c);                       // Handle printable character input and display
+        void handleInputControl(char c);                        // Handle all input control operations
         
         // Escape sequence handlers
         void handleEscapeSequence();                            // Main escape sequence handler
@@ -140,16 +143,13 @@
         void refreshLineFromCursor();                           // Refresh display from cursor position
         void resetInputState();                                 // Reset input state after command
 
-        // Command execution methods - organized by category
+        // Console Command Execution and Help
         bool runConsoleCommands(const String& cmd, const String& args);     // System commands (help, cls, status)
         bool runLegCommand(const String& cmd, const String& args);          // Leg control commands
-
-        // Helper methods for command processing
-        void printAllHelp();                                       // Print comprehensive help information
-        void printConsoleHelp();                                // Print console-specific help information
+        bool printAllHelp();                                       // Print comprehensive help information
+        bool printConsoleHelp();                                // Print console-specific help information
         
-        // Private logging helper
-        static void printLog(DebugLevel level, const String& prefix, const String& color, const String& message);
+
     };
 
 #endif
