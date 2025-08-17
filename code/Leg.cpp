@@ -14,24 +14,38 @@ Leg::Leg(){
 }
 
 // Initialize the leg servos
-void Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
+bool Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
   legIDs[Coxa]  = coxaID;   // Set coxa ID
   legIDs[Femur] = femurID;  // Set femur ID
   legIDs[Tibia] = tibiaID;  // Set tibia ID
 
   this->servo = servo;  // Set the servo pointer
 
-  servo->init(legIDs[Coxa] , LEG_SPEED, COXA_CW_LIMIT, COXA_CCW_LIMIT);   // Initialize coxa servo with velocity
-  servo->init(legIDs[Femur], LEG_SPEED, FEMUR_CW_LIMIT, FEMUR_CCW_LIMIT);   // Initialize femur servo with velocity
-  servo->init(legIDs[Tibia], LEG_SPEED, TIBIA_CW_LIMIT, TIBIA_CCW_LIMIT);   // Initialize tibia servo with velocity
+  if (!servo->init(legIDs[Coxa] , LEG_SPEED, COXA_CW_LIMIT, COXA_CCW_LIMIT)) {   // Initialize coxa servo with velocity
+    LOG_ERR("Failed to initialize coxa servo.");
+    return false;
+  }
+  if (!servo->init(legIDs[Femur], LEG_SPEED, FEMUR_CW_LIMIT, FEMUR_CCW_LIMIT)) {   // Initialize femur servo with velocity
+    LOG_ERR("Failed to initialize femur servo.");
+    return false;
+  }
+  if (!servo->init(legIDs[Tibia], LEG_SPEED, TIBIA_CW_LIMIT, TIBIA_CCW_LIMIT)) {   // Initialize tibia servo with velocity
+    LOG_ERR("Failed to initialize tibia servo.");
+    return false;
+  }
 
   LOG_INF("Leg initialized successfully. (Servo IDs: " + String(legIDs[Coxa]) + ", " + String(legIDs[Femur]) + ", " + String(legIDs[Tibia]) + ")");
+  return true;
 }
 
 // Move the leg to the specified positions
-void Leg::move(int32_t *positions) {
+bool Leg::move(int32_t *positions) {
   const uint8_t num_positions   = 1;
-  servo->syncWrite(handler_index, legIDs, LEG_SERVOS, positions, num_positions);
+  if(!servo->syncWrite(handler_index, legIDs, LEG_SERVOS, positions, num_positions)) {
+    LOG_ERR("Failed to move leg.");
+    return false;
+  }
+  return true;
 }
 
 // Check if any servo in the leg is currently moving
@@ -46,59 +60,71 @@ bool Leg::isMoving() {
 }
 
 // Move leg up
-void Leg::movePointUp() {
-  move(poseLegPointUp);
+bool Leg::movePointUp() {
+  return move(poseLegPointUp);
 }
 
 // Move leg down
-void Leg::movePointDown() {
-  move(poseLegPointDown);
+bool Leg::movePointDown() {
+  return move(poseLegPointDown);
 }
 
 // Move leg out
-void Leg::movePointOut() {
-  move(poseLegPointOut);
+bool Leg::movePointOut() {
+  return move(poseLegPointOut);
 }
 
 // Move leg to stand up position
-void Leg::moveStandUp() {
-  move(poseLegStandUp);
+bool Leg::moveStandUp() {
+  return move(poseLegStandUp);
 }
 
 // Move leg to stand down position
-void Leg::moveStandDown() {
-  move(poseLegStandDown);
+bool Leg::moveStandDown() {
+  return move(poseLegStandDown);
 }
 
 // Get current coxa angle
-int32_t Leg::getCoxa() {
-  int32_t angle = 0;
-  servo->getPosition(legIDs[Coxa], &angle);
-  return angle;
+bool Leg::getCoxa(uint16_t* angle) {
+  if (!servo->getPosition(legIDs[Coxa], (int32_t*)angle)) {
+    LOG_ERR("Failed to get coxa position.");
+    return false;
+  }
+  return true;
 }
 
 // Get current femur angle
-int32_t Leg::getFemur() {
-  int32_t angle = 0;
-  servo->getPosition(legIDs[Femur], &angle);
-  return angle;
+bool Leg::getFemur(uint16_t* angle) {
+  if (!servo->getPosition(legIDs[Femur], (int32_t*)angle)) {
+    LOG_ERR("Failed to get femur position.");
+    return false;
+  }
+  return true;
 }
 
 // Get current tibia angle
-int32_t Leg::getTibia() {
-  int32_t angle = 0;
-  servo->getPosition(legIDs[Tibia], &angle);
-  return angle;
+bool Leg::getTibia(uint16_t* angle) {
+  if (!servo->getPosition(legIDs[Tibia], (int32_t*)angle)) {
+    LOG_ERR("Failed to get tibia position.");
+    return false;
+  }
+  return true;
 }
 
 // Print current joint angles
-void Leg::printStatus() {
+bool Leg::printStatus() {
+  uint16_t coxaAngle = 0, femurAngle = 0, tibiaAngle = 0;
+  if (!getCoxa(&coxaAngle) || !getFemur(&femurAngle) || !getTibia(&tibiaAngle)) {
+    LOG_ERR("Failed to get joint angles.");
+    return false;
+  }
   PRINT("Coxa: ");
-  PRINT((int)getCoxa());
+  PRINT((int)coxaAngle);
   PRINT(" | Femur: ");
-  PRINT((int)getFemur());
+  PRINT((int)femurAngle);
   PRINT(" | Tibia: ");
-  PRINTLN((int)getTibia());
+  PRINTLN((int)tibiaAngle);
+  return true;
 }
 
 // Process console commands for leg control
@@ -142,16 +168,20 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
 }
 
 // Print leg-specific help information
-void Leg::printConsoleHelp() {
-    PRINTLN("Leg Commands (add leg number 0-5 as argument, default=0):");
+bool Leg::printConsoleHelp() {
+    PRINTLN("Leg Commands (add leg number 0-5 as argument, default=0):\n\r");
+    PRINTLN("  ls  [n]          - Print leg status (angles)");
+    PRINTLN("");
     PRINTLN("  lpu [n]          - Move leg point up");
     PRINTLN("  lpd [n]          - Move leg point down");
     PRINTLN("  lpo [n]          - Move leg point out");
+    PRINTLN("");
     PRINTLN("  lsu [n]          - Move leg to stand up position");
     PRINTLN("  lsd [n]          - Move leg to stand down position");
-    PRINTLN("  ls  [n]          - Print leg status (angles)");
+    PRINTLN("");
     PRINTLN("  l?               - Show this help");
     PRINTLN("");
+    return true;
 }
 
 
