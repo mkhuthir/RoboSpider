@@ -12,10 +12,6 @@
     #include "GaitController.h"     // Include GaitController for movement control
     #include "Remotecontroller.h"   // Include RemoteController class for remote control input
 
-    // EEPROM addresses for storing settings
-    #define EEPROM_ADDR_DEBUG_LEVEL     0
-    #define EEPROM_ADDR_COLOR_ENABLED   1
-
     // ANSI color codes for terminal output
     #define COLOR_RESET     "\033[0m"       // Reset color
     #define COLOR_RED       "\033[31m"      // Error messages
@@ -24,10 +20,10 @@
     #define COLOR_CYAN      "\033[36m"      // Debug messages
     #define COLOR_BOLD      "\033[1m"       // Bold text
 
-    #define LOG_HEADER_ERROR   "[ERR]"      // Error log header
-    #define LOG_HEADER_WARNING "[WRN]"      // Warning log header
-    #define LOG_HEADER_INFO    "[INF]"      // Info log header
-    #define LOG_HEADER_DEBUG   "[DBG]"      // Debug log header
+    #define LOG_HEADER_ERROR   "[E]"      // Error log header
+    #define LOG_HEADER_WARNING "[W]"      // Warning log header
+    #define LOG_HEADER_INFO    "[I]"      // Info log header
+    #define LOG_HEADER_DEBUG   "[D]"      // Debug log header
 
     // Global macros for printing messages
     #define PRINT(msg)      Console::print(msg)             // Normal print without debug level or color
