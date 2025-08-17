@@ -1,4 +1,5 @@
 #include "Servo.h"
+#include "Driver.h"
 #include "Console.h"
 #include "Debug.h"
 
@@ -8,193 +9,19 @@ Servo::Servo(){}
 
 //initialize the DynamixelWorkbench instance
 bool Servo::begin(const char* device_name, uint32_t baudrate, float protocol_version) {
-    if (!setPortHandler(device_name)) return false;
-    if (!setBaudrate(baudrate)) return false;
-    if (!setPacketHandler(protocol_version)) return false;
-    LOG_INF("DynamixelWorkbench initialized successfully");
+    if (!Driver::begin(device_name, baudrate, protocol_version)) return false;
+    LOG_INF("Servo initialized successfully");
     return true;
 }
 
-// Set the port handler with the device name
-bool Servo::setPortHandler(const char *device_name) {
-    
-    if (!dxl.setPortHandler(device_name, &log))
-    {        
-        LOG_ERR(log);
-        return false;  
-    }       
-    LOG_INF("Port handler set to: " + String(device_name));
-    return true;
-}
-
-// Set the baudrate for the port handler
-bool Servo::setBaudrate(uint32_t baud_rate) {     
-    
-    if (!dxl.setBaudrate(baud_rate, &log))
-    {        
-        LOG_ERR(log);
-    }
-    LOG_INF("Baudrate set to: "+ String(baud_rate));
-    return true;
-}
-
-// Set the packet handler with the protocol version
-bool Servo::setPacketHandler(float protocol_version) {
-    
-    if (!dxl.setPacketHandler(protocol_version, &log))
-    {        
-        LOG_ERR(log);
-    }
-    LOG_INF("Packet handler set with protocol version: " + String(protocol_version));
-    return true;
-}
-
-// Get the protocol version
-float Servo::getProtocolVersion(void) {
-    float protocol_version = dxl.getProtocolVersion();
-    if (protocol_version < 0)
-    {        
-        LOG_ERR("Failed to get protocol version!");
-        return -1.0;
-    }
-    LOG_INF("Protocol Version: " + String(protocol_version));
-    return protocol_version;
-}
-
-// Get the baudrate
-uint32_t Servo::getBaudrate(void) {
-
-    uint32_t baudrate = dxl.getBaudrate();
-
-    if (baudrate == 0)
-    {        
-        LOG_ERR("Failed to get baudrate!");
-        return 0;
-    }
-    return baudrate;
-}
-//-----------------------------------------------------------------------------
-// Read a register from a servo with address and length
-bool Servo::readRegister(uint8_t id, uint16_t address, uint16_t length, uint32_t *data) {
-    
-    if (!dxl.readRegister(id, address, length, data, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id) + " address: " + String(address) + " length: " + String(length));
-        return false;  
-    }
-    return true;
-}
-
-// Write a register to a servo with address and length
-bool Servo::writeRegister(uint8_t id, uint16_t address, uint16_t length, uint8_t* data) {
-    
-    if (!dxl.writeRegister(id, address, length, data, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id));
-        return false;
-    }
-    return true;
-}
-
-// Read a register from a servo with item name
-bool Servo::readRegister(uint8_t id, const char *item_name, uint32_t *data) {
-
-    if (!dxl.readRegister(id, item_name, (int32_t*)data, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id) + " item name: " + String(item_name));
-        return false;  
-    }
-
-    return true;
-}
-
-// Write a register to a servo with item name
-bool Servo::writeRegister(uint8_t id, const char *item_name, uint32_t data) {
-    
-    if (!dxl.writeRegister(id, item_name, (int32_t)data, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id) + " item name: " + String(item_name) + " data: " + String(data));
-        return false;  
-    }
-    return true;
-}
-
-// Add a sync write handler with address and length
-bool Servo::addSyncWriteHandler(uint16_t address, uint16_t length) {
-    
-    if (!dxl.addSyncWriteHandler(address, length, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("address: " + String(address) + " length: " + String(length));
-        return false;  
-    }
-    return true;
-}
-
-// Add a sync write handler with ID and item name
-bool Servo::addSyncWriteHandler(uint8_t id, const char *item_name) {
-    
-    if (!dxl.addSyncWriteHandler(id, item_name, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("id: " + String(id) + " item name: " + String(item_name));
-        return false;  
-    }
-    return true;
-}
-
-// Sync write data for a specific index
-bool Servo::syncWrite(uint8_t index, int32_t *data) {
-    
-    if (!dxl.syncWrite(index, data, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("index: " + String(index) + " data: " + String(*data));
-        return false;  
-    }
-    return true;
-}
-
-// Sync write data for multiple IDs
-bool Servo::syncWrite(uint8_t index, uint8_t *id, uint8_t id_num, int32_t *data, uint8_t data_num_for_each_id) {
-    
-    if (!dxl.syncWrite(index, id, id_num, data, data_num_for_each_id, &log))
-    {
-        LOG_ERR(log);
-        LOG_ERR("index: " + String(index));
-        return false;  
-    }
-    return true;
-}
-
-//------------------------------------------------------------------------
 // Ping a servo to check if it is connected, ping is required before you can use a servo.
 bool Servo::ping(uint8_t dxl_id) {
-    
-    if (!dxl.ping(dxl_id, &log))
-    {
-        LOG_ERR(log);
-        return false;
-    }
-    return true;
+    return Driver::ping(dxl_id);
 }
 
 // Get the model name of a servo
 const char * Servo::getModelName(uint8_t id) {
-
-    const char*  model_name = NULL;
-    model_name = dxl.getModelName(id, &log);
-
-    if (model_name == NULL)
-    {   
-        LOG_ERR(log);
-        return NULL;
-    }
-    return model_name;
+    return Driver::getModelName(id);
 }
 
 // ------------------ EPROM Area -----------------------------
@@ -202,76 +29,76 @@ const char * Servo::getModelName(uint8_t id) {
 
 // Get the model number of a servo
 bool Servo::getModelNumber(uint8_t id, uint16_t* model_number) {
-    if (!readRegister(id, "Model_Number", (uint32_t*)model_number)) return false;
+    if (!Driver::readRegister(id, "Model_Number", (uint32_t*)model_number)) return false;
     return true;
 }
 
 // Get Firmware Version
 bool Servo::getFirmwareVersion(uint8_t id, uint8_t* version) {
-    if (!readRegister(id, "Firmware_Version", (uint32_t*)version)) return false;
+    if (!Driver::readRegister(id, "Firmware_Version", (uint32_t*)version)) return false;
     return true;
 }
 
 // Get Baud Rate
 bool Servo::getBaudRate(uint8_t id, uint8_t* baud_rate) {
-    if (!readRegister(id, "Baud_Rate", (uint32_t*)baud_rate)) return false;
+    if (!Driver::readRegister(id, "Baud_Rate", (uint32_t*)baud_rate)) return false;
     return true;
 }
 
 // Get Return Delay Time
 bool Servo::getReturnDelayTime(uint8_t id, uint8_t* return_delay_time) {
-    if (!readRegister(id, "Return_Delay_Time", (uint32_t*)return_delay_time)) return false;
+    if (!Driver::readRegister(id, "Return_Delay_Time", (uint32_t*)return_delay_time)) return false;
     return true;
 }
 
 // Get the angle limits for a servo
 bool Servo::getAngleLimits(uint8_t id, uint16_t* CW_angle, uint16_t* CCW_angle) {
-    if (!readRegister(id, "CW_Angle_Limit", (uint32_t*)CW_angle)) return false;
-    if (!readRegister(id, "CCW_Angle_Limit", (uint32_t*)CCW_angle)) return false;
+    if (!Driver::readRegister(id, "CW_Angle_Limit", (uint32_t*)CW_angle)) return false;
+    if (!Driver::readRegister(id, "CCW_Angle_Limit", (uint32_t*)CCW_angle)) return false;
     return true;
 }
 
 // Set the angle limits for a servo
 bool Servo::setAngleLimits(uint8_t id, uint16_t CW_angle, uint16_t CCW_angle) {
-    if (!writeRegister(id, "CW_Angle_Limit", (uint32_t)CW_angle)) return false;
-    if (!writeRegister(id, "CCW_Angle_Limit", (uint32_t)CCW_angle)) return false;
+    if (!Driver::writeRegister(id, "CW_Angle_Limit", (uint32_t)CW_angle)) return false;
+    if (!Driver::writeRegister(id, "CCW_Angle_Limit", (uint32_t)CCW_angle)) return false;
     return true;
 }
 
 // Get Temperature Limit
 bool Servo::getTemperatureLimit(uint8_t id, uint8_t* max_temp) {
-    if (!readRegister(id, "Temperature_Limit", (uint32_t*)max_temp)) return false;
+    if (!Driver::readRegister(id, "Temperature_Limit", (uint32_t*)max_temp)) return false;
     return true;
 }
 
 // Get Voltage Limit
 bool Servo::getVoltageLimit(uint8_t id, uint8_t* min_voltage, uint8_t* max_voltage) {
-    if (!readRegister(id, "Voltage_Limit_Min", (uint32_t*)min_voltage)) return false;
-    if (!readRegister(id, "Voltage_Limit_Max", (uint32_t*)max_voltage)) return false;
+    if (!Driver::readRegister(id, "Voltage_Limit_Min", (uint32_t*)min_voltage)) return false;
+    if (!Driver::readRegister(id, "Voltage_Limit_Max", (uint32_t*)max_voltage)) return false;
     return true;
 }
 
 // Get Max Torque
 bool Servo::getMaxTorque(uint8_t id, uint16_t* max_torque) {
-    if (!readRegister(id, "Max_Torque", (uint32_t*)max_torque)) return false;
+    if (!Driver::readRegister(id, "Max_Torque", (uint32_t*)max_torque)) return false;
     return true;
 }
 
 // Get Status Return Level
 bool Servo::getStatusReturnLevel(uint8_t id, uint8_t* level) {
-    if (!readRegister(id, "Status_Return_Level", (uint32_t*)level)) return false;
+    if (!Driver::readRegister(id, "Status_Return_Level", (uint32_t*)level)) return false;
     return true;
 }
 
     // Get Alarm LED
 bool Servo::getAlarmLED(uint8_t id, uint8_t* alarm_led) {
-    if (!readRegister(id, "Alarm_LED", (uint32_t*)alarm_led)) return false;
+    if (!Driver::readRegister(id, "Alarm_LED", (uint32_t*)alarm_led)) return false;
     return true;
 }
 
 // Get Shutdown
 bool Servo::getShutdown(uint8_t id, uint8_t* shutdown) {
-    if (!readRegister(id, "Shutdown", (uint32_t*)shutdown)) return false;
+    if (!Driver::readRegister(id, "Shutdown", (uint32_t*)shutdown)) return false;
     return true;
 }
 
@@ -279,127 +106,127 @@ bool Servo::getShutdown(uint8_t id, uint8_t* shutdown) {
 // Check if the torque is enabled for a servo
 bool Servo::isTorqueOn(uint8_t id) {
     uint32_t isTorqueOn = 0;
-    if (!readRegister(id, "Torque_Enable", &isTorqueOn)) return false;
+    if (!Driver::readRegister(id, "Torque_Enable", &isTorqueOn)) return false;
     return isTorqueOn;
 }
 
 // Turn on the torque for a servo
 bool Servo::torqueOn(uint8_t id) {
-    if (!writeRegister(id, "Torque_Enable", 1)) return false;
+    if (!Driver::writeRegister(id, "Torque_Enable", 1)) return false;
     return true;
 }
 
 // Turn off the torque for a servo
 bool Servo::torqueOff(uint8_t id) {
-    if (!writeRegister(id, "Torque_Enable", 0)) return false;
+    if (!Driver::writeRegister(id, "Torque_Enable", 0)) return false;
     return true;
 }
 
 // Check if the LED is enabled for a servo
 bool Servo::isLedOn(uint8_t id) {
     uint32_t isLedOn = 0;
-    if (!readRegister(id, "LED", &isLedOn)) return false;
+    if (!Driver::readRegister(id, "LED", &isLedOn)) return false;
     return isLedOn;
 }
 
 // Turn on the LED of a servo
 bool Servo::ledOn(uint8_t dxl_id) {
-    if (!writeRegister(dxl_id, "LED", 1)) return false;
+    if (!Driver::writeRegister(dxl_id, "LED", 1)) return false;
     return true;
 }
 
 // Turn off the LED of a servo
 bool Servo::ledOff(uint8_t dxl_id) {
-    if (!writeRegister(dxl_id, "LED", 0)) return false;
+    if (!Driver::writeRegister(dxl_id, "LED", 0)) return false;
     return true;
 }
 
 // Get the compliance margin of a servo
 bool Servo::getComplianceMargin(uint8_t id, uint8_t* CW_margin, uint8_t* CCW_margin) {
-    if (!readRegister(id, "CW_Compliance_Margin", (uint32_t*)CW_margin)) return false;
-    if (!readRegister(id, "CCW_Compliance_Margin", (uint32_t*)CCW_margin)) return false;
+    if (!Driver::readRegister(id, "CW_Compliance_Margin", (uint32_t*)CW_margin)) return false;
+    if (!Driver::readRegister(id, "CCW_Compliance_Margin", (uint32_t*)CCW_margin)) return false;
     return true;
 }
 
 // Set the compliance margin of a servo
 bool Servo::setComplianceMargin(uint8_t id, uint8_t CW_margin, uint8_t CCW_margin) {
-    if (!writeRegister(id, "CW_Compliance_Margin", (uint32_t)CW_margin)) return false;
-    if (!writeRegister(id, "CCW_Compliance_Margin", (uint32_t)CCW_margin)) return false;
+    if (!Driver::writeRegister(id, "CW_Compliance_Margin", (uint32_t)CW_margin)) return false;
+    if (!Driver::writeRegister(id, "CCW_Compliance_Margin", (uint32_t)CCW_margin)) return false;
     return true;
 }
 
 // Get the compliance slope of a servo
 bool Servo::getComplianceSlope(uint8_t id, uint8_t* CW_slope, uint8_t* CCW_slope) {
-    if (!readRegister(id, "CW_Compliance_Slope", (uint32_t*)CW_slope)) return false;
-    if (!readRegister(id, "CCW_Compliance_Slope", (uint32_t*)CCW_slope)) return false;
+    if (!Driver::readRegister(id, "CW_Compliance_Slope", (uint32_t*)CW_slope)) return false;
+    if (!Driver::readRegister(id, "CCW_Compliance_Slope", (uint32_t*)CCW_slope)) return false;
     return true;
 }
 
 // Set the compliance slope of a servo
 bool Servo::setComplianceSlope(uint8_t id, uint8_t CW_slope, uint8_t CCW_slope) {
-    if (!writeRegister(id, "CW_Compliance_Slope", (uint32_t)CW_slope)) return false;
-    if (!writeRegister(id, "CCW_Compliance_Slope", (uint32_t)CCW_slope)) return false;
+    if (!Driver::writeRegister(id, "CW_Compliance_Slope", (uint32_t)CW_slope)) return false;
+    if (!Driver::writeRegister(id, "CCW_Compliance_Slope", (uint32_t)CCW_slope)) return false;
     return true;
 }
 
 // Set the goal position of a servo in value
 bool Servo::setGoalPosition(uint8_t dxl_id, int16_t position) {
-    if (!writeRegister(dxl_id, "Goal_Position", (uint32_t)position)) return false;
+    if (!Driver::writeRegister(dxl_id, "Goal_Position", (uint32_t)position)) return false;
     return true;
 }
 
 // Set the goal speed of a servo in int value
 bool Servo::setGoalSpeed(uint8_t dxl_id, int16_t speed) {
-    if (!writeRegister(dxl_id, "Moving_Speed", (uint32_t)speed)) return false;
+    if (!Driver::writeRegister(dxl_id, "Moving_Speed", (uint32_t)speed)) return false;
     return true;
 }
 
 // Get the torque limit of a servo
 bool Servo::getTorqueLimit(uint8_t id, uint16_t* torque_limit) {
-    if (!readRegister(id, "Torque_Limit", (uint32_t*)torque_limit)) return false;
+    if (!Driver::readRegister(id, "Torque_Limit", (uint32_t*)torque_limit)) return false;
     return true;
 }
 
 // Set the torque limit of a servo
 bool Servo::setTorqueLimit(uint8_t id, uint16_t torque_limit) {
-    if (!writeRegister(id, "Torque_Limit", (uint32_t)torque_limit)) return false;
+    if (!Driver::writeRegister(id, "Torque_Limit", (uint32_t)torque_limit)) return false;
     return true;
 }
 
 // Get the present position data of a servo in value
 bool Servo::getPresentPosition(uint8_t id, uint16_t* pos) {
-    if (!readRegister(id, "Present_Position", (uint32_t*)pos)) return false;
+    if (!Driver::readRegister(id, "Present_Position", (uint32_t*)pos)) return false;
     return true;
 }
 
 // Get the present velocity data of a servo in value
 bool Servo::getPresentSpeed(uint8_t id, uint16_t* speed) {
-    if (!readRegister(id, "Moving_Speed", (uint32_t*)speed)) return false;
+    if (!Driver::readRegister(id, "Moving_Speed", (uint32_t*)speed)) return false;
     return true;
 }
 
 // Get the present load data of a servo in value
 bool Servo::getPresentLoad(uint8_t id, uint16_t* load) {
-    if (!readRegister(id, "Present_Load", (uint32_t*)load)) return false;
+    if (!Driver::readRegister(id, "Present_Load", (uint32_t*)load)) return false;
     return true;
 }
 
 // Get the present voltage data of a servo in value
 bool Servo::getPresentVoltage(uint8_t id, uint8_t* voltage) {
-    if (!readRegister(id, "Present_Voltage", (uint32_t*)voltage)) return false;
+    if (!Driver::readRegister(id, "Present_Voltage", (uint32_t*)voltage)) return false;
     return true;
 }
 
 // Get the present temperature data of a servo in value
 bool Servo::getPresentTemperature(uint8_t id, uint8_t* temperature) {
-    if (!readRegister(id, "Present_Temperature", (uint32_t*)temperature)) return false;
+    if (!Driver::readRegister(id, "Present_Temperature", (uint32_t*)temperature)) return false;
     return true;
 }
 
 // Check if a servo is currently moving
 bool Servo::isMoving(uint8_t id) {
     uint32_t isMoving = 0;
-    if (!readRegister(id, "Moving", &isMoving)) return false;
+    if (!Driver::readRegister(id, "Moving", &isMoving)) return false;
     return isMoving;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
