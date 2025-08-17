@@ -1,4 +1,5 @@
 #include "Servo.h"
+#include "Log.h"
 #include "Console.h"        // Add this include for logging macros
 
 

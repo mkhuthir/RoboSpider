@@ -1,4 +1,5 @@
 #include "Microcontroller.h"
+#include "Log.h"
 #include "pitches.h"            // Include pitches for melody notes
 #include "Console.h"        // Add this include for logging macros
 

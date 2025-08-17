@@ -1,5 +1,6 @@
 #include "Servo.h"
 #include "Leg.h"
+#include "Log.h"
 #include "LegPoses.h"   // Include leg poses header
 #include "Console.h"        // Add this include for logging macros
 

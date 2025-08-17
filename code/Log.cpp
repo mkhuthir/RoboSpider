@@ -1,5 +1,15 @@
 #include "Log.h"
 
+// Static method to set the log stream
+void log::setLogStream(Stream* stream) {
+    logStream = stream;
+}
+
+// Static method to get the log stream
+Stream* log::getLogStream() {
+    return logStream;
+}
+
 // Static members initialization
 Stream*     log::logStream       = &Serial;      // Default to Serial for logging
 DebugLevel  log::debugLevel      = DEBUG_INF;    // Default debug level

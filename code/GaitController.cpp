@@ -1,5 +1,6 @@
 #include "Hexapod.h"
 #include "GaitController.h"
+#include "Log.h"
 #include "GaitPoses.h"        // Include gait poses header
 #include "Console.h"        // Add this include for logging macros
 

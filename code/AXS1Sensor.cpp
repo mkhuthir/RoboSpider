@@ -1,5 +1,6 @@
 #include "Servo.h"                  // Include Servo class for managing Dynamixel servos
 #include "AXS1Sensor.h"
+#include "Log.h"
 #include "Console.h"        // Add this include for logging macros
 
 

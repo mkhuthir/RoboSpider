@@ -1,4 +1,4 @@
-#ifdef LOG_H
+#ifndef LOG_H
 #define LOG_H
 
     #include <Arduino.h>
@@ -17,13 +17,13 @@
     #define LOG_HEADER_DEBUG   "DBG-"      // Debug log header
 
     // Global macros for printing messages
-    #define PRINT(msg)      Console::print(msg)             // Normal print without debug level or color
-    #define PRINTLN(msg)    Console::println(msg)           // Print with newline
-    
-    #define LOG_ERR(msg)    Console::printError(msg)        // Error logging with red color
-    #define LOG_WRN(msg)    Console::printWarning(msg)      // Warning logging with yellow color
-    #define LOG_INF(msg)    Console::printInfo(msg)         // Info logging with green color
-    #define LOG_DBG(msg)    Console::printDebug(msg)        // Debug logging with cyan color
+    #define PRINT(msg)      log::print(msg)             // Normal print without debug level or color
+    #define PRINTLN(msg)    log::println(msg)           // Print with newline
+
+    #define LOG_ERR(msg)    log::printError(msg)        // Error logging with red color
+    #define LOG_WRN(msg)    log::printWarning(msg)      // Warning logging with yellow color
+    #define LOG_INF(msg)    log::printInfo(msg)         // Info logging with green color
+    #define LOG_DBG(msg)    log::printDebug(msg)        // Debug logging with cyan color
 
     // Debug levels for logging system
     enum DebugLevel {
@@ -39,6 +39,10 @@
             // Static methods for managing console state
             static void setDebugLevel(DebugLevel level);            // Set the global debug level
             static void setColorEnabled(bool enabled);              // Enable/disable color output
+
+            // Static methods for managing log stream
+            static void setLogStream(Stream* stream);               // Set the log stream
+            static Stream* getLogStream();                          // Get the log stream
 
             // Static methods for printing messages
             static void print(const String& message);               // Normal print without debug level or color
@@ -61,7 +65,7 @@
 
             // Private logging helper
             static void printLog(DebugLevel level, const String& prefix, const String& color, const String& message);
-    }
+    };
 
 #endif
 // Log.h

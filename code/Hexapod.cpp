@@ -1,5 +1,6 @@
 #include "Servo.h"
 #include "Hexapod.h"
+#include "Log.h"
 #include "HexapodPoses.h"       // Include hexapod poses header
 #include "Console.h"        // Add this include for logging macros
 
