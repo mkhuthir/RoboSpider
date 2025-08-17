@@ -16,7 +16,7 @@
 
     class Console {
         public:
-            Console(    Stream&             stream,                 // Initialize the console with a stream
+            Console(    Stream*             stream,                 // Initialize the console with a stream
                         unsigned long       baud,                   // Baud rate for serial communication
                         Microcontroller*    mc      = nullptr,      // Pointer to Microcontroller instance
                         Servo*              servo   = nullptr,      // Pointer to Servo instance
@@ -32,6 +32,7 @@
             bool update();                                          // Call in loop()
 
         private:
+            Stream*             stream;                             // Pointer to the stream for input/output
             String              inputBuffer     = "";               // Buffer to store the input command
             String              shell           = "$";              // Shell prompt string
             int                 cursorPos       = 0;                // Current cursor position in input buffer

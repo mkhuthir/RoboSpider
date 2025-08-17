@@ -26,7 +26,7 @@ GaitController      gc;                         // Gait Controller instance
 Remotecontroller    rc;                         // Remote Controller instance
 
 // Initialize console with all necessary components
-Console             con(    DEBUG_SERIAL,       // Initialize console with debug serial stream
+Console             con(    &DEBUG_SERIAL,       // Initialize console with debug serial stream
                             DEBUG_BAUD_RATE,    // Set baud rate for console communication
                             &mc,                // Pass the Microcontroller instance
                             &servo,             // Pass the Servo instance for Dynamixel control

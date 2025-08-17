@@ -2,7 +2,7 @@
 #include "Log.h"
 
 // Constructor for Console class
-Console::Console(   Stream& stream,
+Console::Console(   Stream* stream,
                     unsigned long baud,
                     Microcontroller* mc,
                     Servo* servo,
@@ -13,9 +13,10 @@ Console::Console(   Stream& stream,
                     Remotecontroller* rc
                     ){
 
-    log::setLogStream(&stream);                // Set the log stream to the same stream
+    log::setLogStream(stream);                // Set the log stream to the same stream
+    this->stream = stream;
 
-    if (logStream == &Serial) {
+    if (stream == &Serial) {
         Serial.begin(baud);
     }
     
@@ -35,12 +36,12 @@ Console::Console(   Stream& stream,
 // Initialize the console with a baud rate and instances of components
 bool Console::begin() {
     
-    if (log::getLogStream() == nullptr) {
+    if (stream == nullptr) {
         LOG_ERR("Log stream is not initialized.");
         return false;
     }
 
-    if (log::getLogStream() == &Serial) {
+    if (stream == &Serial) {
         while (!Serial);                            // Wait for Serial if using USB
     }
 
@@ -61,8 +62,8 @@ bool Console::startShell() {
 
 // Update the console, reading input and processing commands
 bool Console::update() {
-    while (log::getLogStream()->available()) {
-        char c = log::getLogStream()->read();            // Read a character from the console input
+    while (stream->available()) {
+        char c = stream->read();            // Read a character from the console input
 
         if (c >= 32 && c <= 126) {      // Printable ASCII characters
             handlePrintableChar(c);
@@ -124,23 +125,23 @@ void Console::handlePrintableChar(char c) {
             String before = inputBuffer.substring(0, cursorPos);    // Insert character in the middle of the string
             String after = inputBuffer.substring(cursorPos);
             inputBuffer = before + c + after;
-            log::print("\033[K");                                // Clear from cursor to end and reprint
+            PRINT("\033[K");                                // Clear from cursor to end and reprint
             String remaining = inputBuffer.substring(cursorPos);
-            log::print(remaining);
+            PRINT(remaining);
             for (int i = remaining.length() - 1; i > 0; i--) {  // Move cursor back to position after inserted character
-                log::print("\033[D");
+                PRINT("\033[D");
             }
         } else {
             inputBuffer += c;                                   // At end of string, just append and echo
-            log::getLogStream()->write(c);
+            stream->write(c);
         }
     } else {
         if (cursorPos < (int)inputBuffer.length()) {            // Overwrite mode: replace character at cursor position
             inputBuffer.setCharAt(cursorPos, c);                // Replace character at cursor position
-            log::getLogStream()->write(c);                                       // Echo the character
+            stream->write(c);                                       // Echo the character
         } else {
             inputBuffer += c;                                   // At end of string, append new character
-            log::getLogStream()->write(c);                                       // Echo the character
+            stream->write(c);                                       // Echo the character
         }
     }
     cursorPos++;
@@ -181,11 +182,11 @@ void Console::handleInputControl(char c) {
 void Console::handleEscapeSequence() {
     // Wait for next character with timeout (100ms)
     unsigned long timeout = millis() + 100;
-    while (!log::getLogStream()->available() && millis() < timeout);
+    while (!stream->available() && millis() < timeout);
 
-    if (!log::getLogStream()->available()) return;                               // Timeout - ignore incomplete sequence
+    if (!stream->available()) return;                               // Timeout - ignore incomplete sequence
 
-    char c1 = log::getLogStream()->read();
+    char c1 = stream->read();
     if (c1 == '[') {
         handleCSISequence();                                    // Control Sequence Introducer
     } else if (c1 == 'O') {
@@ -197,11 +198,11 @@ void Console::handleEscapeSequence() {
 // Handle CSI (Control Sequence Introducer) sequences like ESC[A, ESC[2~, etc.
 void Console::handleCSISequence() {
     unsigned long timeout = millis() + 100;
-    while (!log::getLogStream()->available() && millis() < timeout);
+    while (!stream->available() && millis() < timeout);
 
-    if (!log::getLogStream()->available()) return;                               // Timeout
+    if (!stream->available()) return;                               // Timeout
 
-    char c2 = log::getLogStream()->read();
+    char c2 = stream->read();
     switch (c2) {
         case 'A':                                               // Up arrow - Command history: previous
             handleArrowUp();
@@ -245,11 +246,11 @@ void Console::handleCSISequence() {
 // Handle SS (Single Shift) sequences like ESC-O for function keys
 void Console::handleSSSequence() {
     unsigned long timeout = millis() + 100;
-    while (!log::getLogStream()->available() && millis() < timeout);
+    while (!stream->available() && millis() < timeout);
 
-    if (!log::getLogStream()->available()) return;                               // Timeout
+    if (!stream->available()) return;                               // Timeout
 
-    char c2 = log::getLogStream()->read();
+    char c2 = stream->read();
     switch (c2) {
         case 'H':                                               // Home key (alternative)
             handleHome();
@@ -275,11 +276,11 @@ void Console::handleSSSequence() {
 // Handle extended keys that end with '~'
 void Console::handleExtendedKey(char keyCode) {
     unsigned long timeout = millis() + 100;
-    while (!log::getLogStream()->available() && millis() < timeout);
+    while (!stream->available() && millis() < timeout);
 
-    if (!log::getLogStream()->available()) return;                               // Timeout
+    if (!stream->available()) return;                               // Timeout
 
-    char c3 = log::getLogStream()->read();
+    char c3 = stream->read();
     if (c3 == '~') {
         switch (keyCode) {
             case '2':                                           // Insert key
@@ -315,14 +316,14 @@ void Console::handleArrowDown() {
 
 void Console::handleArrowRight() {
     if (cursorPos < (int)inputBuffer.length()) {
-    log::print("\033[C");
+    PRINT("\033[C");
         cursorPos++;
     }
 }
 
 void Console::handleArrowLeft() {
     if (cursorPos > 0) {
-    log::print("\033[D");
+    PRINT("\033[D");
         cursorPos--;
     }
 }
@@ -330,14 +331,14 @@ void Console::handleArrowLeft() {
 // Navigation key handlers
 void Console::handleHome() {
     while (cursorPos > 0) {
-    log::print("\033[D");
+    PRINT("\033[D");
         cursorPos--;
     }
 }
 
 void Console::handleEnd() {
     while (cursorPos < (int)inputBuffer.length()) {
-    log::print("\033[C");
+    PRINT("\033[C");
         cursorPos++;
     }
 }
@@ -346,7 +347,7 @@ void Console::handleEnd() {
 void Console::handleInsertKey() {
     insertMode = !insertMode;
     // Change cursor type based on mode
-    log::print(insertMode ? "\033[4 q" : "\033[2 q");           // Underline for insert, block for overwrite
+    PRINT(insertMode ? "\033[4 q" : "\033[2 q");           // Underline for insert, block for overwrite
 }
 
 void Console::handleDeleteKey() {
@@ -360,27 +361,27 @@ void Console::handleBackspace() {
     if (cursorPos > 0) {
         cursorPos--;
         inputBuffer.remove(cursorPos, 1);
-    log::print("\b");
+    PRINT("\b");
         refreshLineFromCursor();
     }
 }
 
 void Console::handleClearScreen() {
-    log::print("\033[2J\033[H");                                 // Clear screen and move cursor to home
+    PRINT("\033[2J\033[H");                                 // Clear screen and move cursor to home
     inputBuffer = "";
     cursorPos = 0;
-    print(shell);
+    PRINT(shell);
 }
 
 void Console::handleNewline() {
     if (inputBuffer.length() > 0) {
-        print("\n\r");
+        PRINT("\n\r");
         processInput(inputBuffer);
         resetInputState();
-        print(shell);
+        PRINT(shell);
     } else {
-        print("\n\r");
-        print(shell);
+        PRINT("\n\r");
+        PRINT(shell);
     }
 }
 
@@ -388,28 +389,28 @@ void Console::handleNewline() {
 void Console::clearAndRedrawLine(const String& newContent) {
     // Move cursor to beginning of input
     while (cursorPos > 0) {
-    log::print("\b");
+    PRINT("\b");
         cursorPos--;
     }
     
     // Clear the entire line content
-    log::print("\033[K");                                        // Clear from cursor to end of line
+    PRINT("\033[K");                                        // Clear from cursor to end of line
     
     // Set new content and redraw
     inputBuffer = newContent;
-    log::print(inputBuffer);
+    PRINT(inputBuffer);
     cursorPos = inputBuffer.length();
 }
 
 // Refresh line after cursor position changes
 void Console::refreshLineFromCursor() {
-    log::print("\033[K");                                        // Clear from cursor to end
+    PRINT("\033[K");                                        // Clear from cursor to end
     String remaining = inputBuffer.substring(cursorPos);
-    log::print(remaining);
+    PRINT(remaining);
 
     // Move cursor back to correct position
     for (int i = 0; i < (int)remaining.length(); i++) {
-    log::print("\033[D");
+    PRINT("\033[D");
     }
 }
 
@@ -419,7 +420,7 @@ void Console::resetInputState() {
     cursorPos = 0;
     commandHistory.resetToEnd();
     insertMode = true;
-        log::print("\033[4 q");                                      // Reset to insert mode cursor
+        PRINT("\033[4 q");                                      // Reset to insert mode cursor
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -451,7 +452,7 @@ bool Console::runConsoleCommands(const String& cmd, const String& args) {
             }
 
         } else {
-            log::println("Current debug level: " + String(log::getDebugLevel()));
+            PRINTLN("Current debug level: " + String(log::getDebugLevel()));
         }
         return true;
 
@@ -462,19 +463,19 @@ bool Console::runConsoleCommands(const String& cmd, const String& args) {
         } else if (args == "off" || args == "0" || args == "false") {
             log::setColorEnabled(false);
         } else {
-            log::println("Current color setting: " + String(log::getColorEnabled() ? "enabled" : "disabled"));
+            PRINTLN("Current color setting: " + String(log::getColorEnabled() ? "enabled" : "disabled"));
         }
         return true;
 
     } else if (cmd == "test") {
         // Test all log levels
-    log::println("This is a normal message");
+    PRINTLN("This is a normal message");
     LOG_ERR("This is an error message");
     LOG_WRN("This is a warning message");
     LOG_INF("This is an info message");
     LOG_DBG("This is a debug message");
-    log::println("Current debug level: " + String(log::getDebugLevel()));
-    log::println("Color output is " + String(log::getColorEnabled() ? "enabled" : "disabled"));
+    PRINTLN("Current debug level: " + String(log::getDebugLevel()));
+    PRINTLN("Color output is " + String(log::getColorEnabled() ? "enabled" : "disabled"));
         return true;
 
     } 
@@ -500,8 +501,8 @@ bool Console::runLegCommand(const String& cmd, const String& args) {
 //Print comprehensive help information
 bool Console::printAllHelp() {
 
-    log::println("SpiderBot Console - Available Commands:");
-    log::println("");
+    PRINTLN("SpiderBot Console - Available Commands:");
+    PRINTLN("");
     
     // Print help for each component
     if (!this->printConsoleHelp()) return false;
@@ -514,28 +515,28 @@ bool Console::printAllHelp() {
     if (!sensor->printConsoleHelp()) return false;
 
     // Show examples for common commands
-    log::println("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note, 'mlon 3' turns on user LED 3");
+    PRINTLN("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note, 'mlon 3' turns on user LED 3");
 
     return true;
 }
 
 // Print console-specific help information
 bool Console::printConsoleHelp() {
-    log::println("Console Commands:\n\r");
-    log::println("  ? / h            - Show this help message");
-    log::println("  ??               - Show all available commands");
-    log::println("  s?               - Show servo commands");
-    log::println("  h?               - Show hexapod commands");
-    log::println("  l?               - Show leg commands");
-    log::println("  a?               - Show AX-S1 Sensor commands");
-    log::println("  t?               - Show turret commands");
-    log::println("  g?               - Show gait controller commands");
-    log::println("");
-    log::println("  cls / clear      - Clear the terminal screen");
-    log::println("  debug [0-4]      - Set debug level (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
-    log::println("  color [on/off]   - Enable/disable color output");
-    log::println("  test             - Test all log message types");
-    log::println("");
+    PRINTLN("Console Commands:\n\r");
+    PRINTLN("  ? / h            - Show this help message");
+    PRINTLN("  ??               - Show all available commands");
+    PRINTLN("  s?               - Show servo commands");
+    PRINTLN("  h?               - Show hexapod commands");
+    PRINTLN("  l?               - Show leg commands");
+    PRINTLN("  a?               - Show AX-S1 Sensor commands");
+    PRINTLN("  t?               - Show turret commands");
+    PRINTLN("  g?               - Show gait controller commands");
+    PRINTLN("");
+    PRINTLN("  cls / clear      - Clear the terminal screen");
+    PRINTLN("  debug [0-4]      - Set debug level (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
+    PRINTLN("  color [on/off]   - Enable/disable color output");
+    PRINTLN("  test             - Test all log message types");
+    PRINTLN("");
     return true;
 }
 
