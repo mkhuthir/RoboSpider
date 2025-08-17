@@ -63,9 +63,9 @@ bool Turret::moveDown() {
 
 // Print current turret angles to Serial
 bool Turret::printStatus() {
-  int32_t panPosition = 0, tiltPosition = 0;
-  if (!servo->getPosition(turret_ids[0], &panPosition)) return false;
-  if (!servo->getPosition(turret_ids[1], &tiltPosition)) return false;
+  uint16_t panPosition = 0, tiltPosition = 0;
+  if (!servo->getPresentPosition(turret_ids[0], &panPosition)) return false;
+  if (!servo->getPresentPosition(turret_ids[1], &tiltPosition)) return false;
   PRINTLN("Turret Status: Pan: " + String(panPosition) + " | Tilt: " + String(tiltPosition));
   return true;
 }

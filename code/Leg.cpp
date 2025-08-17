@@ -96,7 +96,7 @@ bool Leg::moveStandDown() {
 
 // Get current coxa angle
 bool Leg::getCoxa(uint16_t* angle) {
-  if (!servo->getPosition(legIDs[Coxa], (int32_t*)angle)) {
+  if (!servo->getPresentPosition(legIDs[Coxa], (uint16_t*)angle)) {
     LOG_ERR("Failed to get coxa position.");
     return false;
   }
@@ -105,7 +105,7 @@ bool Leg::getCoxa(uint16_t* angle) {
 
 // Get current femur angle
 bool Leg::getFemur(uint16_t* angle) {
-  if (!servo->getPosition(legIDs[Femur], (int32_t*)angle)) {
+  if (!servo->getPresentPosition(legIDs[Femur], (uint16_t*)angle)) {
     LOG_ERR("Failed to get femur position.");
     return false;
   }
@@ -114,7 +114,7 @@ bool Leg::getFemur(uint16_t* angle) {
 
 // Get current tibia angle
 bool Leg::getTibia(uint16_t* angle) {
-  if (!servo->getPosition(legIDs[Tibia], (int32_t*)angle)) {
+  if (!servo->getPresentPosition(legIDs[Tibia], (uint16_t*)angle)) {
     LOG_ERR("Failed to get tibia position.");
     return false;
   }
