@@ -13,7 +13,9 @@
       bool    init( uint8_t coxaID,           // Initialize the leg servos
                     uint8_t femurID, 
                     uint8_t tibiaID, 
-                    Servo* servo);            
+                    Servo* servo);
+
+      bool    update();                       // Update the leg state
 
       bool    move(int32_t *positions);       // Move the leg to the specified positions
       bool    isMoving();                     // Check if any servo in the leg is currently moving 

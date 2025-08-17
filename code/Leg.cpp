@@ -36,6 +36,16 @@ bool Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
 
   LOG_INF("Leg initialized successfully. (Servo IDs: " + String(legIDs[Coxa]) + ", " + String(legIDs[Femur]) + ", " + String(legIDs[Tibia]) + ")");
   return true;
+
+}
+
+// Update the leg state
+bool Leg::update() {
+  // Update each servo
+  for (int i = 0; i < LEG_SERVOS; i++) {
+    servo->update(legIDs[i]);
+  }
+  return true;
 }
 
 // Move the leg to the specified positions

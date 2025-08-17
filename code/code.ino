@@ -60,12 +60,13 @@ void setup() {
     }
 }
 
-// Loop function to handle remote controller input and control the robot
+// Main loop function
 void loop() {
-    con.update();   // Update console state
-    mc.update();    // Update microcontroller state
-    axs1.update();  // Update AX-S1 sensor state
-    turret.update(); // Update turret state
-    gc.update();    // Update gait controller state
-    rc.update();    // Update remote controller state
+    con.update();       // Update console state
+    mc.update();        // Update microcontroller state
+    hexapod.update();   // Update hexapod state
+    turret.update();    // Update turret state
+    axs1.update();      // Update AX-S1 sensor state
+    gc.update();        // Update gait controller state
+    rc.update();        // Update remote controller state
 }

@@ -38,6 +38,15 @@ bool Hexapod::begin(Servo* servo) {
   return true;                                      // Initialization successful
 }
 
+// Hexapod update
+bool Hexapod::update() {
+  // Update each leg
+  for (int i = 0; i < HEXAPOD_LEGS; i++) {
+    legs[i].update();
+  }
+  return true;
+}
+
 // Move Hexapod
 bool Hexapod::move(uint8_t *ids, uint8_t num_servos, int32_t *positions) {
   const uint8_t num_positions   = 1;

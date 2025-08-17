@@ -324,6 +324,11 @@ bool Servo::init(   uint8_t dxl_id,
     return result;
 }
 
+bool Servo::update(uint8_t id) {
+    // Update the state of the servo
+    return true;
+}
+
 // Process console commands for servo control
 bool Servo::runConsoleCommands(const String& cmd, const String& args) {
     
