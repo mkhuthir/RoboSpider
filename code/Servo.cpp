@@ -479,33 +479,33 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
         return true;
 
     } else if (cmd == "sgp") {
-        uint16_t currentPos;
-        getPresentPosition((uint8_t)id, &currentPos);
-        PRINTLN("Servo ID " + String(id) + " current position: " + String(currentPos));
+        uint16_t presentPos;
+        getPresentPosition((uint8_t)id, &presentPos);
+        PRINTLN("Servo ID " + String(id) + " current position: " + String(presentPos));
         return true;
         
     } else if (cmd == "sgs") {
-        uint16_t currentSpeed;
-        getPresentSpeed((uint8_t)id, &currentSpeed);
-        PRINTLN("Servo ID " + String(id) + " current speed: " + String(currentSpeed));
+        uint16_t presentSpeed;
+        getPresentSpeed((uint8_t)id, &presentSpeed);
+        PRINTLN("Servo ID " + String(id) + " current speed: " + String(presentSpeed));
         return true;
         
     } else if (cmd == "sgl") {
-        uint16_t currentLoad;
-        getPresentLoad((uint8_t)id, &currentLoad);
-        PRINTLN("Servo ID " + String(id) + " current load: " + String(currentLoad));
+        uint16_t presentLoad;
+        getPresentLoad((uint8_t)id, &presentLoad);
+        PRINTLN("Servo ID " + String(id) + " current load: " + String(presentLoad));
         return true;
 
     } else if (cmd == "sgv") {
-        uint8_t currentVoltage;
-        getPresentVoltage((uint8_t)id, &currentVoltage);
-        PRINTLN("Servo ID " + String(id) + " current voltage: " + String(currentVoltage));
+        uint8_t presentVoltage;
+        getPresentVoltage((uint8_t)id, &presentVoltage);
+        PRINTLN("Servo ID " + String(id) + " current voltage: " + String(presentVoltage));
         return true;
 
     } else if (cmd == "sgt") {
-        uint8_t currentTemperature;
-        getPresentTemperature((uint8_t)id, &currentTemperature);
-        PRINTLN("Servo ID " + String(id) + " current temperature: " + String(currentTemperature));
+        uint8_t presentTemperature;
+        getPresentTemperature((uint8_t)id, &presentTemperature);
+        PRINTLN("Servo ID " + String(id) + " current temperature: " + String(presentTemperature));
         return true;
 
     } else if (cmd == "sim") {
