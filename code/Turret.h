@@ -25,6 +25,7 @@
       bool printConsoleHelp();                                        // Print turret-specific help information
 
     private:
+      Driver* driver;                   // Pointer to the driver instance
       Servo*  servo;                    // Pointer to the servo instance
   };
 

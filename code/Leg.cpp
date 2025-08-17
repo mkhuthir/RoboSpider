@@ -15,7 +15,7 @@ Leg::Leg(){
 }
 
 // Initialize the leg servos
-bool Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
+bool Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Driver* driver, Servo* servo) {
   legIDs[Coxa]  = coxaID;   // Set coxa ID
   legIDs[Femur] = femurID;  // Set femur ID
   legIDs[Tibia] = tibiaID;  // Set tibia ID
