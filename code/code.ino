@@ -51,8 +51,8 @@ void setup() {
     success &= mc.begin();
     success &= driver.begin( DXL_SERIAL, DXL_BAUD_RATE, DXL_PROTOCOL_VERSION);
     success &= servo.begin(&driver);
-    success &= hexapod.begin(&driver , &servo);
-    success &= turret.begin(&driver);
+    success &= hexapod.begin(&driver, &servo);
+    success &= turret.begin(&driver, &servo);
     success &= axs1.begin(&driver, AXS1_SENSOR_ID);
     success &= gc.begin(&hexapod);
     success &= rc.begin(RC100_SERIAL,&mc,&hexapod,&turret,&gc);

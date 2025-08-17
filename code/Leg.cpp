@@ -20,7 +20,8 @@ bool Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Servo* servo) {
   legIDs[Femur] = femurID;  // Set femur ID
   legIDs[Tibia] = tibiaID;  // Set tibia ID
 
-  this->servo = servo;  // Set the servo pointer
+  this->driver = driver;    // Set the driver pointer
+  this->servo = servo;      // Set the servo pointer
 
   if (!servo->init(legIDs[Coxa] , LEG_SPEED, COXA_CW_LIMIT, COXA_CCW_LIMIT)) {   // Initialize coxa servo with velocity
     LOG_ERR("Failed to initialize coxa servo.");
@@ -52,7 +53,7 @@ bool Leg::update() {
 // Move the leg to the specified positions
 bool Leg::move(int32_t *positions) {
   const uint8_t num_positions   = 1;
-  if(!servo->syncWrite(handler_index, legIDs, LEG_SERVOS, positions, num_positions)) {
+  if(!driver->syncWrite(handler_index, legIDs, LEG_SERVOS, positions, num_positions)) {
     LOG_ERR("Failed to move leg.");
     return false;
   }

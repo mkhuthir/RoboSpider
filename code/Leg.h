@@ -2,7 +2,8 @@
 #define LEG_H
 
   #include "Servo.h"
-  
+  #include "Driver.h"
+
   #define handler_index   0                   // Index for sync write handler
   #define LEG_SERVOS      uint8_t(3)          // Number of servos per leg
   #define HEXAPOD_LEGS    uint8_t(6)          // Maximum number of legs
@@ -12,7 +13,8 @@
       Leg();                                  // Constructor
       bool    init( uint8_t coxaID,           // Initialize the leg servos
                     uint8_t femurID, 
-                    uint8_t tibiaID, 
+                    uint8_t tibiaID,
+                    Driver* driver,
                     Servo* servo);
 
       bool    update();                       // Update the leg state
@@ -35,6 +37,7 @@
       bool    printConsoleHelp();             // Print leg-specific help information
       
     private:
+      Driver* driver;                         // Pointer to the driver instance
       Servo* servo;                           // Pointer to the servo instance
       uint8_t legIDs[LEG_SERVOS]={0,0,0};     // Servo IDs for the leg joints
 
