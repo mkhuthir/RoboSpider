@@ -1,8 +1,8 @@
 #include "Hexapod.h"
 #include "GaitController.h"
+#include "GaitPoses.h"
+#include "Console.h"
 #include "Log.h"
-#include "GaitPoses.h"        // Include gait poses header
-#include "Console.h"        // Add this include for logging macros
 
 // Constructor for GaitController class
 GaitController::GaitController() {

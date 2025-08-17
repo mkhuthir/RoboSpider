@@ -1,8 +1,7 @@
 #include "Servo.h"
+#include "LegPoses.h"
+#include "Console.h"
 #include "Leg.h"
-#include "Log.h"
-#include "LegPoses.h"   // Include leg poses header
-#include "Console.h"        // Add this include for logging macros
 
 
 // Default constructor for Leg class
