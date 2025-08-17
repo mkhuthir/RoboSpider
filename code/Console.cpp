@@ -5,6 +5,7 @@
 Console::Console(   Stream* stream,
                     unsigned long baud,
                     Microcontroller* mc,
+                    Driver* driver,
                     Servo* servo,
                     Hexapod* hexapod,
                     Turret* turret,
@@ -21,6 +22,7 @@ Console::Console(   Stream* stream,
     }
     
     this->mc        = mc;               // Store the Microcontroller instance
+    this->driver    = driver;           // Store the Driver instance
     this->servo     = servo;            // Store the Servo instance
     this->hexapod   = hexapod;          // Store the hexapod instance
     this->turret    = turret;           // Store the turret instance

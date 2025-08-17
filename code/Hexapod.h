@@ -2,6 +2,7 @@
 #define HEXAPOD_H
 
   #include "Leg.h"
+  #include "Driver.h"
 
   #define handler_index  uint8_t(0)                                     // Index for sync write handler
   #define HEXAPOD_LEGS   uint8_t(6)                                     // Maximum number of legs
@@ -11,7 +12,7 @@
   class Hexapod {
     public:
       Hexapod(); // Constructor
-      bool begin(Servo* servo);                                         // Initialize the hexapod
+      bool begin(Driver* driver, Servo* servo);                         // Initialize the hexapod
       bool update();                                                    // Update the hexapod state
 
       bool move(uint8_t *ids, uint8_t num_servos, int32_t *positions);  // Move Hexapod
@@ -26,7 +27,8 @@
       Leg     legs[HEXAPOD_LEGS];                                       // Array of legs
 
     private:
-      Servo*  servo;                                                    // Dynamixel controller instance
+      Driver*  driver;                                                  // Dynamixel controller instance
+      Servo*   servo;                                                   // Servo controller instance
 
 
   };

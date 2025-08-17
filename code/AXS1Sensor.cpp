@@ -6,15 +6,16 @@
 
 // Constructor for AXS1Sensor class
 AXS1Sensor::AXS1Sensor(){
-    servo   = nullptr;              // Initialize servo pointer to null
+    driver  = nullptr;              // Initialize driver pointer to null
     id      = AXS1_SENSOR_ID;       // Initialize sensor ID to AXS1_SENSOR_ID
 }
 
-// Begin method to initialize the sensor with a Servo instance and sensor ID
-bool AXS1Sensor::begin(Servo* servo, uint8_t sensor_id){
-    
-    if (servo == nullptr) return false;
-    this->servo = servo;
+// Begin method to initialize the sensor with a Driver instance and sensor ID
+bool AXS1Sensor::begin(Driver* driver, uint8_t sensor_id){
+
+    if (driver == nullptr) return false;
+
+    this->driver = driver;
     this->id    = sensor_id;
 
     if (!setObstacleCompare(AXS1_OBSTACLE_DETECTED)) return false;  // Set default obstacle detection threshold
@@ -35,7 +36,7 @@ bool AXS1Sensor::update() {
 
 // Ping method to check connectivity with the sensor
 bool AXS1Sensor::ping() {
-  return servo->ping(this->id);
+  return driver->ping(this->id);
 }
 
 // Get the ID of the sensor
@@ -46,7 +47,7 @@ bool AXS1Sensor::getID(uint8_t* sensorID) {
 
 // Get the model number of the sensor
 bool AXS1Sensor::getModelNumber(uint16_t* model_number) {
-    if (!servo->readRegister(this->id, AXS1_Model_Number_L, 2, (uint32_t*)model_number)) {
+    if (!driver->readRegister(this->id, AXS1_Model_Number_L, 2, (uint32_t*)model_number)) {
         LOG_ERR("Failed to read Model Number for ID: " + String(this->id));
         return false;
     }
@@ -55,7 +56,7 @@ bool AXS1Sensor::getModelNumber(uint16_t* model_number) {
 
 // Get the firmware version of the sensor
 bool AXS1Sensor::getFirmwareVersion(uint8_t* version) {
-    if (!servo->readRegister(id, AXS1_Firmware_Version, 1, (uint32_t*)version)) {
+    if (!driver->readRegister(id, AXS1_Firmware_Version, 1, (uint32_t*)version)) {
         LOG_ERR("Failed to read Firmware Version for ID: " + String(id));
         return false;
     }
@@ -64,7 +65,7 @@ bool AXS1Sensor::getFirmwareVersion(uint8_t* version) {
 
 // Get the baud rate of the sensor
 bool AXS1Sensor::getBaudRate(uint8_t* baud_rate) {
-    if (!servo->readRegister(id, AXS1_Baud_Rate, 1, (uint32_t*)baud_rate)) {
+    if (!driver->readRegister(id, AXS1_Baud_Rate, 1, (uint32_t*)baud_rate)) {
         LOG_ERR("Failed to read Baud Rate for ID: " + String(id));
         return false;
     }
@@ -73,7 +74,7 @@ bool AXS1Sensor::getBaudRate(uint8_t* baud_rate) {
 
 // Get the return delay time of the sensor
 bool AXS1Sensor::getReturnDelayTime(uint8_t* return_delay) {
-    if (!servo->readRegister(id, AXS1_Return_Delay_Time, 1, (uint32_t*)return_delay)) {
+    if (!driver->readRegister(id, AXS1_Return_Delay_Time, 1, (uint32_t*)return_delay)) {
         LOG_ERR("Failed to read Return Delay Time for ID: " + String(id));
         return false;
     }
@@ -82,7 +83,7 @@ bool AXS1Sensor::getReturnDelayTime(uint8_t* return_delay) {
 
 // Get the status return level of the sensor
 bool AXS1Sensor::getStatusReturnLevel(uint8_t* status_return) {
-    if (!servo->readRegister(id, AXS1_Status_Return_Level, 1, (uint32_t*)status_return)) {
+    if (!driver->readRegister(id, AXS1_Status_Return_Level, 1, (uint32_t*)status_return)) {
         LOG_ERR("Failed to read Status Return Level for ID: " + String(id));
         return false;
     }
@@ -91,7 +92,7 @@ bool AXS1Sensor::getStatusReturnLevel(uint8_t* status_return) {
 
 // Get the distance data from the IR left side sensor
 bool AXS1Sensor::getDistanceLeft(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Left_Distance_Data, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Left_Distance_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Left Distance Data for ID: " + String(id));
         return false;
     }
@@ -100,7 +101,7 @@ bool AXS1Sensor::getDistanceLeft(uint8_t* value) {
 
 // Get the distance data from the IR center sensor
 bool AXS1Sensor::getDistanceCenter(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Center_Distance_Data, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Center_Distance_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Center Distance Data for ID: " + String(id));
         return false;
     }
@@ -109,7 +110,7 @@ bool AXS1Sensor::getDistanceCenter(uint8_t* value) {
 
 // Get the distance data from the IR right side sensor
 bool AXS1Sensor::getDistanceRight(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Right_Distance_Data, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Right_Distance_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Right Distance Data for ID: " + String(id));
         return false;
     }
@@ -118,7 +119,7 @@ bool AXS1Sensor::getDistanceRight(uint8_t* value) {
 
 // Get the IR light left side sensor data
 bool AXS1Sensor::getIRLeft(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Light_Left_Data, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Light_Left_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Left Data for ID: " + String(id));
         return false;
     }
@@ -127,7 +128,7 @@ bool AXS1Sensor::getIRLeft(uint8_t* value) {
 
 // Get the IR light center sensor data
 bool AXS1Sensor::getIRCenter(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Light_Center_Data, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Light_Center_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Center Data for ID: " + String(id));
         return false;
     }
@@ -136,7 +137,7 @@ bool AXS1Sensor::getIRCenter(uint8_t* value) {
 
 // Get the IR light right side sensor data
 bool AXS1Sensor::getIRRight(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Light_Right_Data, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Light_Right_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read IR Right Data for ID: " + String(id));
         return false;
     }
@@ -146,7 +147,7 @@ bool AXS1Sensor::getIRRight(uint8_t* value) {
 // Set the obstacle detection comparison value
 bool AXS1Sensor::setObstacleCompare(uint8_t value) {
 
-    if (!servo->writeRegister(id, AXS1_IR_Obstacle_Detect_Compare, 1, &value)) {
+    if (!driver->writeRegister(id, AXS1_IR_Obstacle_Detect_Compare, 1, &value)) {
         LOG_ERR("Failed to set Obstacle Compare for ID: " + String(id));
         return false;
     }
@@ -155,7 +156,7 @@ bool AXS1Sensor::setObstacleCompare(uint8_t value) {
 
 // Get the obstacle detection comparison value
 bool AXS1Sensor::getObstacleCompare(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_IR_Obstacle_Detect_Compare, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_IR_Obstacle_Detect_Compare, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Obstacle Compare Data for ID: " + String(id));
         return false;
     }
@@ -164,7 +165,7 @@ bool AXS1Sensor::getObstacleCompare(uint8_t* value) {
 
 // Get the obstacle detected status
 bool AXS1Sensor::ObstacleDetected(uint8_t* value) {
-    if (!servo->readRegister(this->id, AXS1_IR_Obstacle_Detected, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(this->id, AXS1_IR_Obstacle_Detected, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Obstacle Detected Data for ID: " + String(this->id));
         return false;
     }
@@ -173,7 +174,7 @@ bool AXS1Sensor::ObstacleDetected(uint8_t* value) {
 
 // Set the light detection comparison value
 bool AXS1Sensor::setLightCompare(uint8_t value) {
-    if (!servo->writeRegister(id, AXS1_Light_Detect_Compare, 1, &value)) {
+    if (!driver->writeRegister(id, AXS1_Light_Detect_Compare, 1, &value)) {
         LOG_ERR("Failed to set Light Compare for ID: " + String(id));
         return false;
     }
@@ -182,7 +183,7 @@ bool AXS1Sensor::setLightCompare(uint8_t value) {
 
 // Get the light detection comparison value
 bool AXS1Sensor::getLightCompare(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Light_Detect_Compare, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Light_Detect_Compare, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Light Compare Data for ID: " + String(id));
         return false;
     }
@@ -191,7 +192,7 @@ bool AXS1Sensor::getLightCompare(uint8_t* value) {
 
 // Get the light detected status
 bool AXS1Sensor::LightDetected(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Light_Detected, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Light_Detected, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Light Detected Data for ID: " + String(id));
         return false;
     }
@@ -200,7 +201,7 @@ bool AXS1Sensor::LightDetected(uint8_t* value) {
 
 // Get the sound data from the sensor
 bool AXS1Sensor::getSoundData(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Sound_Data, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Sound_Data, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Sound Data for ID: " + String(id));
         return false;
     }
@@ -209,7 +210,7 @@ bool AXS1Sensor::getSoundData(uint8_t* value) {
 
 // Get the maximum hold sound data from the sensor
 bool AXS1Sensor::getSoundDataMaxHold(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Sound_Data_Max_Hold, 1, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Sound_Data_Max_Hold, 1, (uint32_t*)value)) {
         LOG_ERR("Failed to read Sound Data Max Hold for ID: " + String(id));
         return false;
     }
@@ -218,7 +219,7 @@ bool AXS1Sensor::getSoundDataMaxHold(uint8_t* value) {
 
 // Get the count of sound detected by the sensor
 bool AXS1Sensor::getSoundDetectedCount(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Sound_Detected_Count, 1, (uint32_t*)value)){
+    if (!driver->readRegister(id, AXS1_Sound_Detected_Count, 1, (uint32_t*)value)){
         LOG_ERR("Failed to read Sound Detected Count for ID: " + String(id));
         return false;
     }
@@ -227,7 +228,7 @@ bool AXS1Sensor::getSoundDetectedCount(uint8_t* value) {
 
 // Get the time of sound detected by the sensor
 bool AXS1Sensor::getSoundDetectedTime(uint8_t* value) {
-    if (!servo->readRegister(id, AXS1_Sound_Detected_Time_L, 2, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Sound_Detected_Time_L, 2, (uint32_t*)value)) {
         LOG_ERR("Failed to read Sound Detected Time for ID: " + String(id));
         return false;
     }
@@ -237,7 +238,7 @@ bool AXS1Sensor::getSoundDetectedTime(uint8_t* value) {
 // Reset the maximum hold sound data
 bool AXS1Sensor::resetSoundDataMaxHold() {
     uint8_t value = 0;
-    if (!servo->writeRegister(id, AXS1_Sound_Data_Max_Hold, 1, &value)) {
+    if (!driver->writeRegister(id, AXS1_Sound_Data_Max_Hold, 1, &value)) {
         LOG_ERR("Failed to reset Sound Data Max Hold for ID: " + String(id));
         return false;       
     }
@@ -248,7 +249,7 @@ bool AXS1Sensor::resetSoundDataMaxHold() {
 bool AXS1Sensor::resetSoundDetectedCount() {
     
     uint8_t value = 0;
-    if (!servo->writeRegister(id, AXS1_Sound_Detected_Count, 1, &value)) {
+    if (!driver->writeRegister(id, AXS1_Sound_Detected_Count, 1, &value)) {
         LOG_ERR("Failed to reset Sound Detected Count for ID: " + String(id));
         return false;
     }
@@ -258,7 +259,7 @@ bool AXS1Sensor::resetSoundDetectedCount() {
 // Reset the sound detected time
 bool AXS1Sensor::resetSoundDetectedTime() {
     uint8_t txData[2] = {0, 0};
-    if (!servo->writeRegister(id, AXS1_Sound_Detected_Time_L, 2, txData)){
+    if (!driver->writeRegister(id, AXS1_Sound_Detected_Time_L, 2, txData)){
         LOG_ERR("Failed to reset Sound Detected Time for ID: " + String(id));
         return false;
     }
@@ -272,12 +273,12 @@ bool AXS1Sensor::playTone(uint8_t note, uint8_t duration) {
         return false;
     }
 
-    if (!servo->writeRegister(id, AXS1_Buzzer_Data_1, 1, &duration)) {
+    if (!driver->writeRegister(id, AXS1_Buzzer_Data_1, 1, &duration)) {
         LOG_ERR("Failed to set Buzzer Duration for ID: " + String(id));
         return false;
     }
 
-    if (!servo->writeRegister(id, AXS1_Buzzer_Data_0, 1, &note)) {
+    if (!driver->writeRegister(id, AXS1_Buzzer_Data_0, 1, &note)) {
         LOG_ERR("Failed to set Buzzer Note for ID: " + String(id));
         return false;
     }
@@ -291,12 +292,12 @@ bool AXS1Sensor::playMelody(uint8_t melody) {
         LOG_ERR("Invalid melody value: " + String(melody));
         return false;
     }
-    if (!servo->writeRegister(id, AXS1_Buzzer_Data_1, 1, &duration)) {
+    if (!driver->writeRegister(id, AXS1_Buzzer_Data_1, 1, &duration)) {
         LOG_ERR("Failed to set Buzzer Duration for ID: " + String(id));
         return false;
     }
 
-    if (!servo->writeRegister(id, AXS1_Buzzer_Data_0, 1, &melody)) {
+    if (!driver->writeRegister(id, AXS1_Buzzer_Data_0, 1, &melody)) {
         LOG_ERR("Failed to set Buzzer Note for ID: " + String(id));
         return false;
     }
@@ -310,12 +311,12 @@ bool AXS1Sensor::startTone(uint8_t note) {
         LOG_ERR("Invalid note value: " + String(note));
         return false;
     }
-    if (!servo->writeRegister(id, AXS1_Buzzer_Data_1, 1, &duration)) { 
+    if (!driver->writeRegister(id, AXS1_Buzzer_Data_1, 1, &duration)) { 
         LOG_ERR("Failed to set Buzzer Duration for ID: " + String(id));
         return false;
     }
 
-    if (!servo->writeRegister(id, AXS1_Buzzer_Data_0, 1, &note)) {
+    if (!driver->writeRegister(id, AXS1_Buzzer_Data_0, 1, &note)) {
         LOG_ERR("Failed to start tone for ID: " + String(id));
         return false;
     }
@@ -325,7 +326,7 @@ bool AXS1Sensor::startTone(uint8_t note) {
 // Stop the continuous tone on the sensor's buzzer
 bool AXS1Sensor::stopTone() {
     uint8_t duration = 0;  // value to stop continuous tone
-    if (!servo->writeRegister(id, AXS1_Buzzer_Data_1, 1, &duration)) {
+    if (!driver->writeRegister(id, AXS1_Buzzer_Data_1, 1, &duration)) {
         LOG_ERR("Failed to stop tone for ID: " + String(id));
         return false;
     }
@@ -335,7 +336,7 @@ bool AXS1Sensor::stopTone() {
 // Check if the remote control data has arrived
 bool AXS1Sensor::RemoconArrived() {         //TODO: validation using remote to be done.
     uint32_t value = 0;  
-    if (!servo->readRegister(id, AXS1_IR_Remocon_Arrived, 1, &value)) {
+    if (!driver->readRegister(id, AXS1_IR_Remocon_Arrived, 1, &value)) {
         LOG_ERR("Failed to read Remote Control Data for ID: " + String(id));
         return false;
     }
@@ -344,7 +345,7 @@ bool AXS1Sensor::RemoconArrived() {         //TODO: validation using remote to b
 
 // Get the remote control RX data
 bool AXS1Sensor::getRemoconRX(uint16_t* value) {
-    if (!servo->readRegister(id, AXS1_Remocon_RX_Data_0, 2, (uint32_t*)value)) {
+    if (!driver->readRegister(id, AXS1_Remocon_RX_Data_0, 2, (uint32_t*)value)) {
         LOG_ERR("Failed to read Remote Control RX Data for ID: " + String(id));
         return false;
     }
@@ -354,7 +355,7 @@ bool AXS1Sensor::getRemoconRX(uint16_t* value) {
 
 // Get the remote control TX data
 bool AXS1Sensor::getRemoconTX(uint16_t* value) {
-    if (!servo->readRegister(id, AXS1_Remocon_TX_Data_0, 2, (uint32_t*)value)){
+    if (!driver->readRegister(id, AXS1_Remocon_TX_Data_0, 2, (uint32_t*)value)){
         LOG_ERR("Failed to read Remote Control TX Data for ID: " + String(id));
         return false;
     }
@@ -370,7 +371,7 @@ bool AXS1Sensor::setRemoconTX(uint16_t value) {
     uint8_t txData[2];
     txData[0] = value & 0xFF;         // Low byte
     txData[1] = (value >> 8) & 0xFF;  // High byte
-    if (!servo->writeRegister(id, AXS1_Remocon_TX_Data_0, 2, txData)) {
+    if (!driver->writeRegister(id, AXS1_Remocon_TX_Data_0, 2, txData)) {
         LOG_ERR("Failed to set Remote Control TX value for ID: " + String(id));
         return false;
     }

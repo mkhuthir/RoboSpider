@@ -1,14 +1,12 @@
 #ifndef SERVO_H
 #define SERVO_H
 
-    #include <DynamixelWorkbench.h> // Include DynamixelWorkbench for managing servos
+    #include "Driver.h"
 
     class Servo {
         public:
             Servo();
-            bool                begin(  const char* device_name,                            // initialize the controller with device name and baudrate
-                                        uint32_t baudrate,
-                                        float protocol_version);
+            bool                begin(Driver* driver);                                      // initialize the servo with a driver instance
 
             bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
             const char *        getModelName(uint8_t id);                                   // get the model name of a servo by its ID

@@ -41,13 +41,13 @@
     #define AXS1_IR_Obstacle_Detect_Compare     52  // access=RW
     #define AXS1_Light_Detect_Compare           53  // access=RW
 
-    #include "Servo.h"
+    #include "Driver.h"
 
     class AXS1Sensor {
     public:
         AXS1Sensor();
 
-        bool begin(Servo* servo, uint8_t sensor_id);
+        bool begin(Driver* driver, uint8_t sensor_id);
         bool update();
         
         bool ping();
@@ -108,7 +108,7 @@
         bool printConsoleHelp();                                                // Print sensor-specific help information
 
     private:
-        Servo*      servo;                     // Pointer to Servo instance
+        Driver*     driver;                    // Pointer to Driver instance
         uint8_t     id = AXS1_SENSOR_ID;       // ID of the AX-S1 sensor
     };
 

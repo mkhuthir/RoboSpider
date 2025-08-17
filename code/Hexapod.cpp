@@ -7,16 +7,17 @@
 
 // Constructor for Hexapod class
 Hexapod::Hexapod(){
-  servo         = nullptr;              // Dynamixel controller not initialized
+  driver = nullptr;                     // Dynamixel controller not initialized
   for (int i = 0; i < HEXAPOD_LEGS; i++) {
     legs[i] = Leg();                    // instantiate each leg
   }
 }
 
 // Initialize the hexapod
-bool Hexapod::begin(Servo* servo) {
+bool Hexapod::begin(Driver* driver , Servo* servo) {
   
-  this->servo=servo;
+  this->servo = servo;    // Set the servo pointer
+  this->driver = driver;  // Set the driver pointer
   
   legs[0].init(1,  2,  3,  servo);                  // Initialize each leg with servo IDs
   legs[1].init(4,  5,  6,  servo);
@@ -25,7 +26,7 @@ bool Hexapod::begin(Servo* servo) {
   legs[4].init(13, 14, 15, servo);
   legs[5].init(16, 17, 18, servo);
 
-  if (!servo->addSyncWriteHandler(1, "Goal_Position")) {   // Add sync write handler
+  if (!driver->addSyncWriteHandler(1, "Goal_Position")) {   // Add sync write handler
     LOG_ERR("Failed to add sync write handler for Goal_Position");
     return false;
   }
@@ -51,7 +52,7 @@ bool Hexapod::update() {
 // Move Hexapod
 bool Hexapod::move(uint8_t *ids, uint8_t num_servos, int32_t *positions) {
   const uint8_t num_positions   = 1;
-  return servo->syncWrite(handler_index, ids, num_servos, positions, num_positions);
+  return driver->syncWrite(handler_index, ids, num_servos, positions, num_positions);
 }
 
 // Check if any leg is currently moving
