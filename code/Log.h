@@ -1,6 +1,8 @@
 #ifdef LOG_H
 #define LOG_H
 
+    #include <Arduino.h>
+
     // ANSI color codes for terminal output
     #define COLOR_RESET     "\033[0m"       // Reset color
     #define COLOR_RED       "\033[31m"      // Error messages
