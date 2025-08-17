@@ -12,7 +12,7 @@
                                         float protocol_version);          
                                         
             bool                setPortHandler(const char *device_name);                    // set the port handler for the controller  
-            bool                setBaudrate(uint8_t baud_rate);                            // set the baudrate for the controller
+            bool                setBaudrate(uint32_t baud_rate);                            // set the baudrate for the controller
             bool                setPacketHandler(float protocol_version);                   // set the packet handler with the protocol version
             
             float               getProtocolVersion(void);                                   // get the protocol version being used

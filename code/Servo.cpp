@@ -27,7 +27,7 @@ bool Servo::setPortHandler(const char *device_name) {
 }
 
 // Set the baudrate for the port handler
-bool Servo::setBaudrate(uint8_t baud_rate) {     
+bool Servo::setBaudrate(uint32_t baud_rate) {     
     
     if (!dxl.setBaudrate(baud_rate, &log))
     {        

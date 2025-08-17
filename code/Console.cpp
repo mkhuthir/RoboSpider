@@ -1,10 +1,5 @@
 #include "Console.h"
 
-// Static members initialization
-Stream*     Console::logStream       = &Serial;      // Default to Serial for logging
-DebugLevel  Console::debugLevel      = DEBUG_INF;    // Default debug level
-bool        Console::colorEnabled    = true;         // Default color enabled
-
 // Constructor for Console class
 Console::Console(   Stream& stream,
                     unsigned long baud,
@@ -77,111 +72,6 @@ bool Console::update() {
     return true;
 }
 
-// Static method to set debug level
-void Console::setDebugLevel(DebugLevel level) {
-    debugLevel = level;
-    println("Debug level set to: " + String(level));
-}
-
-// Static method to enable/disable colors
-void Console::setColorEnabled(bool enabled) {
-    colorEnabled = enabled;
-    println("Color output " + String(enabled ? "enabled" : "disabled"));
-}
-
-// Static method to print normal messages (always printed, no debug level filtering)
-void Console::print(const String& message) {
-    if (logStream == nullptr) {
-        printError("Log stream is not initialized.");
-        return;
-    }
-    
-    // Print message directly without debug level check, timestamp, or color formatting
-    logStream->print(message);
-}
-
-// Static method to print normal messages (always printed, no debug level filtering)
-void Console::println(const String& message) {
-    if (logStream == nullptr) {
-        printError("Log stream is not initialized.");
-        return;
-    }
-    
-    // Print message directly without debug level check, timestamp, or color formatting
-    logStream->println(message);
-}
-
-// Print float value
-void Console::print(float value) {
-    if (logStream) {
-        logStream->print(value);
-    }
-}
-
-// Print float value with newline
-void Console::println(float value) {
-    if (logStream) {
-        logStream->println(value);
-    }
-}
-
-// Print int value
-void Console::print(int value) {
-    if (logStream) {
-        logStream->print(value);
-    }
-}
-
-// Print int value with newline
-void Console::println(int value) {
-    if (logStream) {
-        logStream->println(value);
-    }
-}
-
-// Static method to print error messages
-void Console::printError(const String& message) {
-    printLog(DEBUG_ERR, LOG_HEADER_ERROR, COLOR_RED, message);
-}
-
-// Static method to print warning messages
-void Console::printWarning(const String& message) {
-    printLog(DEBUG_WRN, LOG_HEADER_WARNING, COLOR_YELLOW, message);
-}
-
-// Static method to print info messages
-void Console::printInfo(const String& message) {
-    printLog(DEBUG_INF, LOG_HEADER_INFO, COLOR_WHITE, message);
-}
-
-// Static method to print debug messages
-void Console::printDebug(const String& message) {
-    printLog(DEBUG_DBG, LOG_HEADER_DEBUG, COLOR_CYAN, message);
-}
-
-// Private helper method for formatted logging
-void Console::printLog(DebugLevel level, const String& prefix, const String& color, const String& message) {
-    // Check if we should print this message based on debug level
-    if (debugLevel < level || logStream == nullptr) {
-        return;
-    }
-
-    // Build the formatted message
-    String timestamp = String(millis());
-    String formattedMessage = "";
-
-    if (colorEnabled) {
-        formattedMessage = color + COLOR_BOLD + prefix + COLOR_RESET + 
-                          " [" + timestamp + "ms] " + 
-                          color + message + COLOR_RESET;
-    } else {
-        formattedMessage = prefix + " [" + timestamp + "ms] " + message;
-    }
-
-    // Print the message
-    logStream->println(formattedMessage);
-}
-
 // Process the command entered by the user
 void Console::processInput(const String& input) {
     // Trim whitespace and convert to lowercase for consistent handling
@@ -225,7 +115,6 @@ void Console::processInput(const String& input) {
         PRINTLN("Type '?' for help.");
     }
 }
-
 
 // Handle printable character input and display
 void Console::handlePrintableChar(char c) {
