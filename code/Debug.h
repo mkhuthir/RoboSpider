@@ -1,5 +1,5 @@
-#ifndef LOG_H
-#define LOG_H
+#ifndef DEBUG_H
+#define DEBUG_H
 
     #include <Arduino.h>
 
@@ -71,4 +71,4 @@
     };
 
 #endif
-// Log.h
+// DEBUG_H
