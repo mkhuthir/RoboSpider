@@ -32,8 +32,9 @@ bool Microcontroller::begin() {
 }
 
 // Update the microcontroller state
-void Microcontroller::update() {
+bool Microcontroller::update() {
     // TODO: Add any periodic update logic here if needed
+    return true;
 }
 
 // OpenCR1.0 LED IDs are as follows:
@@ -122,8 +123,8 @@ void Microcontroller::resetMicrocontroller() {
 }
 
 // Print the current status of the microcontroller to the given stream
-void Microcontroller::printStatus() {
-    PRINTLN("\nMicrocontroller Status:\n\r");
+bool Microcontroller::printStatus() {
+    PRINTLN("Microcontroller Status:\n\r");
     PRINTLN("Microcontroller Uptime: " + String(getUpTime()) + " ms");
     PRINTLN("Battery Voltage       : " + String(getBatteryVoltage())+" V");
     PRINTLN("Battery Status        : " + String(checkBattery() ? "PASSED" : "FAILED"));
@@ -133,24 +134,28 @@ void Microcontroller::printStatus() {
     PRINT(String(" | User3:") + ((digitalRead(BDPIN_LED_USER_3) == LOW) ? "On " : "Off"));
     PRINT(String(" | User4:") + ((digitalRead(BDPIN_LED_USER_4) == LOW) ? "On " : "Off"));
     PRINTLN(String(" | Status:") + ((digitalRead(BDPIN_LED_STATUS) == LOW) ? "On " : "Off"));
-    
+    return true;
+
 }
 
 // Process console commands for microcontroller control
 bool Microcontroller::runConsoleCommands(const String& cmd, const String& args) {
-    if (cmd == "mbv") {
-        float voltage = getBatteryVoltage();
-        PRINTLN("Battery Voltage: " + String(voltage, 2) + "V");
+    if (cmd == "ms") {
+        if (!printStatus()) {
+            LOG_ERR("Failed to print status");
+        }
+        return true;
+
+    } else if (cmd == "mbv") {
+        PRINTLN("Battery Voltage: " + String(getBatteryVoltage(), 4) + "V");
         return true;
         
     } else if (cmd == "mbc") {
-        bool result = checkBattery();
-        PRINTLN("Battery check: " + String(result ? "PASSED" : "FAILED"));
+        PRINTLN("Battery check: " + String(checkBattery()? "PASSED" : "FAILED"));
         return true;
         
     } else if (cmd == "mpm") {
-        bool result = playMelody();
-        PRINTLN("Play melody: " + String(result ? "SUCCESS" : "FAILED"));
+        PRINTLN("Play melody: " + String(playMelody() ? "SUCCESS" : "FAILED"));
         return true;
         
     } else if (cmd == "mlon") {
@@ -166,17 +171,16 @@ bool Microcontroller::runConsoleCommands(const String& cmd, const String& args) 
         uint8_t actualLedPin;
         String ledName;
         switch (ledId) {
-            case 0: actualLedPin = LED_BUILTIN; ledName = "Built-in"; break;
-            case 1: actualLedPin = BDPIN_LED_USER_1; ledName = "User1"; break;
-            case 2: actualLedPin = BDPIN_LED_USER_2; ledName = "User2"; break;
-            case 3: actualLedPin = BDPIN_LED_USER_3; ledName = "User3"; break;
-            case 4: actualLedPin = BDPIN_LED_USER_4; ledName = "User4"; break;
-            case 5: actualLedPin = BDPIN_LED_STATUS; ledName = "Status"; break;
-            default: actualLedPin = BDPIN_LED_USER_1; ledName = "User1"; break;
+            case 0:  actualLedPin = LED_BUILTIN;      ledName = "Built-in"; break;
+            case 1:  actualLedPin = BDPIN_LED_USER_1; ledName = "User1";    break;
+            case 2:  actualLedPin = BDPIN_LED_USER_2; ledName = "User2";    break;
+            case 3:  actualLedPin = BDPIN_LED_USER_3; ledName = "User3";    break;
+            case 4:  actualLedPin = BDPIN_LED_USER_4; ledName = "User4";    break;
+            case 5:  actualLedPin = BDPIN_LED_STATUS; ledName = "Status";   break;
+            default: actualLedPin = BDPIN_LED_USER_1; ledName = "User1";    break;
         }
         
-        bool result = ledOn(actualLedPin);
-        PRINTLN(ledName + " LED turned " + String(result ? "ON" : "FAILED"));
+        PRINTLN(ledName + " LED turned " + String(ledOn(actualLedPin) ? "ON" : "FAILED"));
         return true;
         
     } else if (cmd == "mloff") {
@@ -192,17 +196,16 @@ bool Microcontroller::runConsoleCommands(const String& cmd, const String& args) 
         uint8_t actualLedPin;
         String ledName;
         switch (ledId) {
-            case 0: actualLedPin = LED_BUILTIN; ledName = "Built-in"; break;
-            case 1: actualLedPin = BDPIN_LED_USER_1; ledName = "User1"; break;
-            case 2: actualLedPin = BDPIN_LED_USER_2; ledName = "User2"; break;
-            case 3: actualLedPin = BDPIN_LED_USER_3; ledName = "User3"; break;
-            case 4: actualLedPin = BDPIN_LED_USER_4; ledName = "User4"; break;
-            case 5: actualLedPin = BDPIN_LED_STATUS; ledName = "Status"; break;
-            default: actualLedPin = BDPIN_LED_USER_1; ledName = "User1"; break;
+            case 0:  actualLedPin = LED_BUILTIN;      ledName = "Built-in"; break;
+            case 1:  actualLedPin = BDPIN_LED_USER_1; ledName = "User1";    break;
+            case 2:  actualLedPin = BDPIN_LED_USER_2; ledName = "User2";    break;
+            case 3:  actualLedPin = BDPIN_LED_USER_3; ledName = "User3";    break;
+            case 4:  actualLedPin = BDPIN_LED_USER_4; ledName = "User4";    break;
+            case 5:  actualLedPin = BDPIN_LED_STATUS; ledName = "Status";   break;
+            default: actualLedPin = BDPIN_LED_USER_1; ledName = "User1";    break;
         }
         
-        bool result = ledOff(actualLedPin);
-        PRINTLN(ledName + " LED turned " + String(result ? "OFF" : "FAILED"));
+        PRINTLN(ledName + " LED turned " + String(ledOff(actualLedPin) ? "OFF" : "FAILED"));
         return true;
 
     } else if (cmd == "mu") {
@@ -213,9 +216,7 @@ bool Microcontroller::runConsoleCommands(const String& cmd, const String& args) 
         resetMicrocontroller();
         return true;
 
-    } else if (cmd == "ms") {
-        printStatus();
-        return true;
+
             
     } else if (cmd == "m?") {
         printConsoleHelp();
@@ -226,16 +227,21 @@ bool Microcontroller::runConsoleCommands(const String& cmd, const String& args) 
 }
 
 // Print microcontroller-specific help information
-void Microcontroller::printConsoleHelp() {
-    PRINTLN("Microcontroller Commands:");
+bool Microcontroller::printConsoleHelp() {
+    PRINTLN("Microcontroller Commands:\n\r");
+    PRINTLN("  ms               - Show microcontroller status");
+    PRINTLN("");
     PRINTLN("  mbv              - Read battery voltage");
     PRINTLN("  mbc              - Check battery status");
+    PRINTLN("");
     PRINTLN("  mpm              - Play melody");
     PRINTLN("  mlon [0-5]       - Turn on LED (0=builtin, 1-4=user, 5=status)");
     PRINTLN("  mloff [0-5]      - Turn off LED (0=builtin, 1-4=user, 5=status)");
+    PRINTLN("");
     PRINTLN("  mu               - Show microcontroller uptime in milliseconds");
     PRINTLN("  mr               - Reset the microcontroller");
-    PRINTLN("  ms               - Show microcontroller status");
+    PRINTLN("");
     PRINTLN("  m?               - Show this help");
     PRINTLN("");
+    return true;
 }
