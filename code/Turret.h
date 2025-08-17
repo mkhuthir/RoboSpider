@@ -2,14 +2,15 @@
 #define TURRET_H
 
   #include "Servo.h"
-  
+  #include "Driver.h"
+
   #define handler_index  0                           // Index for sync write handler
   static constexpr uint8_t TURRET_SERVOS      = 2;   // Number of servos to control
 
   class Turret {
     public:
       Turret();                         // Constructor
-      bool begin(Servo* servo);         // Initialize the turret servos
+      bool begin(Driver* driver, Servo* servo);         // Initialize the turret servos
       bool update();                    // Update turret state
 
       bool move(int32_t *positions);    // Rotate the turret to specified angles
