@@ -5,12 +5,12 @@
 // Constructor for Servo
 Driver::Driver(){}
 
-//initialize the DynamixelWorkbench instance
+//initialize the Dynamixel driver instance
 bool Driver::begin(const char* device_name, uint32_t baudrate, float protocol_version) {
     if (!setPortHandler(device_name)) return false;
     if (!setBaudrate(baudrate)) return false;
     if (!setPacketHandler(protocol_version)) return false;
-    LOG_INF("DynamixelWorkbench initialized successfully");
+    LOG_INF("Dynamixel Driver initialized successfully");
     return true;
 }
 

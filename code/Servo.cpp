@@ -10,7 +10,7 @@ Servo::Servo(){}
 //initialize the DynamixelWorkbench instance
 bool Servo::begin(Driver* driver) {
     this->driver = driver;
-    LOG_INF("Servo initialized successfully");
+    LOG_INF("Servo class initialized successfully");
     return true;
 }
 
