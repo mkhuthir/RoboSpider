@@ -408,35 +408,73 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
 bool Servo::printStatus(uint8_t id) {
 
     uint16_t model_number = 0;
+    uint8_t firmware_version = 0;
+    uint8_t baud_rate = 0;
+    uint8_t return_delay_time = 0;
+    uint16_t CW_angle = 0, CCW_angle = 0;
+    uint8_t max_temperature = 0;
+    uint8_t min_voltage = 0, max_voltage = 0;
+    uint16_t max_torque = 0;
+    uint8_t status_return_level = 0;
+    uint8_t alarm_LED = 0;
+    uint8_t shutdown = 0;
+
+    getModelNumber(id, &model_number);
+    getFirmwareVersion(id, &firmware_version);
+    getBaudRate(id, &baud_rate);
+    getReturnDelayTime(id, &return_delay_time);
+    getAngleLimits(id, &CW_angle, &CCW_angle);
+    getTemperatureLimit(id, &max_temperature);
+    getVoltageLimit(id, &min_voltage, &max_voltage);
+    getTorqueLimit(id, &max_torque);
+    getStatusReturnLevel(id, &status_return_level);
+    getAlarmLED(id, &alarm_LED);
+    getShutdown(id, &shutdown);
+
+    uint8_t CW_margin = 0, CCW_margin = 0;
+    uint8_t CW_slope = 0, CCW_slope = 0;
+    uint16_t torque_limit = 0;
     uint16_t position = 0;
     uint16_t speed = 0;
     uint16_t load = 0;
     uint8_t voltage = 0;
     uint8_t temperature = 0;
-    uint16_t CW_angle = 0, CCW_angle = 0;
 
-    getModelNumber(id, &model_number);
+    getComplianceMargin(id, &CW_margin, &CCW_margin);
+    getComplianceSlope(id, &CW_slope, &CCW_slope);
+    getTorqueLimit(id, &torque_limit);
     getPresentPosition(id, &position);
-    getAngleLimits(id, &CW_angle, &CCW_angle);
     getPresentSpeed(id, &speed);
     getPresentLoad(id, &load);
     getPresentVoltage(id, &voltage);
     getPresentTemperature(id, &temperature);
 
     PRINTLN("\nServo Status:");
-    PRINTLN("Servo ID     : " + String(id));                         // Print the ID of the servo
-    PRINTLN("Model Number : " + String(model_number));
-    PRINTLN("Model Name   : " + String(getModelName(id)));
-    PRINTLN("Position     : " + String(position));
-    PRINTLN("Angle Limits : CW " + String(CW_angle) + " ~ CCW " + String(CCW_angle));
-    PRINTLN("Speed        : " + String(speed));
-    PRINTLN("Load         : " + String(load));
-    PRINTLN("Voltage      : " + String(voltage));
-    PRINTLN("Temperature  : " + String(temperature));
-    PRINTLN("Torque       : " + String(isTorqueOn(id) ? "Enabled" : "Disabled"));
-    PRINTLN("Moving       : " + String(isMoving(id) ? "YES" : "NO"));
-    PRINTLN("LED          : " + String(isLedOn(id) ? "ON" : "OFF"));
-    return true;                                                    // Return true to indicate successful status print
+    PRINTLN("Servo ID            : " + String(id));
+    PRINTLN("Model Number        : " + String(model_number));
+    PRINTLN("Model Name          : " + String(getModelName(id)));
+    PRINTLN("Firmware Ver        : " + String(firmware_version));
+    PRINTLN("Baud Rate           : " + String(baud_rate));
+    PRINTLN("Return Delay        : " + String(return_delay_time));
+    PRINTLN("Angle Limits        : CW " + String(CW_angle) + " ~ CCW " + String(CCW_angle));
+    PRINTLN("Max Temperature     : " + String(max_temperature));
+    PRINTLN("Voltage Limits      : " + String(min_voltage) + " ~ " + String(max_voltage) + " V");
+    PRINTLN("Max Torque          : " + String(max_torque));
+    PRINTLN("Status Level        : " + String(status_return_level));
+    PRINTLN("Alarm LED Status    : " + String(alarm_LED));
+    PRINTLN("Shutdown Status     : " + String(shutdown));
+    PRINTLN("Torque              : " + String(isTorqueOn(id) ? "Enabled" : "Disabled"));
+    PRINTLN("LED                 : " + String(isLedOn(id) ? "ON" : "OFF"));
+    PRINTLN("Compliance Margin   : CW " + String(CW_margin) + " ~ CCW " + String(CCW_margin));
+    PRINTLN("Compliance Slope    : CW " + String(CW_slope) + " ~ CCW " + String(CCW_slope));
+    PRINTLN("Torque Limit        : " + String(torque_limit));
+    PRINTLN("Present Position    : " + String(position));
+    PRINTLN("Present Speed       : " + String(speed));
+    PRINTLN("Present Load        : " + String(load));
+    PRINTLN("Present Voltage     : " + String(voltage));
+    PRINTLN("Present Temperature : " + String(temperature));
+    PRINTLN("Moving              : " + String(isMoving(id) ? "YES" : "NO"));
+    return true;
 }
 
 // Print servo-specific help information
