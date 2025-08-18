@@ -126,6 +126,7 @@ bool Hexapod::runConsoleCommands(const String& cmd, const String& args) {
 bool Hexapod::printConsoleHelp() {
     PRINTLN("Hexapod Commands:\n\r");
     PRINTLN("  hs               - Print hexapod legs status");
+    PRINTLN("");
     PRINTLN("  hsu              - Hexapod stand up");
     PRINTLN("  hsd              - Hexapod stand down");
     PRINTLN("  h?               - Print this help information");
