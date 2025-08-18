@@ -7,12 +7,12 @@
 #define PITCH_MAX   1.57f   //  90 degrees in radians
 #define YAW_MIN    -3.14f   // -180 degrees in radians
 #define YAW_MAX     3.14f   //  180 degrees in radians
-#define X_MIN     -100.0f   // example min in mm
-#define X_MAX      100.0f   // example max in mm
-#define Y_MIN     -100.0f   // example min in mm
-#define Y_MAX      100.0f   // example max in mm
-#define Z_MIN     -50.0f    // example min in mm
-#define Z_MAX      50.0f    // example max in mm
+#define X_MIN     -100.0f   // min in mm
+#define X_MAX      100.0f   // max in mm
+#define Y_MIN     -100.0f   // min in mm
+#define Y_MAX      100.0f   // max in mm
+#define Z_MIN     -50.0f    // min in mm
+#define Z_MAX      50.0f    // max in mm
 
 class BodyPose {
 public:
