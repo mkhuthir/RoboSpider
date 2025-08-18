@@ -73,8 +73,8 @@ bool Servo::getTemperatureLimit(uint8_t id, uint8_t* max_temp) {
 
 // Get Voltage Limit
 bool Servo::getVoltageLimit(uint8_t id, uint8_t* min_voltage, uint8_t* max_voltage) {
-    if (!driver->readRegister(id, "Voltage_Limit_Min", (uint32_t*)min_voltage)) return false;
-    if (!driver->readRegister(id, "Voltage_Limit_Max", (uint32_t*)max_voltage)) return false;
+    if (!driver->readRegister(id, "Min_Voltage_Limit", (uint32_t*)min_voltage)) return false;
+    if (!driver->readRegister(id, "Max_Voltage_Limit", (uint32_t*)max_voltage)) return false;
     return true;
 }
 
