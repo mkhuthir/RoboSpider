@@ -67,7 +67,8 @@ void BodyPose::resetPose() {
     yaw = 0;
 }
 
-static float clamp(float value, float min, float max) {
+// Clamp function implementation
+float BodyPose::clamp(float value, float min, float max) {
     if (value < min) return min;
     if (value > max) return max;
     return value;
@@ -81,6 +82,7 @@ bool BodyPose::printStatus() {
     PRINTLN("");
     return true;
 }
+
 
 bool BodyPose::runConsoleCommands(const String& cmd, const String& args) {
     if (cmd == "bs") {

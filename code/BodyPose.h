@@ -1,6 +1,8 @@
 #ifndef BODYPPOSE_H
 #define BODYPPOSE_H
 
+#include "Arduino.h"
+
 #define ROLL_MIN   -1.57f   // -90 degrees in radians
 #define ROLL_MAX    1.57f   //  90 degrees in radians
 #define PITCH_MIN  -1.57f   // -90 degrees in radians
@@ -39,7 +41,7 @@ public:
     float pitch;  // Rotation in radians
     float yaw;    // Rotation in radians
 private:
-    static float clamp(float value, float min, float max);
+    float clamp(float value, float min, float max);
 };
 
 #endif // BODYPPOSE_H
