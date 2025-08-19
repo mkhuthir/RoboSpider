@@ -407,11 +407,11 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
 // Print the status of a servo for debugging
 bool Servo::printStatus(uint8_t id) {
 
-    uint16_t model_number = 0;
+    uint16_t model_number = 0;              // FIXME: model_number is getting reset before print
     uint8_t firmware_version = 0;
     uint8_t baud_rate = 0;
     uint8_t return_delay_time = 0;
-    uint16_t CW_angle = 0, CCW_angle = 0;
+    uint16_t CW_angle = 0, CCW_angle = 0;   // FIXME: CW_angle is getting reset before print
     uint8_t max_temperature = 0;
     uint8_t min_voltage = 0, max_voltage = 0;
     uint16_t max_torque = 0;
