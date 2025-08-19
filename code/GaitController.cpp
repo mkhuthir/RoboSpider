@@ -6,14 +6,14 @@
 
 // Constructor for GaitController class
 GaitController::GaitController() {
-    hexapod         = nullptr;
-    gaitType        = GAIT_IDLE;
-    currentPhase    = 0;
-    currentStep     = 0;
-    direction       = 0;
-    speed           = 512;
-    stepSize        = 10.0;
-    rotationAngle   = 0;
+    hexapod             = nullptr;
+    gaitType            = GAIT_IDLE;
+    currentPhase        = 0;
+    currentStep         = 0;
+    gaitDirection       = 0;
+    gaitSpeed           = 300;
+    gaitStepSize        = 100;
+    gaitRotationAngle   = 0;
 }
 
 // Initialize the GaitController with a Hexapod instance
@@ -75,6 +75,39 @@ bool GaitController::setGait(GaitType newGait) {
     
 }
 
+// Setters and getters
+void GaitController::setDirection(int dir) {
+    if (dir < -180) dir = -180;
+    if (dir > 180) dir = 180;
+    gaitDirection = dir;
+}
+int GaitController::getDirection() const {
+    return gaitDirection;
+}
+
+void GaitController::setSpeed(int s) {
+    if (s < 0) s = 0;
+    if (s > 1023) s = 1023;
+    gaitSpeed = s;
+}
+int GaitController::getSpeed() const {
+    return gaitSpeed;
+}
+
+void GaitController::setStepSize(float size) {
+    if (size < 0) size = 0;
+    gaitStepSize = size;
+}
+float GaitController::getStepSize() const {
+    return stepSize;
+}
+
+void GaitController::rotate(int angle) {
+    if (angle < -180) angle = -180;
+    if (angle > 180) angle = 180;
+    gaitRotationAngle = angle;
+    // You would implement the hexapod rotation logic here using rotationAngle
+}
 // Get the current gait type
 GaitType GaitController::getGait() const {
     return gaitType;
@@ -158,47 +191,9 @@ bool GaitController::doTripodGait() {
     return true;
 }
 
-// Setters and getters
-void GaitController::setDirection(int dir) {
-    if (dir < -180) dir = -180;
-    if (dir > 180) dir = 180;
-    direction = dir;
-}
-int GaitController::getDirection() const {
-    return direction;
-}
-
-void GaitController::setSpeed(int s) {
-    if (s < 0) s = 0;
-    if (s > 1023) s = 1023;
-    speed = s;
-}
-int GaitController::getSpeed() const {
-    return speed;
-}
-
-void GaitController::setStepSize(float size) {
-    if (size < 0) size = 0;
-    stepSize = size;
-}
-float GaitController::getStepSize() const {
-    return stepSize;
-}
-
-void GaitController::rotate(int angle) {
-    if (angle < -180) angle = -180;
-    if (angle > 180) angle = 180;
-    rotationAngle = angle;
-    // You would implement the hexapod rotation logic here using rotationAngle
-}
-
-// Constructor for GaitController class
-GaitController::GaitController() {
-    hexapod         = nullptr;
-    gaitType        = GAIT_IDLE;
-    currentPhase    = 0;
-    currentStep     = 0;
-}
+// Perform the tripod gait, three legs swing at a time
+bool GaitController::doRotationGait() {
+};
 
 // Print the current gait status to Serial
 bool GaitController::printStatus() {
