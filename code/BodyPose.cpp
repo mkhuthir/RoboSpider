@@ -100,6 +100,23 @@ bool BodyPose::runConsoleCommands(const String& cmd, const String& args) {
     } else if (cmd == "brp") {
         resetPose();
         return true;
+    } else if (cmd == "bspos") {
+        float x, y, z;
+        if (sscanf(args.c_str(), "%f %f %f", &x, &y, &z) == 3) {
+            setPosition(x, y, z);
+        } else {
+            LOG_ERR("Invalid arguments. Usage: bspos [x y z]");
+        }
+        return true;
+        
+    } else if (cmd == "bso") {
+        float roll, pitch, yaw;
+        if (sscanf(args.c_str(), "%f %f %f", &roll, &pitch, &yaw) == 3) {
+            setOrientation(roll, pitch, yaw);
+        } else {
+            LOG_ERR("Invalid arguments. Usage: bso [roll pitch yaw]");
+        }
+        return true;
 
     } else if (cmd == "b?") {
         printConsoleHelp();
@@ -114,6 +131,8 @@ bool BodyPose::printConsoleHelp() const {
     PRINTLN("  bs                           - Print body pose status");
     PRINTLN("  bsp [x y z roll pitch yaw]   - Set the body pose");
     PRINTLN("  brp                          - Reset the body pose");
+    PRINTLN("  bspos [x y z]                - Set the body position");
+    PRINTLN("  bso [roll pitch yaw]         - Set the body orientation");
     PRINTLN("  b?                           - Show this help");
     return true;
 }
