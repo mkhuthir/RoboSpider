@@ -91,9 +91,11 @@ bool BodyPose::runConsoleCommands(const String& cmd, const String& args) {
 
     } else if (cmd == "bsp") {
         float x, y, z, roll, pitch, yaw;
-        sscanf(args.c_str(), "%f %f %f %f %f %f", &x, &y, &z, &roll, &pitch, &yaw);
-        setPose(x, y, z, roll, pitch, yaw);
-        return true;
+        if (sscanf(args.c_str(), "%f %f %f %f %f %f", &x, &y, &z, &roll, &pitch, &yaw) == 6) {
+            setPose(x, y, z, roll, pitch, yaw);
+        } else {
+            LOG_ERR("Invalid arguments. Usage: bsp [x y z roll pitch yaw]");
+        }   
 
     } else if (cmd == "brp") {
         resetPose();
@@ -102,7 +104,7 @@ bool BodyPose::runConsoleCommands(const String& cmd, const String& args) {
     } else if (cmd == "b?") {
         printConsoleHelp();
         return true;
-        
+
     }
     return false;
 }
