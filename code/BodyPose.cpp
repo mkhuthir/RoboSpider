@@ -95,6 +95,14 @@ bool BodyPose::runConsoleCommands(const String& cmd, const String& args) {
         setPose(x, y, z, roll, pitch, yaw);
         return true;
 
+    } else if (cmd == "brp") {
+        resetPose();
+        return true;
+
+    } else if (cmd == "b?") {
+        printConsoleHelp();
+        return true;
+        
     }
     return false;
 }
