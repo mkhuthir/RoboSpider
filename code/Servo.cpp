@@ -327,13 +327,13 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
     } else if (cmd == "sgv") {
         uint8_t presentVoltage;
         getPresentVoltage((uint8_t)id, &presentVoltage);
-        PRINTLN("Servo ID " + String(id) + " current voltage: " + String(presentVoltage));
+        PRINTLN("Servo ID " + String(id) + " current voltage: " + String((float)presentVoltage/10) + " V");
         return true;
 
     } else if (cmd == "sgt") {
         uint8_t presentTemperature;
         getPresentTemperature((uint8_t)id, &presentTemperature);
-        PRINTLN("Servo ID " + String(id) + " current temperature: " + String(presentTemperature));
+        PRINTLN("Servo ID " + String(id) + " current temperature: " + String(presentTemperature) + " C");
         return true;
 
     } else if (cmd == "sim") {
@@ -454,11 +454,11 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Model Number        : " + String(model_number));
     PRINTLN("Model Name          : " + String(getModelName(id)));
     PRINTLN("Firmware Ver        : " + String(firmware_version));
-    PRINTLN("Baud Rate           : " + String(baud_rate));
-    PRINTLN("Return Delay        : " + String(return_delay_time));
+    PRINTLN("Baud Rate           : " + String(2000000/(baud_rate+1)) + " bps");
+    PRINTLN("Return Delay        : " + String(return_delay_time) + " us");
     PRINTLN("Angle Limits        : CW " + String(CW_angle) + " ~ CCW " + String(CCW_angle));
-    PRINTLN("Max Temperature     : " + String(max_temperature));
-    PRINTLN("Voltage Limits      : " + String(min_voltage) + " ~ " + String(max_voltage) + " V");
+    PRINTLN("Max Temperature     : " + String(max_temperature)+ " C");
+    PRINTLN("Voltage Limits      : " + String((float)min_voltage/10) + " ~ " + String((float)max_voltage/10) + " V");
     PRINTLN("Max Torque          : " + String(max_torque));
     PRINTLN("Status Level        : " + String(status_return_level));
     PRINTLN("Alarm LED Status    : " + String(alarm_LED));
@@ -471,15 +471,15 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Present Position    : " + String(position));
     PRINTLN("Present Speed       : " + String(speed));
     PRINTLN("Present Load        : " + String(load));
-    PRINTLN("Present Voltage     : " + String(voltage));
-    PRINTLN("Present Temperature : " + String(temperature));
+    PRINTLN("Present Voltage     : " + String((float)voltage/10) + " V");
+    PRINTLN("Present Temperature : " + String(temperature) + " C");
     PRINTLN("Moving              : " + String(isMoving(id) ? "YES" : "NO"));
     return true;
 }
 
 // Print servo-specific help information
 bool Servo::printConsoleHelp() {
-    PRINTLN("Servo Commands:");
+    PRINTLN("Servo Commands:\n\r");
     PRINTLN("  ss [id] [id]         - Show servo status for range of id's (default id=1)");
     PRINTLN("  sp [id] [id]         - Ping servo for range of id's (default id=1)");
     PRINTLN("");
