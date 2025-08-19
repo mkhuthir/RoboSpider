@@ -23,11 +23,29 @@
             bool            runConsoleCommands(const String& cmd, const String& args);  // Process console commands for gait control
             bool            printConsoleHelp();                         // Print gait-specific help information
 
+// New control methods
+            void            setDirection(int dir);      // -180 to 180
+            int             getDirection() const;
+
+            void            setSpeed(int speed);        // 0 to 1023
+            int             getSpeed() const;
+
+            void            setStepSize(float size);    // step size, e.g. mm or degrees
+            float           getStepSize() const;
+
+            void            rotate(int angle);          // -180 to 180
+
         private:
             Hexapod*        hexapod;                                    // Pointer to the Hexapod instance
             GaitType        gaitType;                                   // Current gait type
             int             currentPhase;                               // Current phase of the gait
             int             currentStep;                                // Current step in the gait sequence
+
+        // New parameters
+            int             direction;           // -180 to 180
+            int             speed;               // 0 to 1023
+            float           stepSize;          // e.g. mm or degrees
+            int             rotationAngle;       // -180 to 180
 
             bool            doWaveGait();                               // Perform the wave gait
             bool            doRippleGait();                             // Perform the ripple gait
