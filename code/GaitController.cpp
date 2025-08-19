@@ -277,6 +277,31 @@ bool GaitController::runConsoleCommands(const String& cmd, const String& args) {
         LOG_INF("Gait set to ROTATE");
         return true;
 
+    } else if (cmd == "gswd") {
+        int8_t dir = args.toInt();
+        setWalkDirection(dir);
+        LOG_INF("Walk direction set to " + String(dir));
+        return true;
+
+    } else if (cmd == "gsrd") {
+        //int8_t dir = args.toInt();
+        //setRotateDirection(dir);
+        //LOG_INF("Rotate direction set to " + String(dir));
+        return true;
+    
+    } else if (cmd == "gss") {
+        uint16_t speed = args.toInt();
+        if (!setGaitSpeed(speed)) {
+            LOG_ERR("Failed to set gait speed");
+        }
+        return true;
+
+    } else if (cmd == "gsz") {
+        uint16_t size = args.toInt();
+        setGaitStepSize(size);
+        LOG_INF("Gait step size set to " + String(size));
+        return true;
+
     } else if (cmd == "g?") {
         printConsoleHelp();
         return true;
