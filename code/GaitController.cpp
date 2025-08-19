@@ -7,21 +7,30 @@
 // Constructor for GaitController class
 GaitController::GaitController() {
     hexapod             = nullptr;
-    gaitType            = GAIT_IDLE;
     currentPhase        = 0;
     currentStep         = 0;
-    gaitDirection       = 0;
+    
+    gaitType            = GAIT_IDLE;
+    gaitWalkDirection   = 0;
+    gaitRotateDirection = ROTATE_CW;
     gaitSpeed           = 300;
     gaitStepSize        = 100;
-    gaitRotationAngle   = 0;
+    
 }
 
 // Initialize the GaitController with a Hexapod instance
 bool GaitController::begin(Hexapod* hexapod){
-    this->hexapod   = hexapod;
-    gaitType        = GAIT_IDLE;    // Start with idle gait
-    currentPhase    = 0;
-    currentStep     = 0;            // Reset current step
+    
+    this->hexapod       = hexapod;
+    gaitType            = GAIT_IDLE;    // Start with idle gait
+    currentPhase        = 0;            // Reset current phase
+    currentStep         = 0;            // Reset current step
+
+    gaitWalkDirection   = 0;            // Default direction
+    gaitRotateDirection = ROTATE_CW;    // Default rotation direction
+    gaitSpeed           = 300;          // Default speed
+    gaitStepSize        = 100;          // Default step size
+
     LOG_INF("GaitController initialized successfully.");
     return true;
 }
@@ -40,7 +49,10 @@ bool GaitController::update() {
         case GAIT_TRIPOD:               // Perform tripod gait
             doTripodGait();
             break;
-        default:                        // If an unknown gait type is set, do nothing               
+        case GAIT_ROTATE:               // Perform rotate gait
+            doRotateGait();
+            break;
+        default:                        // If an unknown gait type is set, do nothing
             LOG_ERR("Unknown gait type, no action taken.");
             break;
     }
@@ -48,7 +60,7 @@ bool GaitController::update() {
 }
 
 // Set the current gait type
-bool GaitController::setGait(GaitType newGait) {
+bool GaitController::setGaitType(GaitType newGait) {
     gaitType        = newGait;      // Set the new gait type
     currentPhase    = 0;            // Reset current phase for the new gait
     currentStep     = 0;            // Reset current step for the new gait
@@ -67,6 +79,9 @@ bool GaitController::setGait(GaitType newGait) {
         case GAIT_TRIPOD:
             LOG_DBG("Tripod");
             break;
+        case GAIT_ROTATE:
+            LOG_DBG("Rotate");
+            break;
         default:
             LOG_DBG("Unknown");
             break;
@@ -75,43 +90,40 @@ bool GaitController::setGait(GaitType newGait) {
     
 }
 
-// Setters and getters
-void GaitController::setDirection(int dir) {
-    if (dir < -180) dir = -180;
-    if (dir > 180) dir = 180;
-    gaitDirection = dir;
-}
-int GaitController::getDirection() const {
-    return gaitDirection;
+// Get the current gait type
+GaitType GaitController::getGaitType() const {
+    return gaitType;
 }
 
-void GaitController::setSpeed(int s) {
-    if (s < 0) s = 0;
-    if (s > 1023) s = 1023;
-    gaitSpeed = s;
+// Setters and getters
+void GaitController::setWalkDirection(int8_t w_dir) {
+    if (w_dir < -180) w_dir = -180;
+    if (w_dir > 180) w_dir = 180;
+    gaitWalkDirection = w_dir;
 }
-int GaitController::getSpeed() const {
+int8_t GaitController::getWalkDirection() const {
+    return gaitWalkDirection;
+}
+
+void GaitController::setGaitSpeed(uint16_t speed) {
+    if (speed < 0) speed = 0;
+    if (speed > 1023) speed = 1023;
+    gaitSpeed = speed;
+}
+uint16_t GaitController::getGaitSpeed() const {
     return gaitSpeed;
 }
 
-void GaitController::setStepSize(float size) {
-    if (size < 0) size = 0;
-    gaitStepSize = size;
+void GaitController::setGaitStepSize(uint16_t step_size) {
+    if (step_size < 0) step_size = 0;
+    if (step_size > 1023) step_size = 1023;
+    gaitStepSize = step_size;
 }
-float GaitController::getStepSize() const {
-    return stepSize;
+uint16_t GaitController::getGaitStepSize() const {
+    return gaitStepSize;
 }
 
-void GaitController::rotate(int angle) {
-    if (angle < -180) angle = -180;
-    if (angle > 180) angle = 180;
-    gaitRotationAngle = angle;
-    // You would implement the hexapod rotation logic here using rotationAngle
-}
-// Get the current gait type
-GaitType GaitController::getGait() const {
-    return gaitType;
-}
+
 
 // Perform the wave gait, one leg swings at a time
 bool GaitController::doWaveGait() {
@@ -119,7 +131,7 @@ bool GaitController::doWaveGait() {
     if(hexapod->isMoving()) return false;      // If hexapod is already moving, do nothing
 
     if (currentPhase == (HEXAPOD_LEGS)) {                                           // if end of the wave gait cycle
-        hexapod->moveStandUp();                                                          // Move hexapod to standing position
+        hexapod->moveStandUp();                                                     // Move hexapod to standing position
         currentPhase = 0;                                                           // Reset phase for the next cycle                                     
         currentStep  = 0;                                                           // Reset step for the next cycle
 
@@ -135,7 +147,7 @@ bool GaitController::doWaveGait() {
         }   
         currentStep     = (currentStep  + 1) % 2;                                   // Toggle between up and down poses
     }
-    return true;                                                                   // Return true to indicate gait was performed
+    return true;                                                                    // Return true to indicate gait was performed
 }
 
 
@@ -183,7 +195,7 @@ bool GaitController::doTripodGait() {
 
             case 1:                                                                 // If current step is 1, move the two legs down
                 hexapod->move(poseTripodGaitIDs[currentPhase], LEG_SERVOS*3, poseTripodGaitLegDown[currentPhase]);
-                currentPhase    = (currentPhase + 1) % (HEXAPOD_LEGS/3+1);            // Increment phase with wrap-around
+                currentPhase    = (currentPhase + 1) % (HEXAPOD_LEGS/3+1);          // Increment phase with wrap-around
                 break;
         }
         currentStep     = (currentStep + 1) % 2;                                    // Toggle between up and down poses
@@ -191,14 +203,15 @@ bool GaitController::doTripodGait() {
     return true;
 }
 
-// Perform the tripod gait, three legs swing at a time
-bool GaitController::doRotationGait() {
+// Perform the rotate gait
+bool GaitController::doRotateGait() {
+
 };
 
 // Print the current gait status to Serial
 bool GaitController::printStatus() {
-    PRINT("\nGaitController Status: \n\r");
-    PRINT("Gait: ");
+    PRINTLN("GaitController Status: \n\r");
+    PRINT("Gait Type ");
     switch (gaitType) {
         case GAIT_IDLE:
             PRINT("Idle");
@@ -212,14 +225,19 @@ bool GaitController::printStatus() {
         case GAIT_TRIPOD:
             PRINT("Tripod");
             break;
+        case GAIT_ROTATE:
+            PRINT("Rotate");
+            break;
         default:
             PRINT("Unknown");
             break;
     }
-    PRINT(" | Step: ");
-    PRINT((int)currentStep);
-    PRINT(" | Phase: ");
-    PRINTLN((int)currentPhase);
+    PRINT(" | Step " + String((int)currentStep));
+    PRINTLN(" | Phase " + String((int)currentPhase));
+    PRINTLN("Walk Direction   : " + String((int)gaitWalkDirection));
+    PRINTLN("Rotate Direction : " + String(gaitRotateDirection == ROTATE_CW ? "CW" : "CCW"));
+    PRINTLN("Gait Speed       : " + String((int)gaitSpeed));
+    PRINTLN("Gait Step Size   : " + String((int)gaitStepSize));
     return true;
 }
 
@@ -231,23 +249,28 @@ bool GaitController::runConsoleCommands(const String& cmd, const String& args) {
         return true;
 
     } else if (cmd == "gw") {
-        setGait(GAIT_WAVE);
+        setGaitType(GAIT_WAVE);
         LOG_INF("Gait set to WAVE");
         return true;
 
     } else if (cmd == "gr") {
-        setGait(GAIT_RIPPLE);
+        setGaitType(GAIT_RIPPLE);
         LOG_INF("Gait set to RIPPLE");
         return true;
 
     } else if (cmd == "gt") {
-        setGait(GAIT_TRIPOD);
+        setGaitType(GAIT_TRIPOD);
         LOG_INF("Gait set to TRIPOD");
         return true;
 
     } else if (cmd == "gi") {
-        setGait(GAIT_IDLE);
+        setGaitType(GAIT_IDLE);
         LOG_INF("Gait set to IDLE");
+        return true;
+
+    } else if (cmd == "grt") {
+        setGaitType(GAIT_ROTATE);
+        LOG_INF("Gait set to ROTATE");
         return true;
 
     } else if (cmd == "g?") {
@@ -267,7 +290,12 @@ bool GaitController::printConsoleHelp() {
     PRINTLN("  gr               - Set ripple gait");
     PRINTLN("  gt               - Set tripod gait");
     PRINTLN("  gi               - Set idle gait");
+    PRINTLN("  grt              - Set rotate gait");
     PRINTLN("");
+    PRINTLN("  gswd [dir]       - Set walk direction -180 to 180 (default 0)");
+    PRINTLN("  gsrd [dir]       - Set rotate direction CW or CCW (default CW)");
+    PRINTLN("  gss [speed]      - Set gait speed 0 to 1023 (default 300)");
+    PRINTLN("  gsz [size]       - Set gait step size (default 100)");
     PRINTLN("  g?               - Show this help");
     PRINTLN("");
     return true;

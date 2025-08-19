@@ -19,18 +19,17 @@ public:
     BodyPose();
     BodyPose(float x, float y, float z, float roll, float pitch, float yaw);
 
-    // Setters
     void setPosition(float x, float y, float z);
-    void setOrientation(float roll, float pitch, float yaw);
-    void setPose(float x, float y, float z, float roll, float pitch, float yaw);
-
-    // Getters
     void getPosition(float &x, float &y, float &z) const;
+    void setOrientation(float roll, float pitch, float yaw);
     void getOrientation(float &roll, float &pitch, float &yaw) const;
+    void setPose(float x, float y, float z, float roll, float pitch, float yaw);
     void getPose(float &x, float &y, float &z, float &roll, float &pitch, float &yaw) const;
+    void resetPose();
 
-    // Utility
-    void reset(); // Reset to default pose
+    bool printStatus();
+    bool runConsoleCommands(const String& cmd, const String& args);
+    bool printConsoleHelp() const;
 
     // Members
     float x;      // Position in mm (forward/back)

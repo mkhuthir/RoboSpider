@@ -50,28 +50,27 @@ bool Remotecontroller::update() {
 
             case RC100_BTN_1:
                 LOG_DBG("RC Button 1 pressed");
-                gc->setGait(GAIT_WAVE); // Set gait to WAVE
+                gc->setGaitType(GAIT_WAVE); // Set gait to WAVE
                 break;
 
             case RC100_BTN_2:
                 LOG_DBG("RC Button 2 pressed");
-                gc->setGait(GAIT_RIPPLE); // Set gait to RIPPLE
+                gc->setGaitType(GAIT_RIPPLE); // Set gait to RIPPLE
                 break;
 
             case RC100_BTN_3:
                 LOG_DBG("RC Button 3 pressed");
-                gc->setGait(GAIT_TRIPOD); // Set gait to TRIPOD
+                gc->setGaitType(GAIT_TRIPOD); // Set gait to TRIPOD
                 break;
 
             case RC100_BTN_4:
                 LOG_DBG("RC Button 4 pressed");
-                turret->printStatus(); // Print turret status
-                hexapod->printStatus(); // Print hexapod status
+                gc->setGaitType(GAIT_ROTATE); // Set gait to ROTATE
                 break;
 
             case RC100_BTN_5:
                 LOG_DBG("RC Button 5 pressed");
-                gc->setGait(GAIT_IDLE); // Set gait to IDLE
+                gc->setGaitType(GAIT_IDLE); // Set gait to IDLE
                 break;
 
             case RC100_BTN_6:

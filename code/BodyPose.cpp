@@ -1,4 +1,7 @@
 #include "BodyPose.h"
+#include "Console.h"
+#include "Debug.h"
+
 
 BodyPose::BodyPose()
     : x(0), y(0), z(0), roll(0), pitch(0), yaw(0)
@@ -55,7 +58,7 @@ void BodyPose::getPose(float &x, float &y, float &z, float &roll, float &pitch, 
     yaw = this->yaw;
 }
 
-void BodyPose::reset() {
+void BodyPose::resetPose() {
     x = 0; 
     y = 0; 
     z = 0;
@@ -68,4 +71,37 @@ static float clamp(float value, float min, float max) {
     if (value < min) return min;
     if (value > max) return max;
     return value;
+}
+
+bool BodyPose::printStatus() {
+    PRINTLN("Body Pose Status:\n\r");
+    PRINT("Position    : X = " + String(x) + ", Y = " + String(y) + ", Z = " + String(z));
+    PRINTLN("");
+    PRINT("Orientation : Roll = " + String(roll) + ", Pitch = " + String(pitch) + ", Yaw = " + String(yaw));
+    PRINTLN("");
+    return true;
+}
+
+bool BodyPose::runConsoleCommands(const String& cmd, const String& args) {
+    if (cmd == "bs") {
+        printStatus();
+        return true;
+
+    } else if (cmd == "bsp") {
+        float x, y, z, roll, pitch, yaw;
+        sscanf(args.c_str(), "%f %f %f %f %f %f", &x, &y, &z, &roll, &pitch, &yaw);
+        setPose(x, y, z, roll, pitch, yaw);
+        return true;
+
+    }
+    return false;
+}
+
+bool BodyPose::printConsoleHelp() const {
+    PRINTLN("BodyPose Console Commands:\n\r");
+    PRINTLN("  bs                           - Print body pose status");
+    PRINTLN("  bsp [x y z roll pitch yaw]   - Set the body pose");
+    PRINTLN("  brp                          - Reset the body pose");
+    PRINTLN("  b?                           - Show this help");
+    return true;
 }

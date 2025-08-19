@@ -7,7 +7,13 @@
         GAIT_IDLE,
         GAIT_WAVE,
         GAIT_RIPPLE,
-        GAIT_TRIPOD
+        GAIT_TRIPOD,
+        GAIT_ROTATE
+    };
+
+    enum RotateDirection {
+        ROTATE_CW,
+        ROTATE_CCW
     };
 
     class GaitController {
@@ -16,20 +22,16 @@
             bool            begin(Hexapod* hexapod);                    // Initialize with Hexapod
             bool            update();                                   // Update the gait controller
 
-            bool            setGait(GaitType newGait);                  // Set the current gait type
-            GaitType        getGait() const;                            // Get the current gait type
-
-            void            setDirection(int dir);      // -180 to 180
-            int             getDirection() const;
-
-            void            setSpeed(int speed);        // 0 to 1023
-            int             getSpeed() const;
-
-            void            setStepSize(float size);    // step size, e.g. mm or degrees
-            float           getStepSize() const;
-
-            void            setRotationAngle(int rotation_angle);
-            int             getRotationAngle();
+            bool            setGaitType(GaitType newGait);              // Set the current gait type
+            GaitType        getGaitType() const;                        // Get the current gait type
+            void            setWalkDirection(int8_t w_dir);               // -180 to 180
+            int8_t          getWalkDirection() const;
+            void            setRotateDirection(RotateDirection r_dir); // -180 to 180
+            RotateDirection getRotateDirection() const;
+            void            setGaitSpeed(uint16_t speed);                   // 0 to 1023
+            uint16_t        getGaitSpeed() const;
+            void            setGaitStepSize(uint16_t step_size);                 // 0 to 1023
+            uint16_t        getGaitStepSize() const;
 
             bool            printStatus();                              // Print current gait status to Serial
             bool            runConsoleCommands(const String& cmd, const String& args);  // Process console commands for gait control
@@ -39,20 +41,20 @@
 
         private:
             Hexapod*        hexapod;                                    // Pointer to the Hexapod instance
-            GaitType        gaitType;                                   // Current gait type
-            int             currentPhase;                               // Current phase of the gait
-            int             currentStep;                                // Current step in the gait sequence
 
-        // New parameters
-            int             gaitDirection;                              // -180 to 180
-            int             gaitSpeed;                                  // 0 to 1023
-            float           gaitStepSize;                               // e.g. mm or degrees
-            int             gaitRotationAngle;                          // -180 to 180
+            uint8_t         currentPhase;                               // Current phase of the gait
+            uint8_t         currentStep;                                // Current step in the gait sequence
+            
+            GaitType        gaitType;                                   // Current gait type
+            int8_t          gaitWalkDirection;                          // -180 to 180
+            RotateDirection gaitRotateDirection;                        // Clockwise or counter-clockwise
+            uint16_t        gaitSpeed;                                  // 0 to 1023
+            uint16_t        gaitStepSize;                               // 0 to 1023
 
             bool            doWaveGait();                               // Perform the wave gait
             bool            doRippleGait();                             // Perform the ripple gait
             bool            doTripodGait();                             // Perform the tripod gait
-            bool            doRotate();                                 // -180 to 180
+            bool            doRotateGait();                             // Perform the rotate gait
     };
 
 #endif // GaitController_h

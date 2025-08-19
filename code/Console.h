@@ -9,6 +9,7 @@
     #include "Servo.h"              // Include Servo class for managing servo motors
     #include "Microcontroller.h"    // Include Microcontroller class for managing the microcontroller
     #include "Hexapod.h"            // Include Hexapod class for managing the hexapod robot
+    #include "BodyPose.h"           // Include BodyPose class for managing body pose
     #include "Turret.h"             // Include Turret class for managing the sensor turret
     #include "AXS1Sensor.h"         // Include AXS1Sensor class for sensor management
     #include "GaitController.h"     // Include GaitController for movement control
@@ -22,6 +23,7 @@
                         Driver*             driver  = nullptr,      // Pointer to Driver instance
                         Servo*              servo   = nullptr,      // Pointer to Servo instance
                         Hexapod*            hexapod = nullptr,      // Pointer to Hexapod instance
+                        BodyPose*           bodyPose = nullptr,      // Pointer to BodyPose instance
                         Turret*             turret  = nullptr,      // Pointer to Turret instance
                         AXS1Sensor*         sensor  = nullptr,      // Pointer to AXS1Sensor instance
                         GaitController*     gc      = nullptr,      // Pointer to GaitController instance
@@ -46,6 +48,7 @@
             Servo*              servo;                              // Pointer to Servo instance for Dynamixel control
             Hexapod*            hexapod;                            // Pointer to hexapod instance
             Turret*             turret;                             // Pointer to turret instance  
+            BodyPose*           bodyPose;                           // Pointer to BodyPose instance
             AXS1Sensor*         sensor;                             // Pointer to AXS1Sensor instance (can be nullptr)
             GaitController*     gc;                                 // Pointer to GaitController instance
             Remotecontroller*   rc;                                 // Pointer to RemoteController instance

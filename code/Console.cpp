@@ -8,6 +8,7 @@ Console::Console(   Stream* stream,
                     Driver* driver,
                     Servo* servo,
                     Hexapod* hexapod,
+                    BodyPose* bodyPose,
                     Turret* turret,
                     AXS1Sensor* sensor,
                     GaitController* gc,
@@ -26,6 +27,7 @@ Console::Console(   Stream* stream,
     this->servo     = servo;            // Store the Servo instance
     this->hexapod   = hexapod;          // Store the hexapod instance
     this->turret    = turret;           // Store the turret instance
+    this->bodyPose  = bodyPose;         // Store the BodyPose instance
     this->sensor    = sensor;           // Store the AXS1Sensor instance
     this->gc        = gc;               // Store the GaitController instance
     this->rc        = rc;               // Store the RemoteController instance
@@ -108,6 +110,7 @@ void Console::processInput(const String& input) {
         !turret->runConsoleCommands(mainCmd, args) &&
         !gc->runConsoleCommands(mainCmd, args) &&
         !hexapod->runConsoleCommands(mainCmd, args) &&
+        !bodyPose->runConsoleCommands(mainCmd, args) &&
         !runLegCommand(mainCmd, args) &&
         !sensor->runConsoleCommands(mainCmd, args) &&
         !servo->runConsoleCommands(mainCmd, args) &&
@@ -512,6 +515,7 @@ bool Console::printAllHelp() {
     if (!servo->printConsoleHelp()) return false;
     if (!hexapod->printConsoleHelp()) return false;
     if (!hexapod->legs[0].printConsoleHelp()) return false;
+    if (!bodyPose->printConsoleHelp()) return false;
     if (!gc->printConsoleHelp()) return false;
     if (!turret->printConsoleHelp()) return false;
     if (!sensor->printConsoleHelp()) return false;
@@ -532,6 +536,7 @@ bool Console::printConsoleHelp() {
     PRINTLN("  l?               - Show leg commands");
     PRINTLN("  a?               - Show AX-S1 Sensor commands");
     PRINTLN("  t?               - Show turret commands");
+    PRINTLN("  b?               - Show body pose commands");
     PRINTLN("  g?               - Show gait controller commands");
     PRINTLN("");
     PRINTLN("  cls / clear      - Clear the terminal screen");

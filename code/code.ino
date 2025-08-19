@@ -24,6 +24,7 @@ Driver              driver;                     // Driver instance
 Servo               servo;                      // Servo instance
 Hexapod             hexapod;                    // Hexapod instance
 Turret              turret;                     // Turret instance
+BodyPose            bodyPose;                   // BodyPose instance
 AXS1Sensor          axs1;                       // AX-S1 Sensor instance
 GaitController      gc;                         // Gait Controller instance
 Remotecontroller    rc;                         // Remote Controller instance
@@ -35,6 +36,7 @@ Console             con(    &DEBUG_SERIAL,      // Initialize console with debug
                             &driver,            // Pass the Driver instance for Dynamixel control
                             &servo,             // Pass the Servo instance for Dynamixel control
                             &hexapod,           // Pass the Hexapod instance
+                            &bodyPose,          // Pass the BodyPose instance
                             &turret,            // Pass the Turret instance
                             &axs1,              // Pass the AXS1Sensor instance
                             &gc,                // Pass the GaitController instance
