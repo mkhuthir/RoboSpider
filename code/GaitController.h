@@ -28,7 +28,7 @@
             int8_t          getWalkDirection() const;
             void            setRotateDirection(RotateDirection r_dir); // -180 to 180
             RotateDirection getRotateDirection() const;
-            void            setGaitSpeed(uint16_t speed);                   // 0 to 1023
+            bool            setGaitSpeed(uint16_t speed);                   // 0 to 1023
             uint16_t        getGaitSpeed() const;
             void            setGaitStepSize(uint16_t step_size);                 // 0 to 1023
             uint16_t        getGaitStepSize() const;

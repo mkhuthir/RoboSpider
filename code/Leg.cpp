@@ -96,6 +96,16 @@ bool Leg::moveStandDown() {
   return move(poseLegStandDown);
 }
 
+// Set the speed of the leg
+bool Leg::setSpeed(uint16_t speed) {
+  if (speed < 0) speed = 0;
+  if (speed > 1023) speed = 1023;
+  for (int i = 0; i < LEG_SERVOS; i++) {
+    servo->setGoalSpeed(legIDs[i], speed);
+  }
+  return true;
+}
+
 // Get current coxa angle
 bool Leg::getCoxa(uint16_t* angle) {
   if (!servo->getPresentPosition(legIDs[Coxa], (uint16_t*)angle)) {

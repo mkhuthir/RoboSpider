@@ -87,6 +87,16 @@ bool Hexapod::moveStandDown() {
   return true;
 }
 
+// Set the speed of the hexapod
+bool Hexapod::setSpeed(uint16_t speed) {
+  if (speed < 0) speed = 0;
+  if (speed > 1023) speed = 1023;
+  for (int i = 0; i < HEXAPOD_LEGS; i++) {
+    legs[i].setSpeed(speed);
+  }
+  return true;
+}
+
 // Print the status of all legs
 bool Hexapod::printStatus() {
   PRINTLN("\nHexapod Legs Status:");

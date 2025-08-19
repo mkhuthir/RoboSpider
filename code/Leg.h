@@ -28,6 +28,8 @@
       bool    moveStandUp();                  // Move leg to stand up position
       bool    moveStandDown();                // Move leg to stand down position
 
+      bool    setSpeed(uint16_t speed);       // Set the speed of the leg
+
       bool    getCoxa(uint16_t* angle);       // Get current coxa angle
       bool    getFemur(uint16_t* angle);      // Get current femur angle
       bool    getTibia(uint16_t* angle);      // Get current tibia angle

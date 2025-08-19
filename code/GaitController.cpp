@@ -105,10 +105,11 @@ int8_t GaitController::getWalkDirection() const {
     return gaitWalkDirection;
 }
 
-void GaitController::setGaitSpeed(uint16_t speed) {
+bool GaitController::setGaitSpeed(uint16_t speed) {
     if (speed < 0) speed = 0;
     if (speed > 1023) speed = 1023;
     gaitSpeed = speed;
+    return hexapod->setSpeed(speed);
 }
 uint16_t GaitController::getGaitSpeed() const {
     return gaitSpeed;
@@ -205,6 +206,9 @@ bool GaitController::doTripodGait() {
 
 // Perform the rotate gait
 bool GaitController::doRotateGait() {
+    if(hexapod->isMoving()) return false;                                                 // If hexapod is already moving, do nothing
+    // TODO: Implement rotate gait logic
+    return true;
 
 };
 
@@ -286,11 +290,11 @@ bool GaitController::printConsoleHelp() {
     PRINTLN("Gait Commands:\n\r");
     PRINTLN("  gs               - Show current gait status");
     PRINTLN("");
-    PRINTLN("  gw               - Set wave gait");
-    PRINTLN("  gr               - Set ripple gait");
-    PRINTLN("  gt               - Set tripod gait");
-    PRINTLN("  gi               - Set idle gait");
-    PRINTLN("  grt              - Set rotate gait");
+    PRINTLN("  gw               - start Wave gait");
+    PRINTLN("  gr               - start Ripple gait");
+    PRINTLN("  gt               - start Tripod gait");
+    PRINTLN("  gi               - start Idle gait");
+    PRINTLN("  grt              - start Rotate gait");
     PRINTLN("");
     PRINTLN("  gswd [dir]       - Set walk direction -180 to 180 (default 0)");
     PRINTLN("  gsrd [dir]       - Set rotate direction CW or CCW (default CW)");

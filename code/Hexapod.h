@@ -19,7 +19,9 @@
       bool isMoving();                                                  // Check if any leg is currently moving
       bool moveStandUp();                                               // Move Hexapod Up
       bool moveStandDown();                                             // Move Hexapod Down
-      
+
+      bool setSpeed(uint16_t speed);                                   // Set the speed of the hexapod
+
       bool printStatus();                                               // Print the status of all legs
       bool runConsoleCommands(const String& cmd, const String& args);   // Process console commands for hexapod control
       bool printConsoleHelp();                                          // Print hexapod-specific help information
