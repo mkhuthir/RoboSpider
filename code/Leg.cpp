@@ -181,15 +181,15 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
 
 // Print leg-specific help information
 bool Leg::printConsoleHelp() {
-    PRINTLN("Leg Commands (add leg number 0-5 as argument, default=0):\n\r");
-    PRINTLN("  ls  [n]          - Print leg status (angles)");
+    PRINTLN("Leg Commands:\n\r");
+    PRINTLN("  ls  [n]          - Print leg status (default: 0)");
     PRINTLN("");
-    PRINTLN("  lpu [n]          - Move leg point up");
-    PRINTLN("  lpd [n]          - Move leg point down");
-    PRINTLN("  lpo [n]          - Move leg point out");
+    PRINTLN("  lpu [n]          - Move leg point up (default: 0)");
+    PRINTLN("  lpd [n]          - Move leg point down (default: 0)");
+    PRINTLN("  lpo [n]          - Move leg point out (default: 0)");
     PRINTLN("");
-    PRINTLN("  lsu [n]          - Move leg to stand up position");
-    PRINTLN("  lsd [n]          - Move leg to stand down position");
+    PRINTLN("  lsu [n]          - Move leg to stand up position (default: 0)");
+    PRINTLN("  lsd [n]          - Move leg to stand down position (default: 0)");
     PRINTLN("");
     PRINTLN("  l?               - Show this help");
     PRINTLN("");

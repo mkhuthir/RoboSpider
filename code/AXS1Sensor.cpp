@@ -744,7 +744,7 @@ bool AXS1Sensor::runConsoleCommands(const String& cmd, const String& args) {
 
 // Print sensor-specific help information
 bool AXS1Sensor::printConsoleHelp() {
-    PRINTLN("Sensor Commands (AXS1):");
+    PRINTLN("Sensor Commands (AXS1):\n\r");
     PRINTLN("  ap               - Ping sensor (connectivity test)");
     PRINTLN("  as               - Print Sensor status");
     PRINTLN("");

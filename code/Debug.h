@@ -11,10 +11,10 @@
     #define COLOR_CYAN      "\033[36m"      // Debug messages
     #define COLOR_BOLD      "\033[1m"       // Bold text
 
-    #define LOG_HEADER_ERROR   "ERR-"      // Error log header
-    #define LOG_HEADER_WARNING "WRN-"      // Warning log header
-    #define LOG_HEADER_INFO    "INF-"      // Info log header
-    #define LOG_HEADER_DEBUG   "DBG-"      // Debug log header
+    #define LOG_HEADER_ERROR   "[ERR] "      // Error log header
+    #define LOG_HEADER_WARNING "[WRN] "      // Warning log header
+    #define LOG_HEADER_INFO    "[INF] "      // Info log header
+    #define LOG_HEADER_DEBUG   "[DBG] "      // Debug log header
 
     // Global macros for printing messages
     #define PRINT(msg)      log::print(msg)             // Normal print without debug level or color

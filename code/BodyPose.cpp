@@ -134,5 +134,6 @@ bool BodyPose::printConsoleHelp() const {
     PRINTLN("  bspos [x y z]                - Set the body position");
     PRINTLN("  bso [roll pitch yaw]         - Set the body orientation");
     PRINTLN("  b?                           - Show this help");
+    PRINTLN("");
     return true;
 }
