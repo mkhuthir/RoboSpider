@@ -5,8 +5,10 @@
   #include "Driver.h"
 
   #define handler_index   0                   // Index for sync write handler
+  
   #define LEG_SERVOS      uint8_t(3)          // Number of servos per leg
   #define HEXAPOD_LEGS    uint8_t(6)          // Maximum number of legs
+  #define LEG_SPEED       uint16_t(300)       // Default speed for leg movement
 
   class Leg {
     public:
@@ -14,8 +16,14 @@
       bool    init( uint8_t coxaID,           // Initialize the leg servos
                     uint8_t femurID, 
                     uint8_t tibiaID,
+                    float   legBaseX,
+                    float   legBaseY,
+                    float   legBaseZ,
+                    float   legBaseRoll,
+                    float   legBasePitch,
+                    float   legBaseYaw,
                     Driver* driver,
-                    Servo* servo);
+                    Servo*  servo);
 
       bool      update();                       // Update the leg state
 
@@ -40,13 +48,19 @@
       bool      printConsoleHelp();             // Print leg-specific help information
       
     private:
-      Driver*   driver;                       // Pointer to the driver instance
-      Servo*    servo;                        // Pointer to the servo instance
-      uint16_t  speed;                        // Speed of the leg
+      Driver*   driver;                         // Pointer to the driver instance
+      Servo*    servo;                          // Pointer to the servo instance
+      uint16_t  speed;                          // Speed of the leg
 
-      uint8_t legIDs[LEG_SERVOS]={0,0,0};     // Servo IDs for the leg joints
+      uint8_t legIDs[LEG_SERVOS]={0,0,0};       // Servo IDs for the leg joints
+      float   legBaseX      = 0.0;              // Base X position from body center
+      float   legBaseY      = 0.0;              // Base Y position from body center
+      float   legBaseZ      = 0.0;              // Base Z position from body center
+      float   legBaseRoll   = 0.0;              // Base Roll position from body center
+      float   legBasePitch  = 0.0;              // Base Pitch position from body center
+      float   legBaseYaw    = 0.0;              // Base Yaw position from body center
 
-      enum LegJoint { Coxa  = 0,              // Enum for leg joints
+      enum LegJoint { Coxa  = 0,                // Enum for leg joints
                       Femur = 1, 
                       Tibia = 2 };
   };

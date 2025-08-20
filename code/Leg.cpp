@@ -11,17 +11,40 @@ Leg::Leg(){
   legIDs[Coxa]  = 0;
   legIDs[Femur] = 0;
   legIDs[Tibia] = 0;
-  servo = nullptr;
+
+  legBaseX      = 0.0;
+  legBaseY      = 0.0;
+  legBaseZ      = 0.0;
+  legBaseRoll   = 0.0;
+  legBasePitch  = 0.0;
+  legBaseYaw    = 0.0;
+
+  driver        = nullptr;
+  servo         = nullptr;
+  speed         = LEG_SPEED;
+
 }
 
 // Initialize the leg servos
-bool Leg::init(uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, Driver* driver, Servo* servo) {
+bool Leg::init( uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, 
+                float legBaseX, float legBaseY, float legBaseZ, 
+                float legBaseRoll, float legBasePitch, float legBaseYaw, 
+                Driver* driver, Servo* servo) {
+  
+  this->legBaseX      = legBaseX;
+  this->legBaseY      = legBaseY;
+  this->legBaseZ      = legBaseZ;
+  this->legBaseRoll   = legBaseRoll;
+  this->legBasePitch  = legBasePitch;
+  this->legBaseYaw    = legBaseYaw;
+
   legIDs[Coxa]  = coxaID;   // Set coxa ID
   legIDs[Femur] = femurID;  // Set femur ID
   legIDs[Tibia] = tibiaID;  // Set tibia ID
 
   this->driver = driver;    // Set the driver pointer
   this->servo = servo;      // Set the servo pointer
+  this->speed = LEG_SPEED;  // Set default speed
 
   if (!servo->init(legIDs[Coxa] , LEG_SPEED, COXA_CW_LIMIT, COXA_CCW_LIMIT)) {   // Initialize coxa servo with velocity
     LOG_ERR("Failed to initialize coxa servo.");
