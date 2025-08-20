@@ -7,7 +7,10 @@
 
 // Constructor for Hexapod class
 Hexapod::Hexapod(){
-  driver = nullptr;                     // Dynamixel controller not initialized
+  driver  = nullptr;                    // Dynamixel controller not initialized
+  servo   = nullptr;                    // Servo controller not initialized
+  speed   = HEXAPOD_SPEED;              // Speed not initialized
+
   for (int i = 0; i < HEXAPOD_LEGS; i++) {
     legs[i] = Leg();                    // instantiate each leg
   }
