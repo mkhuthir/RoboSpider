@@ -25,7 +25,7 @@ bool Hexapod::begin(Driver* driver , Servo* servo) {
   this->speed = HEXAPOD_SPEED;
 
   //           S1  S2  S3  X  Y  Z  Roll  Pitch  Yaw
-  legs[0].init(1,  2,  3,  0, 0, 0, 0, 0, 0, driver, servo);                  // Initialize each leg with servo IDs
+  legs[0].init(1,  2,  3,  0, 0, 0, 0, 0, 0, driver, servo); // Initialize each leg with servo IDs
   legs[1].init(4,  5,  6,  0, 0, 0, 0, 0, 0, driver, servo);
   legs[2].init(7,  8,  9,  0, 0, 0, 0, 0, 0, driver, servo);
   legs[3].init(10, 11, 12, 0, 0, 0, 0, 0, 0, driver, servo);
