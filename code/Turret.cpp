@@ -7,6 +7,7 @@
 Turret::Turret(){
   turret_ids[0] = TURRET_PAN_ID;  // Set pan servo ID
   turret_ids[1] = TURRET_TILT_ID; // Set tilt servo ID
+  speed         = TURRET_SPEED;   // Default speed
   driver        = nullptr;        // Dynamixel controller not initialized
   servo         = nullptr;        // Dynamixel controller not initialized
 }
@@ -15,6 +16,7 @@ Turret::Turret(){
 bool Turret::begin(Driver* driver, Servo* servo) {
   this->driver = driver;  // Set the driver pointer
   this->servo = servo;    // Set the servo pointer
+  this->speed = TURRET_SPEED;
   if (!servo->init(turret_ids[0], TURRET_SPEED, TURRET_PAN_CW_LIMIT, TURRET_PAN_CCW_LIMIT)) return false;
   if (!servo->init(turret_ids[1], TURRET_SPEED, TURRET_TILT_CW_LIMIT, TURRET_TILT_CCW_LIMIT)) return false;
   moveHome();
@@ -75,13 +77,13 @@ bool Turret::setSpeed(int16_t speed) {
     LOG_ERR("Failed to set speed for tilt servo.");
     return false;
   }
-  this->Speed = speed;
+  this->speed = speed;
   return true;
 }
 
 // Get turret rotation speed
 uint16_t Turret::getSpeed() const {
-  return Speed;
+  return speed;
 }
 
 // Print current turret angles to Serial
