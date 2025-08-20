@@ -147,12 +147,11 @@ bool Leg::printStatus() {
     LOG_ERR("Failed to get joint angles.");
     return false;
   }
-  PRINT("Coxa: ");
-  PRINT((int)coxaAngle);
-  PRINT(" | Femur: ");
-  PRINT((int)femurAngle);
-  PRINT(" | Tibia: ");
-  PRINTLN((int)tibiaAngle);
+  PRINT("Coxa: " + String((int)coxaAngle));
+  PRINT(" | Femur: " + String((int)femurAngle));
+  PRINT(" | Tibia: " + String((int)tibiaAngle));
+  PRINTLN(" | Speed: " + String((int)speed));
+
   return true;
 }
 

@@ -4,33 +4,36 @@
   #include "Leg.h"
   #include "Driver.h"
 
-  #define handler_index  uint8_t(0)                                     // Index for sync write handler
-  #define HEXAPOD_LEGS   uint8_t(6)                                     // Maximum number of legs
-  #define LEG_SERVOS     uint8_t(3)                                     // Number of servos per leg
-  #define HEXAPOD_SERVOS uint8_t(HEXAPOD_LEGS * LEG_SERVOS)             // Maximum number of servos
+  #define handler_index  uint8_t(0)                                         // Index for sync write handler
+  #define HEXAPOD_LEGS   uint8_t(6)                                         // Maximum number of legs
+  #define LEG_SERVOS     uint8_t(3)                                         // Number of servos per leg
+  #define HEXAPOD_SERVOS uint8_t(HEXAPOD_LEGS * LEG_SERVOS)                 // Maximum number of servos
+  #define HEXAPOD_SPEED  uint16_t(300)                                      // Default speed for hexapod
 
   class Hexapod {
     public:
       Hexapod(); // Constructor
-      bool begin(Driver* driver, Servo* servo);                         // Initialize the hexapod
-      bool update();                                                    // Update the hexapod state
+      bool      begin(Driver* driver, Servo* servo);                        // Initialize the hexapod
+      bool      update();                                                   // Update the hexapod state
 
-      bool move(uint8_t *ids, uint8_t num_servos, int32_t *positions);  // Move Hexapod
-      bool isMoving();                                                  // Check if any leg is currently moving
-      bool moveStandUp();                                               // Move Hexapod Up
-      bool moveStandDown();                                             // Move Hexapod Down
+      bool      move(uint8_t *ids, uint8_t num_servos, int32_t *positions); // Move Hexapod
+      bool      isMoving();                                                 // Check if any leg is currently moving
+      bool      moveStandUp();                                              // Move Hexapod Up
+      bool      moveStandDown();                                            // Move Hexapod Down
 
-      bool setSpeed(uint16_t speed);                                   // Set the speed of the hexapod
+      bool      setSpeed(uint16_t speed);                                   // Set the speed of the hexapod
+      uint16_t  getSpeed() const;                                           // Get the current speed of the hexapod
 
-      bool printStatus();                                               // Print the status of all legs
-      bool runConsoleCommands(const String& cmd, const String& args);   // Process console commands for hexapod control
-      bool printConsoleHelp();                                          // Print hexapod-specific help information
+      bool      printStatus();                                              // Print the status of all legs
+      bool      runConsoleCommands(const String& cmd, const String& args);  // Process console commands for hexapod control
+      bool      printConsoleHelp();                                         // Print hexapod-specific help information
       
-      Leg     legs[HEXAPOD_LEGS];                                       // Array of legs
+      Leg     legs[HEXAPOD_LEGS];                                           // Array of legs
 
     private:
-      Driver*  driver;                                                  // Dynamixel controller instance
-      Servo*   servo;                                                   // Servo controller instance
+      Driver*  driver;                                                      // Dynamixel controller instance
+      Servo*   servo;                                                       // Servo controller instance
+      uint16_t speed;                                                       // Current speed of the hexapod
 
 
   };

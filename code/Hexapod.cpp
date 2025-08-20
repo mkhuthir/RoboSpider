@@ -22,7 +22,8 @@ bool Hexapod::begin(Driver* driver , Servo* servo) {
 
   this->driver = driver;  // Set the driver pointer
   this->servo = servo;    // Set the servo pointer
-  
+  this->speed = HEXAPOD_SPEED;
+
   legs[0].init(1,  2,  3,  driver, servo);                  // Initialize each leg with servo IDs
   legs[1].init(4,  5,  6,  driver, servo);
   legs[2].init(7,  8,  9,  driver, servo);
@@ -97,6 +98,13 @@ bool Hexapod::setSpeed(uint16_t speed) {
   return true;
 }
 
+// Get the speed of the hexapod
+uint16_t Hexapod::getSpeed() const {
+  return speed;
+}
+
+// Get
+
 // Print the status of all legs
 bool Hexapod::printStatus() {
   PRINTLN("\nHexapod Legs Status:");
@@ -106,21 +114,30 @@ bool Hexapod::printStatus() {
     PRINT(": ");
     legs[i].printStatus();  // Print leg angles of each leg
   }
+  PRINTLN("Hexapod Speed: " + String(speed));
   return true;
 }
 
 // Process console commands for hexapod control
 bool Hexapod::runConsoleCommands(const String& cmd, const String& args) {
-    if (cmd == "hsu") {
+    if (cmd == "hs") {
+        printStatus();
+        return true;
+
+    } else if (cmd == "hss") {
+        setSpeed(args.toInt());
+        return true;
+
+    } else if (cmd == "hsg") {
+        PRINTLN("Hexapod Speed: " + String(speed));
+        return true;
+
+    } else if (cmd == "hsu") {
         if (moveStandUp()) LOG_INF("Hexapod standing up");
         return true;
 
     } else if (cmd == "hsd") {
         if (moveStandDown()) LOG_INF("Hexapod standing down");
-        return true;
-
-    } else if (cmd == "hs") {
-        printStatus();
         return true;
         
     } else if (cmd == "h?") {
@@ -136,6 +153,9 @@ bool Hexapod::runConsoleCommands(const String& cmd, const String& args) {
 bool Hexapod::printConsoleHelp() {
     PRINTLN("Hexapod Commands:\n\r");
     PRINTLN("  hs               - Print hexapod legs status");
+    PRINTLN("");
+    PRINTLN("  hss [speed]      - Set hexapod speed (default: " + String(HEXAPOD_SPEED) + ")");
+    PRINTLN("  hsg              - Get hexapod speed");
     PRINTLN("");
     PRINTLN("  hsu              - Hexapod stand up");
     PRINTLN("  hsd              - Hexapod stand down");
