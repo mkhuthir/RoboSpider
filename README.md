@@ -1,6 +1,6 @@
 # SpiderBot
 
-![MuthSpider](./img/MuthSpider.png)<br>
+![MuthSpider](./img/SpiderBot.png)<br>
 
 YouTube Video:
 
@@ -24,6 +24,8 @@ YouTube Video:
 ## Overview
 
 This project is a firmware for a hexapod robot ("SpiderBot") using Dynamixel AX-18A servos. The code is designed for Arduino-compatible microcontrollers and provides modular control for legs, a sensor turret, and optional AX-S1 sensor modules.
+
+![leg dimentions](./img/leg.png)<br>
 
 ## Features
 
