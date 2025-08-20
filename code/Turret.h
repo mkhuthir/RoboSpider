@@ -30,7 +30,7 @@
     private:
       Driver*   driver;                       // Pointer to the driver instance
       Servo*    servo;                        // Pointer to the servo instance
-      uint16_t  Speed;
+      uint16_t  speed;
   }; 
 
 #endif // TURRET_H
