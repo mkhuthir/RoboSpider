@@ -63,14 +63,33 @@ bool Turret::moveUp() {
 // Rotate turret down
 bool Turret::moveDown() {
   return move(poseTurretDown);
-} 
+}
+
+// Set turret rotation speed
+bool Turret::setSpeed(int16_t speed) {
+  if (!servo->setGoalSpeed(turret_ids[0], speed)) {
+    LOG_ERR("Failed to set speed for pan servo.");
+    return false;
+  }
+  if (!servo->setGoalSpeed(turret_ids[1], speed)) {
+    LOG_ERR("Failed to set speed for tilt servo.");
+    return false;
+  }
+  this->Speed = speed;
+  return true;
+}
+
+// Get turret rotation speed
+uint16_t Turret::getSpeed() const {
+  return Speed;
+}
 
 // Print current turret angles to Serial
 bool Turret::printStatus() {
   uint16_t panPosition = 0, tiltPosition = 0;
   if (!servo->getPresentPosition(turret_ids[0], &panPosition)) return false;
   if (!servo->getPresentPosition(turret_ids[1], &tiltPosition)) return false;
-  PRINTLN("Turret Status: Pan: " + String(panPosition) + " | Tilt: " + String(tiltPosition));
+  PRINTLN("Turret Status: Pan: " + String(panPosition) + " | Tilt: " + String(tiltPosition) + "| Speed: " + String(getSpeed()));
   return true;
 }
 
@@ -78,6 +97,9 @@ bool Turret::printStatus() {
 bool Turret::printConsoleHelp() {
     PRINTLN("Turret Commands:\n\r");
     PRINTLN("  ts               - Print current turret angles");
+    PRINTLN("");
+    PRINTLN("  tss [speed]      - Set turret speed 0 to 1023 (default: " + String(TURRET_SPEED) + ")");
+    PRINTLN("  tgs              - Get turret speed");
     PRINTLN("");
     PRINTLN("  tu               - Move turret up");
     PRINTLN("  td               - Move turret down");
@@ -92,7 +114,21 @@ bool Turret::printConsoleHelp() {
 
 // Process console commands for turret control
 bool Turret::runConsoleCommands(const String& cmd, const String& args) {
-    if (cmd == "tu") {
+  
+      if (cmd == "ts") {
+        printStatus();
+        return true;
+
+    } else if (cmd == "tss") {
+        int16_t speed = args.toInt();
+        setSpeed(speed);
+        return true;
+
+    } else if (cmd == "tgs") {
+        PRINTLN("Turret Speed: " + String(getSpeed()));
+        return true;
+        
+    } else if (cmd == "tu") {
         moveUp();
         return true;
 
@@ -110,10 +146,6 @@ bool Turret::runConsoleCommands(const String& cmd, const String& args) {
 
     } else if (cmd == "th") {
         moveHome();
-        return true;
-
-    } else if (cmd == "ts") {
-        printStatus();
         return true;
 
     } else if (cmd == "t?") {
