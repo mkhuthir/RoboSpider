@@ -98,12 +98,19 @@ bool Leg::moveStandDown() {
 
 // Set the speed of the leg
 bool Leg::setSpeed(uint16_t speed) {
-  if (speed < 0) speed = 0;
-  if (speed > 1023) speed = 1023;
   for (int i = 0; i < LEG_SERVOS; i++) {
-    servo->setGoalSpeed(legIDs[i], speed);
+    if (!servo->setGoalSpeed(legIDs[i], speed)) {
+      LOG_ERR("Failed to set speed for leg servo.");
+      return false;
+    }
   }
+  this->speed = speed;
   return true;
+}
+
+// Get the current speed of the leg
+uint16_t Leg::getSpeed() const {
+  return speed;
 }
 
 // Get current coxa angle
