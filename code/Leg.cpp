@@ -255,16 +255,16 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         return true;
 
     } else if (cmd == "lss") {
+        int newSpeed = LEG_SPEED; // Default speed
         if (args.length() > 0) {
-            int newSpeed = args.toInt();
-            setSpeed(newSpeed);
-            speed = newSpeed;
-            LOG_INF("Leg " + String(legIndex) + " speed set to " + String(newSpeed));
-        } else {
-            setSpeed(LEG_SPEED);
-            speed = LEG_SPEED;  
-            LOG_INF("Leg " + String(legIndex) + " speed: " + String((int)LEG_SPEED));
+            int spaceIdx = args.indexOf(' ');
+            if (spaceIdx >= 0) {
+              newSpeed = args.substring(spaceIdx + 1).toInt();
+            }
         }
+        setSpeed(newSpeed);
+        speed = newSpeed;
+        LOG_INF("Leg " + String(legIndex) + " speed: " + String((int)speed));
         return true;
 
     } else if (cmd == "lpu") {
