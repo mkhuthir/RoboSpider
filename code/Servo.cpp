@@ -257,7 +257,7 @@ bool Servo::update(uint8_t id) {
 
 // Process console commands for servo control
 bool Servo::runConsoleCommands(const String& cmd, const String& args) {
-    
+    // TODO: use sscanf instead of String manipulation
     int id      = 1;                                // Default servo ID to 1
     int arg2    = 0;                                // Default argument2 to 0
     int arg3    = 0;                                // Default argument3 to 0
