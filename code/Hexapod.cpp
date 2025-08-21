@@ -112,9 +112,9 @@ uint16_t Hexapod::getSpeed() const {
 // Print the status of all legs
 bool Hexapod::printStatus() {
   PRINTLN("\nHexapod Legs Status:");
-  for (int i = 0; i < 6; i++) {
+  for (int i = 0; i < HEXAPOD_LEGS; i++) {
     PRINT("Leg ");
-    PRINT(i + 1);
+    PRINT(i);
     PRINT(": ");
     legs[i].printStatus();  // Print leg angles of each leg
   }
@@ -129,10 +129,19 @@ bool Hexapod::runConsoleCommands(const String& cmd, const String& args) {
         return true;
 
     } else if (cmd == "hss") {
-        setSpeed(args.toInt());
+        if (args.length() > 0) {
+            int newSpeed = args.toInt();
+            setSpeed(newSpeed);
+            speed = newSpeed;
+            LOG_INF("Hexapod speed set to " + String(newSpeed));
+        } else {
+            setSpeed(HEXAPOD_SPEED);
+            speed = HEXAPOD_SPEED;
+            LOG_INF("Hexapod speed: " + String((int)HEXAPOD_SPEED));
+        }
         return true;
 
-    } else if (cmd == "hsg") {
+    } else if (cmd == "hgs") {
         PRINTLN("Hexapod Speed: " + String(speed));
         return true;
 
@@ -159,7 +168,7 @@ bool Hexapod::printConsoleHelp() {
     PRINTLN("  hs               - Print hexapod legs status");
     PRINTLN("");
     PRINTLN("  hss [speed]      - Set hexapod speed (default: " + String(HEXAPOD_SPEED) + ")");
-    PRINTLN("  hsg              - Get hexapod speed");
+    PRINTLN("  hgs              - Get hexapod speed");
     PRINTLN("");
     PRINTLN("  hsu              - Hexapod stand up");
     PRINTLN("  hsd              - Hexapod stand down");

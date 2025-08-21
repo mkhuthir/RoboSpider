@@ -250,7 +250,24 @@ bool Leg::printStatus() {
 
 // Process console commands for leg control
 bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex) {
-    if (cmd == "lpu") {
+    if (cmd == "ls") {
+        printStatus();
+        return true;
+
+    } else if (cmd == "lss") {
+        if (args.length() > 0) {
+            int newSpeed = args.toInt();
+            setSpeed(newSpeed);
+            speed = newSpeed;
+            LOG_INF("Leg " + String(legIndex) + " speed set to " + String(newSpeed));
+        } else {
+            setSpeed(LEG_SPEED);
+            speed = LEG_SPEED;  
+            LOG_INF("Leg " + String(legIndex) + " speed: " + String((int)LEG_SPEED));
+        }
+        return true;
+
+    } else if (cmd == "lpu") {
         movePointUp();
         LOG_INF("Leg " + String(legIndex) + " point moving up");
         return true;
@@ -275,10 +292,6 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         LOG_INF("Leg " + String(legIndex) + " standing down");
         return true;
 
-    } else if (cmd == "ls") {
-        printStatus();
-        return true;
-
     } else if (cmd == "l?") {
         printConsoleHelp();
         return true;
@@ -292,6 +305,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
 bool Leg::printConsoleHelp() {
     PRINTLN("Leg Commands:\n\r");
     PRINTLN("  ls  [n]          - Print leg status (default: 0)");
+    PRINTLN("  lss [n] [speed]  - Set leg speed (default: " + String((int)LEG_SPEED) + ")");
     PRINTLN("");
     PRINTLN("  lpu [n]          - Move leg point up (default: 0)");
     PRINTLN("  lpd [n]          - Move leg point down (default: 0)");

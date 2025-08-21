@@ -493,9 +493,10 @@ bool Console::runLegCommand(const String& cmd, const String& args) {
     
     // Parse leg number from arguments if provided
     if (args.length() > 0) {
-        int parsedLeg = args.toInt();
-        if (parsedLeg >= 0 && parsedLeg < 6) { // Assuming 6 legs indexed from 0 to 5
-            legIndex = parsedLeg;
+        legIndex = args.toInt();
+        if (legIndex < 0 || legIndex >= HEXAPOD_LEGS) {
+            LOG_ERR("Invalid leg index: " + String(legIndex));
+            return true;
         }
     }
     
