@@ -451,7 +451,7 @@ bool Servo::printStatus(uint8_t id) {
     uint16_t    position = 0;
     uint16_t    speed = 0;
     uint16_t    load = 0;
-    bool        load_dir = 0;
+    bool        load_dir = false;
     uint8_t     voltage = 0;
     uint8_t     temperature = 0;
     uint16_t    punch = 0;
