@@ -17,7 +17,8 @@
   class Leg {
     public:
       Leg();                                  // Constructor
-      bool    init( uint8_t coxaID,           // Initialize the leg servos
+      bool    init( uint8_t legIndex,         // Initialize the leg servos
+                    uint8_t coxaID,           
                     uint8_t femurID, 
                     uint8_t tibiaID,
                     float   legBaseX,
@@ -55,19 +56,20 @@
       bool      printConsoleHelp();             // Print leg-specific help information
       
     private:
-      Driver*   driver;                         // Pointer to the driver instance
-      Servo*    servo;                          // Pointer to the servo instance
-      uint16_t  speed;                          // Speed of the leg
+      Driver*   driver;                           // Pointer to the driver instance
+      Servo*    servo;                            // Pointer to the servo instance
+      uint16_t  speed;                            // Speed of the leg
 
-      uint8_t   legIDs[LEG_SERVOS]={0,0,0};     // Servo IDs for the leg joints
-      float     legBaseX      = 0.0;            // Base X position from body center
-      float     legBaseY      = 0.0;            // Base Y position from body center
-      float     legBaseZ      = 0.0;            // Base Z position from body center
-      float     legBaseRoll   = 0.0;            // Base Roll position from body center
-      float     legBasePitch  = 0.0;            // Base Pitch position from body center
-      float     legBaseYaw    = 0.0;            // Base Yaw position from body center
+      uint8_t   legIndex;                         // Index of the leg (0-5)
+      uint8_t   legServoIDs[LEG_SERVOS]={0,0,0};  // Servo IDs for the leg joints
+      float     legBaseX      = 0.0;              // Base X position from body center
+      float     legBaseY      = 0.0;              // Base Y position from body center
+      float     legBaseZ      = 0.0;              // Base Z position from body center
+      float     legBaseRoll   = 0.0;              // Base Roll position from body center
+      float     legBasePitch  = 0.0;              // Base Pitch position from body center
+      float     legBaseYaw    = 0.0;              // Base Yaw position from body center
 
-      enum LegJoint { Coxa  = 0,                // Enum for leg joints
+      enum LegJoint { Coxa  = 0,                  // Enum for leg joints
                       Femur = 1, 
                       Tibia = 2 };
 

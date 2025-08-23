@@ -27,13 +27,13 @@ bool Hexapod::begin(Driver* driver , Servo* servo) {
   this->servo = servo;    // Set the servo pointer
   this->speed = HEXAPOD_SPEED;
 
-  //           S1  S2  S3  X  Y  Z  Roll  Pitch  Yaw
-  legs[0].init(1,  2,  3,  0, 0, 0, 0, 0, 0, driver, servo); // Initialize each leg with servo IDs
-  legs[1].init(4,  5,  6,  0, 0, 0, 0, 0, 0, driver, servo);
-  legs[2].init(7,  8,  9,  0, 0, 0, 0, 0, 0, driver, servo);
-  legs[3].init(10, 11, 12, 0, 0, 0, 0, 0, 0, driver, servo);
-  legs[4].init(13, 14, 15, 0, 0, 0, 0, 0, 0, driver, servo);
-  legs[5].init(16, 17, 18, 0, 0, 0, 0, 0, 0, driver, servo);
+  //           i  S1  S2  S3  X  Y  Z  Roll  Pitch  Yaw
+  legs[0].init(0, 1,  2,  3,  0, 0, 0, 0, 0, 0, driver, servo); // Initialize each leg with servo IDs
+  legs[1].init(1, 4,  5,  6,  0, 0, 0, 0, 0, 0, driver, servo);
+  legs[2].init(2, 7,  8,  9,  0, 0, 0, 0, 0, 0, driver, servo);
+  legs[3].init(3, 10, 11, 12, 0, 0, 0, 0, 0, 0, driver, servo);
+  legs[4].init(4, 13, 14, 15, 0, 0, 0, 0, 0, 0, driver, servo);
+  legs[5].init(5, 16, 17, 18, 0, 0, 0, 0, 0, 0, driver, servo);
 
   if (!driver->addSyncWriteHandler(1, "Goal_Position")) {   // Add sync write handler
     LOG_ERR("Failed to add sync write handler for Goal_Position");
@@ -113,9 +113,6 @@ uint16_t Hexapod::getSpeed() const {
 bool Hexapod::printStatus() {
   PRINTLN("\nHexapod Legs Status:");
   for (int i = 0; i < HEXAPOD_LEGS; i++) {
-    PRINT("Leg ");
-    PRINT(i);
-    PRINT(": ");
     legs[i].printStatus();  // Print leg angles of each leg
   }
   PRINTLN("Hexapod Speed: " + String(speed));

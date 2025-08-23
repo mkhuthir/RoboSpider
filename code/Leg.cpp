@@ -8,9 +8,10 @@
 // Default constructor for Leg class
 Leg::Leg(){
   // Initialize leg IDs to zero
-  legIDs[Coxa]  = 0;
-  legIDs[Femur] = 0;
-  legIDs[Tibia] = 0;
+  legIndex      = 0;
+  legServoIDs[Coxa]  = 0;
+  legServoIDs[Femur] = 0;
+  legServoIDs[Tibia] = 0;
 
   legBaseX      = 0.0;
   legBaseY      = 0.0;
@@ -26,11 +27,13 @@ Leg::Leg(){
 }
 
 // Initialize the leg servos
-bool Leg::init( uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, 
+bool Leg::init( uint8_t legIndex,
+                uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, 
                 float legBaseX, float legBaseY, float legBaseZ, 
                 float legBaseRoll, float legBasePitch, float legBaseYaw, 
                 Driver* driver, Servo* servo) {
-  
+
+  this->legIndex      = legIndex;
   this->legBaseX      = legBaseX;
   this->legBaseY      = legBaseY;
   this->legBaseZ      = legBaseZ;
@@ -38,28 +41,28 @@ bool Leg::init( uint8_t coxaID, uint8_t femurID, uint8_t tibiaID,
   this->legBasePitch  = legBasePitch;
   this->legBaseYaw    = legBaseYaw;
 
-  legIDs[Coxa]  = coxaID;   // Set coxa ID
-  legIDs[Femur] = femurID;  // Set femur ID
-  legIDs[Tibia] = tibiaID;  // Set tibia ID
+  legServoIDs[Coxa]  = coxaID;   // Set coxa ID
+  legServoIDs[Femur] = femurID;  // Set femur ID
+  legServoIDs[Tibia] = tibiaID;  // Set tibia ID
 
   this->driver = driver;    // Set the driver pointer
   this->servo = servo;      // Set the servo pointer
   this->speed = LEG_SPEED;  // Set default speed
 
-  if (!servo->init(legIDs[Coxa] , LEG_SPEED, COXA_CW_LIMIT, COXA_CCW_LIMIT)) {   // Initialize coxa servo with velocity
+  if (!servo->init(legServoIDs[Coxa] , LEG_SPEED, COXA_CW_LIMIT, COXA_CCW_LIMIT)) {   // Initialize coxa servo with velocity
     LOG_ERR("Failed to initialize coxa servo.");
     return false;
   }
-  if (!servo->init(legIDs[Femur], LEG_SPEED, FEMUR_CW_LIMIT, FEMUR_CCW_LIMIT)) {   // Initialize femur servo with velocity
+  if (!servo->init(legServoIDs[Femur], LEG_SPEED, FEMUR_CW_LIMIT, FEMUR_CCW_LIMIT)) {   // Initialize femur servo with velocity
     LOG_ERR("Failed to initialize femur servo.");
     return false;
   }
-  if (!servo->init(legIDs[Tibia], LEG_SPEED, TIBIA_CW_LIMIT, TIBIA_CCW_LIMIT)) {   // Initialize tibia servo with velocity
+  if (!servo->init(legServoIDs[Tibia], LEG_SPEED, TIBIA_CW_LIMIT, TIBIA_CCW_LIMIT)) {   // Initialize tibia servo with velocity
     LOG_ERR("Failed to initialize tibia servo.");
     return false;
   }
 
-  LOG_INF("Leg initialized successfully. (Servo IDs: " + String(legIDs[Coxa]) + ", " + String(legIDs[Femur]) + ", " + String(legIDs[Tibia]) + ")");
+  LOG_INF("Leg initialized successfully. (Servo IDs: " + String(legServoIDs[Coxa]) + ", " + String(legServoIDs[Femur]) + ", " + String(legServoIDs[Tibia]) + ")");
   return true;
 
 }
@@ -68,7 +71,7 @@ bool Leg::init( uint8_t coxaID, uint8_t femurID, uint8_t tibiaID,
 bool Leg::update() {
   // Update each servo
   for (int i = 0; i < LEG_SERVOS; i++) {
-    servo->update(legIDs[i]);
+    servo->update(legServoIDs[i]);
   }
   return true;
 }
@@ -76,7 +79,7 @@ bool Leg::update() {
 // Move the leg to the specified positions
 bool Leg::move(int32_t *positions) {
   const uint8_t num_positions   = 1;
-  if(!driver->syncWrite(handler_index, legIDs, LEG_SERVOS, positions, num_positions)) {
+  if(!driver->syncWrite(handler_index, legServoIDs, LEG_SERVOS, positions, num_positions)) {
     LOG_ERR("Failed to move leg.");
     return false;
   }
@@ -87,7 +90,7 @@ bool Leg::move(int32_t *positions) {
 bool Leg::isMoving() {
   uint8_t moving = 0;
   for (int i = 0; i < LEG_SERVOS; ++i) {
-    if (servo->isMoving(legIDs[i])) {
+    if (servo->isMoving(legServoIDs[i])) {
       return true;  // If any servo is moving, return true
     }
   }
@@ -122,7 +125,7 @@ bool Leg::moveStandDown() {
 // Set the speed of the leg
 bool Leg::setSpeed(uint16_t speed) {
   for (int i = 0; i < LEG_SERVOS; i++) {
-    if (!servo->setGoalSpeed(legIDs[i], speed)) {
+    if (!servo->setGoalSpeed(legServoIDs[i], speed)) {
       LOG_ERR("Failed to set speed for leg servo.");
       return false;
     }
@@ -138,7 +141,7 @@ uint16_t Leg::getSpeed() const {
 
 // Get current coxa angle
 bool Leg::getCoxa(uint16_t* angle) {
-  if (!servo->getPresentPosition(legIDs[Coxa], (uint16_t*)angle)) {
+  if (!servo->getPresentPosition(legServoIDs[Coxa], (uint16_t*)angle)) {
     LOG_ERR("Failed to get coxa position.");
     return false;
   }
@@ -147,7 +150,7 @@ bool Leg::getCoxa(uint16_t* angle) {
 
 // Get current femur angle
 bool Leg::getFemur(uint16_t* angle) {
-  if (!servo->getPresentPosition(legIDs[Femur], (uint16_t*)angle)) {
+  if (!servo->getPresentPosition(legServoIDs[Femur], (uint16_t*)angle)) {
     LOG_ERR("Failed to get femur position.");
     return false;
   }
@@ -156,7 +159,7 @@ bool Leg::getFemur(uint16_t* angle) {
 
 // Get current tibia angle
 bool Leg::getTibia(uint16_t* angle) {
-  if (!servo->getPresentPosition(legIDs[Tibia], (uint16_t*)angle)) {
+  if (!servo->getPresentPosition(legServoIDs[Tibia], (uint16_t*)angle)) {
     LOG_ERR("Failed to get tibia position.");
     return false;
   }
@@ -240,9 +243,11 @@ bool Leg::printStatus() {
     LOG_ERR("Failed to get joint angles.");
     return false;
   }
-  PRINT("Coxa: " + String((int)coxaAngle));
-  PRINT(" | Femur: " + String((int)femurAngle));
-  PRINT(" | Tibia: " + String((int)tibiaAngle));
+  PRINT("Leg " + String((int)legIndex));
+  PRINT(": Servo IDs: " + String((int)legServoIDs[0]) + ", " + String((int)legServoIDs[1]) + ", " + String((int)legServoIDs[2]));
+  PRINT(" | Angles: Coxa: " + String((int)coxaAngle));
+  PRINT(", Femur: " + String((int)femurAngle));
+  PRINT(", Tibia: " + String((int)tibiaAngle));
   PRINTLN(" | Speed: " + String((int)speed));
 
   return true;
