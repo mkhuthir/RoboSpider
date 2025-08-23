@@ -80,27 +80,20 @@ bool Console::update() {
 
 // Process the command entered by the user
 void Console::processInput(const String& input) {
-    // Trim whitespace and convert to lowercase for consistent handling
-    String cmd = input;
-    cmd.trim();
-    cmd.toLowerCase();
     
-    // Skip empty commands
-    if (cmd.length() == 0) {
-        return;
-    }
+    String cmd = input;
+    String mainCmd, args;
 
-    commandHistory.addCommand(input);       // Add original command to history
-    LOG_DBG("Received: " + input);          // Log the received command for debugging
-        
-    // Parse command and arguments
-    String mainCmd;
-    String args;
-    int spaceIndex = cmd.indexOf(' ');
-    if (spaceIndex != -1) {
-        mainCmd = cmd.substring(0, spaceIndex);
-        args = cmd.substring(spaceIndex + 1);
-        args.trim();
+    cmd.trim();                                     // Remove leading/trailing whitespace
+    cmd.toLowerCase();                              // Convert to lowercase for consistent handling
+    if (cmd.length() == 0) return;                  // Skip empty commands
+    commandHistory.addCommand(input);               // Add original command to history
+    int spaceIndex = cmd.indexOf(' ');              // Find the first space character
+    if (spaceIndex != -1) {                         // If a space is found
+        mainCmd = cmd.substring(0, spaceIndex);     // Extract main command
+        args = cmd.substring(spaceIndex + 1);       // Extract arguments
+        args.trim();                                // Remove leading/trailing whitespace
+
     } else {
         mainCmd = cmd;
     }
@@ -111,7 +104,7 @@ void Console::processInput(const String& input) {
         !gc->runConsoleCommands(mainCmd, args) &&
         !hexapod->runConsoleCommands(mainCmd, args) &&
         !bodyPose->runConsoleCommands(mainCmd, args) &&
-        !runLegCommand(mainCmd, args) &&
+        !runLegCommand(mainCmd, args) &&                    
         !sensor->runConsoleCommands(mainCmd, args) &&
         !servo->runConsoleCommands(mainCmd, args) &&
         !mc->runConsoleCommands(mainCmd, args)) 
@@ -490,13 +483,10 @@ bool Console::runConsoleCommands(const String& cmd, const String& args) {
 // Leg control commands (operates on leg 0 by default, could be extended for specific legs)
 bool Console::runLegCommand(const String& cmd, const String& args) {
     int legIndex = 0; // Default to leg 0
-    
-    // Parse leg number from arguments if provided
     if (args.length() > 0) {
         legIndex = args.toInt();
         if (legIndex < 0 || legIndex >= HEXAPOD_LEGS) {
-            LOG_ERR("Invalid leg index: " + String(legIndex));
-            return true;
+            legIndex = 0;
         }
     }
     

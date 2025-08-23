@@ -257,19 +257,13 @@ bool Servo::update(uint8_t id) {
 
 // Process console commands for servo control
 bool Servo::runConsoleCommands(const String& cmd, const String& args) {
-    int id      = 1;                                // Default servo ID to 1
-    int arg2    = 0;                                // Default argument2 to 0
-    int arg3    = 0;                                // Default argument3 to 0
-
+    int id = 1, arg2 = 0, arg3 = 0; // Default values
     if (args.length() > 0) {
-        char buf[64];
-        args.toCharArray(buf, sizeof(buf));
-        int n = sscanf(buf, "%d %d %d", &id, &arg2, &arg3);
+        int n = sscanf(args.c_str(), "%d %d %d", &id, &arg2, &arg3);
         if (n > 3) {
             LOG_ERR("Too many arguments");
             return true;
         }
-       
         if (id < 1 || id > 253) // Validate servo ID
             id = 1;
     }
