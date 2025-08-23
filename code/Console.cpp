@@ -100,20 +100,19 @@ void Console::processInput(const String& input) {
 
     // Execute command using organized command handlers
     if (!runConsoleCommands(mainCmd, args) &&
-        !turret->runConsoleCommands(mainCmd, args) &&
-        !gc->runConsoleCommands(mainCmd, args) &&
-        !hexapod->runConsoleCommands(mainCmd, args) &&
-        !bodyPose->runConsoleCommands(mainCmd, args) &&
-        !runLegCommand(mainCmd, args) &&                    
-        !sensor->runConsoleCommands(mainCmd, args) &&
+        !mc->runConsoleCommands(mainCmd, args) &&
+        !driver->runConsoleCommands(mainCmd, args) &&
         !servo->runConsoleCommands(mainCmd, args) &&
-        !mc->runConsoleCommands(mainCmd, args)) 
-        {
-        
-        // Unknown command
-        LOG_ERR("Unknown command: " + input);
-        PRINTLN("Type '?' for help.");
-    }
+        !hexapod->runConsoleCommands(mainCmd, args) &&
+        !runLegCommand(mainCmd, args) &&                    
+        !turret->runConsoleCommands(mainCmd, args) &&
+        !bodyPose->runConsoleCommands(mainCmd, args) &&
+        !sensor->runConsoleCommands(mainCmd, args) &&
+        !gc->runConsoleCommands(mainCmd, args) &&
+        !rc->runConsoleCommands(mainCmd, args)) {
+            LOG_ERR("Unknown command: " + input);   // Unknown command
+            PRINTLN("Type '?' for help.");
+        }
 }
 
 // Handle printable character input and display
@@ -503,13 +502,15 @@ bool Console::printAllHelp() {
     // Print help for each component
     if (!this->printConsoleHelp()) return false;
     if (!mc->printConsoleHelp()) return false;
+    if (!driver->printConsoleHelp()) return false;
     if (!servo->printConsoleHelp()) return false;
     if (!hexapod->printConsoleHelp()) return false;
     if (!hexapod->legs[0].printConsoleHelp()) return false;
-    if (!bodyPose->printConsoleHelp()) return false;
-    if (!gc->printConsoleHelp()) return false;
     if (!turret->printConsoleHelp()) return false;
     if (!sensor->printConsoleHelp()) return false;
+    if (!bodyPose->printConsoleHelp()) return false;
+    if (!gc->printConsoleHelp()) return false;
+    if (!rc->printConsoleHelp()) return false;
 
     // Show examples for common commands
     PRINTLN("Examples: 'lpu 2' moves leg 2 point up, 'sbu 72 200' plays note, 'mlon 3' turns on user LED 3");

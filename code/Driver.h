@@ -35,6 +35,10 @@
             bool                ping(uint8_t dxl_id);                                       // ping a servo to check if it is connected
             const char *        getModelName(uint8_t id);                                   // get the model name of a servo by its ID
 
+            bool                printStatus();                                              // Print current driver status
+            bool                runConsoleCommands(const String& cmd, const String& args);  // Process console commands for driver control
+            bool                printConsoleHelp();                                         // Print driver-specific help information
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------
         private:
             const char*         log = NULL;         // Log string for debugging 

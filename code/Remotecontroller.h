@@ -13,6 +13,10 @@
             bool begin(int serial_port, Microcontroller* mc, Hexapod* hexapod, Turret* turret, GaitController* gc);                
             bool update();                  // Update the remote controller state
 
+            bool      printStatus();
+            bool      runConsoleCommands(const String& cmd, const String& args);
+            bool      printConsoleHelp();
+
         private:
             RC100               rc;         // Instance of the RC100 remote controller
             Hexapod*            hexapod;    // Pointer to the Hexapod instance
