@@ -257,31 +257,25 @@ bool Servo::update(uint8_t id) {
 
 // Process console commands for servo control
 bool Servo::runConsoleCommands(const String& cmd, const String& args) {
-    // TODO: use sscanf instead of String manipulation
     int id      = 1;                                // Default servo ID to 1
     int arg2    = 0;                                // Default argument2 to 0
     int arg3    = 0;                                // Default argument3 to 0
 
     if (args.length() > 0) {
-        int spaceIndex1 = args.indexOf(' ');        
-        if (spaceIndex1 != -1) {
-            id = args.substring(0, spaceIndex1).toInt();
-            int spaceIndex2 = args.indexOf(' ', spaceIndex1 + 1);
-            if (spaceIndex2 == -1) {
-                arg2 = args.substring(spaceIndex1 + 1).toInt();
-            } else {
-                arg2 = args.substring(spaceIndex1 + 1, spaceIndex2).toInt();
-                arg3 = args.substring(spaceIndex2 + 1).toInt();
-            }
-        } else {
-            id = args.toInt();
-            if (id < 1 || id > 253)           // Validate servo ID
-                id = 1;                       // Reset to default ID
+        char buf[64];
+        args.toCharArray(buf, sizeof(buf));
+        int n = sscanf(buf, "%d %d %d", &id, &arg2, &arg3);
+        if (n > 3) {
+            LOG_ERR("Too many arguments");
+            return true;
         }
+       
+        if (id < 1 || id > 253) // Validate servo ID
+            id = 1;
     }
 
     if (cmd == "ss") {
-        if (arg2 > 0 && arg2 > id && arg2 < 253) {
+        if (arg2 > id && arg2 < 253) {
             for (int i = id; i <= arg2; i++) {
                 printStatus(i);
             }
