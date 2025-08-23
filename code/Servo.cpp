@@ -206,8 +206,10 @@ bool Servo::getPresentSpeed(uint8_t id, uint16_t* speed) {
 }
 
 // Get the present load data of a servo in value
-bool Servo::getPresentLoad(uint8_t id, uint16_t* load) {
+bool Servo::getPresentLoad(uint8_t id, bool* load_dir, uint16_t* load) {
     if (!driver->readRegister(id, "Present_Load", (uint32_t*)load)) return false;
+    *load_dir = *load >> 10;
+    *load &= 0x3FF;  // Mask to get the actual load value
     return true;
 }
 
@@ -229,6 +231,20 @@ bool Servo::isMoving(uint8_t id) {
     if (!driver->readRegister(id, "Moving", &isMoving)) return false;
     return isMoving;
 }
+
+// Check if EEPROM is locked
+bool Servo::isLock(uint8_t id) {
+    uint32_t isLocked = 0;
+    if (!driver->readRegister(id, "Lock", &isLocked)) return false;
+    return isLocked;
+}
+
+// Get the punch of a servo
+bool Servo::getPunch(uint8_t id, uint16_t* punch) {
+    if (!driver->readRegister(id, "Punch", (uint32_t*)punch)) return false;
+    return true;
+}
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 // Initialize a servo with default settings
 bool Servo::init(   uint8_t dxl_id, 
@@ -288,6 +304,18 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
         }
         return true;
 
+    } else if (cmd == "sgmn") {
+        uint16_t model_number;
+        getModelNumber((uint8_t)id, &model_number);
+        PRINTLN("Servo ID " + String(id) + " model number: " + String(model_number));
+        return true;
+
+    } else if (cmd == "sgfv") {
+        uint8_t firmware_version;
+        getFirmwareVersion((uint8_t)id, &firmware_version);
+        PRINTLN("Servo ID " + String(id) + " firmware version: " + String(firmware_version));
+        return true;
+
     } else if (cmd == "sgal") {
         uint16_t CW_angle, CCW_angle;
         getAngleLimits((uint8_t)id, &CW_angle, &CCW_angle);
@@ -308,8 +336,9 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
         
     } else if (cmd == "sgl") {
         uint16_t presentLoad;
-        getPresentLoad((uint8_t)id, &presentLoad);
-        PRINTLN("Servo ID " + String(id) + " current load: " + String(presentLoad));
+        bool load_dir;
+        getPresentLoad((uint8_t)id, &load_dir, &presentLoad);
+        PRINTLN("Servo ID " + String(id) + " current load: " + String(load_dir==1 ? "CW " : "CCW ")+ String(presentLoad) );
         return true;
 
     } else if (cmd == "sgv") {
@@ -322,6 +351,16 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
         uint8_t presentTemperature;
         getPresentTemperature((uint8_t)id, &presentTemperature);
         PRINTLN("Servo ID " + String(id) + " current temperature: " + String(presentTemperature) + " C");
+        return true;
+
+    } else if (cmd == "sglo") {
+        PRINTLN("Servo ID " + String(id) + " EEPROM is " + String(isLock((uint8_t)id) ? "LOCKED" : "UNLOCKED"));
+        return true;
+
+    } else if (cmd == "sgpn") {
+        uint16_t punch = 0;
+        getPunch((uint8_t)id, &punch);
+        PRINTLN("Servo ID " + String(id) + " punch: " + String(punch));
         return true;
 
     } else if (cmd == "sim") {
@@ -425,17 +464,20 @@ bool Servo::printStatus(uint8_t id) {
     uint16_t position = 0;
     uint16_t speed = 0;
     uint16_t load = 0;
+    bool load_dir = 0;
     uint8_t voltage = 0;
     uint8_t temperature = 0;
+    uint16_t punch = 0;
 
     getComplianceMargin(id, &CW_margin, &CCW_margin);
     getComplianceSlope(id, &CW_slope, &CCW_slope);
     getTorqueLimit(id, &torque_limit);
     getPresentPosition(id, &position);
     getPresentSpeed(id, &speed);
-    getPresentLoad(id, &load);
+    getPresentLoad(id, &load_dir, &load);
     getPresentVoltage(id, &voltage);
     getPresentTemperature(id, &temperature);
+    getPunch(id, &punch);
 
     PRINTLN("\nServo Status:");
     PRINTLN("Servo ID            : " + String(id));
@@ -458,10 +500,12 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Torque Limit        : " + String(torque_limit));
     PRINTLN("Present Position    : " + String(position));
     PRINTLN("Present Speed       : " + String(speed));
-    PRINTLN("Present Load        : " + String(load));
+    PRINTLN("Present Load        : " + String(load_dir==1 ? "CW " : "CCW ")+ String(load));
     PRINTLN("Present Voltage     : " + String((float)voltage/10) + " V");
     PRINTLN("Present Temperature : " + String(temperature) + " C");
     PRINTLN("Moving              : " + String(isMoving(id) ? "YES" : "NO"));
+    PRINTLN("EEPROM Locked       : " + String(isLock(id) ? "YES" : "NO"));
+    PRINTLN("Punch               : " + String(punch));
     return true;
 }
 
@@ -470,6 +514,8 @@ bool Servo::printConsoleHelp() {
     PRINTLN("Servo Commands:\n\r");
     PRINTLN("  ss [id] [id]         - Show servo status for range of id's (default id=1)");
     PRINTLN("  sp [id] [id]         - Ping servo for range of id's (default id=1)");
+    PRINTLN("  sgmn [id]            - Get servo model number (default id=1)");
+    PRINTLN("  sgfv [id]            - Get servo firmware version (default id=1)");
     PRINTLN("");
     PRINTLN("  sgp [id]             - Get servo position (default id=1)");
     PRINTLN("  sgs [id]             - Get servo speed (default id=1)");
@@ -477,6 +523,8 @@ bool Servo::printConsoleHelp() {
     PRINTLN("  sgl [id]             - Get servo load (default id=1)");
     PRINTLN("  sgv [id]             - Get servo voltage (default id=1)");
     PRINTLN("  sgt [id]             - Get servo temperature (default id=1)");
+    PRINTLN("  sglo [id]            - Get servo lock status (default id=1)");
+    PRINTLN("  sgpn [id]            - Get servo punch (default id=1)");
     PRINTLN("");
     PRINTLN("  sim [id]             - Check is servo moving (default id=1)");
     PRINTLN("  sit [id]             - Check is servo torque enabled (default id=1)");
