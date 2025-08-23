@@ -434,17 +434,27 @@ bool Servo::runConsoleCommands(const String& cmd, const String& args) {
 // Print the status of a servo for debugging
 bool Servo::printStatus(uint8_t id) {
 
-    uint16_t model_number = 0;              // FIXME: model_number is getting reset before print
-    uint8_t firmware_version = 0;
-    uint8_t baud_rate = 0;
-    uint8_t return_delay_time = 0;
-    uint16_t CW_angle = 0, CCW_angle = 0;   // FIXME: CW_angle is getting reset before print
-    uint8_t max_temperature = 0;
-    uint8_t min_voltage = 0, max_voltage = 0;
-    uint16_t max_torque = 0;
-    uint8_t status_return_level = 0;
-    uint8_t alarm_LED = 0;
-    uint8_t shutdown = 0;
+    uint16_t    model_number = 0;
+    uint8_t     firmware_version = 0;
+    uint8_t     baud_rate = 0;
+    uint8_t     return_delay_time = 0;
+    uint16_t    CW_angle = 0, CCW_angle = 0;
+    uint8_t     max_temperature = 0;
+    uint8_t     min_voltage = 0, max_voltage = 0;
+    uint16_t    max_torque = 0;
+    uint8_t     status_return_level = 0;
+    uint8_t     alarm_LED = 0;
+    uint8_t     shutdown = 0;
+    uint8_t     CW_margin = 0, CCW_margin = 0;
+    uint8_t     CW_slope = 0, CCW_slope = 0;
+    uint16_t    torque_limit = 0;
+    uint16_t    position = 0;
+    uint16_t    speed = 0;
+    uint16_t    load = 0;
+    bool        load_dir = 0;
+    uint8_t     voltage = 0;
+    uint8_t     temperature = 0;
+    uint16_t    punch = 0;
 
     getModelNumber(id, &model_number);
     getFirmwareVersion(id, &firmware_version);
@@ -457,18 +467,6 @@ bool Servo::printStatus(uint8_t id) {
     getStatusReturnLevel(id, &status_return_level);
     getAlarmLED(id, &alarm_LED);
     getShutdown(id, &shutdown);
-
-    uint8_t CW_margin = 0, CCW_margin = 0;
-    uint8_t CW_slope = 0, CCW_slope = 0;
-    uint16_t torque_limit = 0;
-    uint16_t position = 0;
-    uint16_t speed = 0;
-    uint16_t load = 0;
-    bool load_dir = 0;
-    uint8_t voltage = 0;
-    uint8_t temperature = 0;
-    uint16_t punch = 0;
-
     getComplianceMargin(id, &CW_margin, &CCW_margin);
     getComplianceSlope(id, &CW_slope, &CCW_slope);
     getTorqueLimit(id, &torque_limit);
