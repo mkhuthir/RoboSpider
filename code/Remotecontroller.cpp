@@ -84,4 +84,37 @@ bool Remotecontroller::update() {
         }
     }
     return true;
+
+    //-----------------------------------------------------------------------------
+
+    // Print the status of all legs
+    bool Remotecontroller::printStatus() {
+        PRINTLN("\nRemotecontroller Status:");
+        return true;
+    }
+
+    // Process console commands for hexapod control
+    bool Remotecontroller::runConsoleCommands(const String& cmd, const String& args) {
+        if (cmd == "rs") {
+            printStatus();
+            return true;
+
+        } else if (cmd == "r?") {
+            printConsoleHelp();
+            return true;
+
+        }
+
+        return false;
+    }
+
+    // Print hexapod-specific help information
+    bool Remotecontroller::printConsoleHelp() {
+        PRINTLN("Remotecontroller Commands:\n\r");
+        PRINTLN("  rs               - Print remotecontroller status");
+        PRINTLN("  r?               - Print this help information");
+        PRINTLN("");
+        return true;
+    }
+
 }
