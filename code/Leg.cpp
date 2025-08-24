@@ -227,12 +227,12 @@ bool Leg::getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, ui
 bool Leg::getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z, uint16_t* positions)
 {
     float tip_local_x, tip_local_y, tip_local_z;
-    transGlobalToLocal(tip_global_x, tip_global_y, tip_global_z, tip_local_x, tip_local_y, tip_local_z);
+    globalToLocal(tip_global_x, tip_global_y, tip_global_z, tip_local_x, tip_local_y, tip_local_z);
     return getIKLocal(tip_local_x, tip_local_y, tip_local_z, positions);
 }
 
 // Utility function to transform global (body) to local (leg base) coordinates
-void Leg::transGlobalToLocal( float global_x, float global_y, float global_z,
+void Leg::globalToLocal( float global_x, float global_y, float global_z,
                 float& local_x, float& local_y, float& local_z)
 {
   // Subtract base position
@@ -370,6 +370,24 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         }
         setServoPositions(coxaPos, femurPos, tibiaPos);
         LOG_INF("Leg " + String(legIndex) + " servo positions set to: Coxa: " + String(coxaPos) + ", Femur: " + String(femurPos) + ", Tibia: " + String(tibiaPos));
+        return true;
+
+    } else if (cmd == "lgsp") {
+        uint16_t coxaPos = 0, femurPos = 0, tibiaPos = 0;
+        getServoPositions(&coxaPos, &femurPos, &tibiaPos);
+        LOG_INF("Leg " + String(legIndex) + " servo positions: Coxa: " + String(coxaPos) + ", Femur: " + String(femurPos) + ", Tibia: " + String(tibiaPos));
+        return true;
+
+    } else if (cmd == "lstlp") {
+        float tip_local_x = 0, tip_local_y = 0, tip_local_z = 0;
+        // TODO:
+        setTipLocalPosition(tip_local_x, tip_local_y, tip_local_z);
+        return true;
+
+    } else if (cmd == "lgtlp") {
+        float tip_local_x = 0, tip_local_y = 0, tip_local_z = 0;
+        getTipLocalPosition(&tip_local_x, &tip_local_y, &tip_local_z);
+        LOG_INF("Leg " + String(legIndex) + " tip local position: X: " + String(tip_local_x) + ", Y: " + String(tip_local_y) + ", Z: " + String(tip_local_z));
         return true;
 
     } else if (cmd == "l?") {

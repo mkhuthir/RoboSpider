@@ -88,7 +88,7 @@
       bool      getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_t* positions);
       bool      getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z, uint16_t* positions);
 
-      void      transGlobalToLocal( float global_x, float global_y, float global_z,
+      void      globalToLocal( float global_x, float global_y, float global_z,
                                     float& local_x, float& local_y, float& local_z);
   };
 
