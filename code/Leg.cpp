@@ -18,7 +18,7 @@ Leg::Leg(){
   legServoIDs[Tibia]  = 0;
   driver              = nullptr;
   servo               = nullptr;
-  speed               = LEG_SPEED;
+  speed               = 0;
 
 }
 
@@ -26,30 +26,30 @@ Leg::Leg(){
 bool Leg::init( uint8_t legIndex,
                 uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, 
                 float legBaseX, float legBaseY, float legBaseZ, 
-                float legBaseR,
+                float legBaseR, uint8_t legSpeed,
                 Driver* driver, Servo* servo) {
 
-  this->legIndex      = legIndex;
-  this->legBaseX      = legBaseX;
-  this->legBaseY      = legBaseY;
-  this->legBaseZ      = legBaseZ;
-  this->legBaseR      = legBaseR;
-  legServoIDs[Coxa]   = coxaID;   // Set coxa ID
-  legServoIDs[Femur]  = femurID;  // Set femur ID
-  legServoIDs[Tibia]  = tibiaID;  // Set tibia ID
-  this->driver        = driver;    // Set the driver pointer
+  this->legIndex      = legIndex;   // Set leg index
+  this->legBaseX      = legBaseX;   // Set leg base X position
+  this->legBaseY      = legBaseY;   // Set leg base Y position
+  this->legBaseZ      = legBaseZ;   // Set leg base height
+  this->legBaseR      = legBaseR;   // Set leg base rotation
+  legServoIDs[Coxa]   = coxaID;     // Set coxa ID
+  legServoIDs[Femur]  = femurID;    // Set femur ID
+  legServoIDs[Tibia]  = tibiaID;    // Set tibia ID
+  this->driver        = driver;     // Set the driver pointer
   this->servo         = servo;      // Set the servo pointer
-  this->speed         = LEG_SPEED;  // Set default speed
+  this->speed         = legSpeed;   // Set default speed
 
-  if (!servo->init(legServoIDs[Coxa] , LEG_SPEED, COXA_CW_LIMIT, COXA_CCW_LIMIT)) {   // Initialize coxa servo with velocity
+  if (!servo->init(legServoIDs[Coxa] , legSpeed, COXA_CW_LIMIT, COXA_CCW_LIMIT)) {   // Initialize coxa servo with velocity
     LOG_ERR("Failed to initialize coxa servo.");
     return false;
   }
-  if (!servo->init(legServoIDs[Femur], LEG_SPEED, FEMUR_CW_LIMIT, FEMUR_CCW_LIMIT)) {   // Initialize femur servo with velocity
+  if (!servo->init(legServoIDs[Femur], legSpeed, FEMUR_CW_LIMIT, FEMUR_CCW_LIMIT)) {   // Initialize femur servo with velocity
     LOG_ERR("Failed to initialize femur servo.");
     return false;
   }
-  if (!servo->init(legServoIDs[Tibia], LEG_SPEED, TIBIA_CW_LIMIT, TIBIA_CCW_LIMIT)) {   // Initialize tibia servo with velocity
+  if (!servo->init(legServoIDs[Tibia], legSpeed, TIBIA_CW_LIMIT, TIBIA_CCW_LIMIT)) {   // Initialize tibia servo with velocity
     LOG_ERR("Failed to initialize tibia servo.");
     return false;
   }

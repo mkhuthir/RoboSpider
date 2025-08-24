@@ -8,7 +8,6 @@
   
   #define LEG_SERVOS        uint8_t(3)      // Number of servos per leg
   #define HEXAPOD_LEGS      uint8_t(6)      // Maximum number of legs
-  #define LEG_SPEED         uint16_t(100)   // Default speed for leg movement
   
   #define COXA_LENGTH       float(52)       // Length of the coxa segment in mm
   #define COXA_CW_LIMIT     uint16_t(225)   // Min position for COXA servo
@@ -36,6 +35,7 @@
                     float   legBaseY,
                     float   legBaseZ,
                     float   legBaseR,
+                    uint8_t legSpeed,
                     Driver* driver,
                     Servo*  servo);
 

@@ -1,18 +1,18 @@
 #include "Servo.h"
 #include "Hexapod.h"
 #include "Debug.h"
-#include "HexapodPoses.h"       // Include hexapod poses header
-#include "Console.h"        // Add this include for logging macros
+#include "HexapodPoses.h"       
+#include "Console.h"            
 
 
 // Constructor for Hexapod class
 Hexapod::Hexapod(){
-  driver  = nullptr;                    // Dynamixel controller not initialized
-  servo   = nullptr;                    // Servo controller not initialized
-  speed   = HEXAPOD_SPEED;              // Speed not initialized
+  driver  = nullptr;                        // Dynamixel controller not initialized
+  servo   = nullptr;                        // Servo controller not initialized
+  speed   = 0;                              // Speed not initialized
 
   for (int i = 0; i < HEXAPOD_LEGS; i++) {
-    legs[i] = Leg();                    // instantiate each leg
+    legs[i] = Leg();                        // instantiate each leg
   }
 }
 
@@ -23,29 +23,29 @@ bool Hexapod::begin(Driver* driver , Servo* servo) {
     return false;
   }
 
-  this->driver = driver;  // Set the driver pointer
-  this->servo = servo;    // Set the servo pointer
-  this->speed = HEXAPOD_SPEED;
-  
-  legs[0].init(0, 1,  2,  3,  LEG_0_BASE_X, LEG_0_BASE_Y, LEG_0_BASE_Z, LEG_0_BASE_R, driver, servo); // Initialize each leg with servo IDs
-  legs[1].init(1, 4,  5,  6,  LEG_1_BASE_X, LEG_1_BASE_Y, LEG_1_BASE_Z, LEG_1_BASE_R, driver, servo);
-  legs[2].init(2, 7,  8,  9,  LEG_2_BASE_X, LEG_2_BASE_Y, LEG_2_BASE_Z, LEG_2_BASE_R, driver, servo);
-  legs[3].init(3, 10, 11, 12, LEG_3_BASE_X, LEG_3_BASE_Y, LEG_3_BASE_Z, LEG_3_BASE_R, driver, servo);
-  legs[4].init(4, 13, 14, 15, LEG_4_BASE_X, LEG_4_BASE_Y, LEG_4_BASE_Z, LEG_4_BASE_R, driver, servo);
-  legs[5].init(5, 16, 17, 18, LEG_5_BASE_X, LEG_5_BASE_Y, LEG_5_BASE_Z, LEG_5_BASE_R, driver, servo);
+  this->driver  = driver;         // Set the driver pointer
+  this->servo   = servo;          // Set the servo pointer
+  this->speed   = HEXAPOD_SPEED;  // Set the hexapod to default speed
 
-  if (!driver->addSyncWriteHandler(1, "Goal_Position")) {   // Add sync write handler
+  legs[0].init(0, 1,  2,  3,  LEG_0_BASE_X, LEG_0_BASE_Y, LEG_0_BASE_Z, LEG_0_BASE_R, HEXAPOD_SPEED, driver, servo); // Initialize each leg
+  legs[1].init(1, 4,  5,  6,  LEG_1_BASE_X, LEG_1_BASE_Y, LEG_1_BASE_Z, LEG_1_BASE_R, HEXAPOD_SPEED, driver, servo);
+  legs[2].init(2, 7,  8,  9,  LEG_2_BASE_X, LEG_2_BASE_Y, LEG_2_BASE_Z, LEG_2_BASE_R, HEXAPOD_SPEED, driver, servo);
+  legs[3].init(3, 10, 11, 12, LEG_3_BASE_X, LEG_3_BASE_Y, LEG_3_BASE_Z, LEG_3_BASE_R, HEXAPOD_SPEED, driver, servo);
+  legs[4].init(4, 13, 14, 15, LEG_4_BASE_X, LEG_4_BASE_Y, LEG_4_BASE_Z, LEG_4_BASE_R, HEXAPOD_SPEED, driver, servo);
+  legs[5].init(5, 16, 17, 18, LEG_5_BASE_X, LEG_5_BASE_Y, LEG_5_BASE_Z, LEG_5_BASE_R, HEXAPOD_SPEED, driver, servo);
+
+  if (!driver->addSyncWriteHandler(1, "Goal_Position")) {           // Add sync write handler
     LOG_ERR("Failed to add sync write handler for Goal_Position");
     return false;
   }
 
-  if (!moveStandUp()) {                                    // Move Hexapod to standing position
+  if (!moveStandUp()) {                                             // Move Hexapod to standing position
     LOG_ERR("Failed to move Hexapod to standing position");
     return false;
   }
 
   LOG_INF("Hexapod initialized successfully.");
-  return true;                                      // Initialization successful
+  return true;                                                      // Initialization successful
 }
 
 // Hexapod update
@@ -98,12 +98,13 @@ bool Hexapod::setSpeed(uint16_t speed) {
   for (int i = 0; i < HEXAPOD_LEGS; i++) {
     legs[i].setSpeed(speed);
   }
+  this->speed = speed;
   return true;
 }
 
 // Get the speed of the hexapod
 uint16_t Hexapod::getSpeed() const {
-  return speed;
+  return this->speed;
 }
 
 //--------------------------------------------------------------------------------
