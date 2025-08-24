@@ -17,12 +17,17 @@
             bool      runConsoleCommands(const String& cmd, const String& args);
             bool      printConsoleHelp();
 
+            uint8_t  getLastButtonPressed();            
+            uint8_t  getLastButtonDepressed();
+
         private:
-            RC100               rc;         // Instance of the RC100 remote controller
-            Hexapod*            hexapod;    // Pointer to the Hexapod instance
-            Turret*             turret;     // Pointer to the turret instance
-            GaitController*     gc;         // Pointer to the GaitController instance
-            Microcontroller*    mc;         // Pointer to the Microcontroller instance
+            uint8_t              lastButtonPressed;     // Last button pressed
+            uint8_t              lastButtonDepressed;   // Last button depressed
+            RC100                rc;                    // Instance of the RC100 remote controller
+            Hexapod*             hexapod;               // Pointer to the Hexapod instance
+            Turret*              turret;                // Pointer to the turret instance
+            GaitController*      gc;                    // Pointer to the GaitController instance
+            Microcontroller*     mc;                    // Pointer to the Microcontroller instance
     };
 
 #endif // REMOTECONTROLLER_H

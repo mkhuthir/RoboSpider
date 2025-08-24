@@ -523,6 +523,8 @@ bool Console::printConsoleHelp() {
     PRINTLN("Console Commands:\n\r");
     PRINTLN("  ? / h            - Show this help message");
     PRINTLN("  ??               - Show all available commands");
+    PRINTLN("");
+    PRINTLN("  d?               - Show driver commands");
     PRINTLN("  s?               - Show servo commands");
     PRINTLN("  h?               - Show hexapod commands");
     PRINTLN("  l?               - Show leg commands");
@@ -530,6 +532,7 @@ bool Console::printConsoleHelp() {
     PRINTLN("  t?               - Show turret commands");
     PRINTLN("  b?               - Show body pose commands");
     PRINTLN("  g?               - Show gait controller commands");
+    PRINTLN("  r?               - Show remote controller commands");
     PRINTLN("");
     PRINTLN("  cls / clear      - Clear the terminal screen");
     PRINTLN("  debug [0-4]      - Set debug level (0=NONE, 1=ERROR, 2=WARN, 3=INFO, 4=ALL)");
