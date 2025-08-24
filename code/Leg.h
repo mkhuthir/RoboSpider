@@ -42,12 +42,13 @@
       bool      setSpeed(uint16_t speed);         // Set the speed of the leg
       uint16_t  getSpeed() const;                 // Get the current speed of the leg
 
-      bool      getServoPositions(uint16_t* coxa, uint16_t* femur, uint16_t* tibia);
       bool      getBasePosition(float* base_x, float* base_y, float* base_z, float* base_r);
-      bool      getTipPosition(float* tip_x, float* tip_y, float* tip_z);
 
-      bool      getIKLocal(float tip_x, float tip_y, float tip_z, int16_t* positions);
-      bool      getIKGlobal(float tip_x_global, float tip_y_global, float tip_z_global, int16_t* positions);
+      bool      setServoPositions(uint16_t coxa, uint16_t femur, uint16_t tibia);
+      bool      getServoPositions(uint16_t* coxa, uint16_t* femur, uint16_t* tibia);
+
+      bool      setTipLocalPosition(float tip_local_x, float tip_local_y, float tip_local_z);
+      bool      getTipLocalPosition(float* tip_local_x, float* tip_local_y, float* tip_local_z);
 
       bool      printStatus();                    // Print current joint angles to Serial
       bool      runConsoleCommands( const String& cmd, 
@@ -71,6 +72,10 @@
       enum LegJoint { Coxa  = 0,                  // Enum for leg joints
                       Femur = 1, 
                       Tibia = 2 };
+
+
+      bool      getIKLocal(float tip_x, float tip_y, float tip_z, uint16_t* positions);
+      bool      getIKGlobal(float tip_x_global, float tip_y_global, float tip_z_global, uint16_t* positions);
 
       void      transGlobalToLocal( float x_global, float y_global, float z_global,
                                     float& x_local, float& y_local, float& z_local);
