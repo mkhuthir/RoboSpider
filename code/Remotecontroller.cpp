@@ -101,12 +101,12 @@ bool Remotecontroller::update() {
 }
  
 // get last button pressed
-uint8_t Remotecontroller::getLastButtonPressed() {
+uint16_t Remotecontroller::getLastButtonPressed() {
     return lastButtonPressed;
 }
 
 // get last button depressed
-uint8_t Remotecontroller::getLastButtonDepressed() {
+uint16_t Remotecontroller::getLastButtonDepressed() {
     return lastButtonDepressed;
 }
 
@@ -115,8 +115,8 @@ uint8_t Remotecontroller::getLastButtonDepressed() {
 // Print the status of the remote controller
 bool Remotecontroller::printStatus() {
     PRINTLN("\nRemotecontroller Status:");
-    PRINTLN("Last button pressed   : " + String(lastButtonPressed));
-    PRINTLN("Last button depressed : " + String(lastButtonDepressed));
+    PRINTLN("Last button pressed   : " + String(lastButtonPressed) + " (0b" + String(lastButtonPressed, BIN) + ")");
+    PRINTLN("Last button depressed : " + String(lastButtonDepressed) + " (0b" + String(lastButtonDepressed, BIN) + ")");
     return true;
 }
 
