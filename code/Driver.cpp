@@ -219,7 +219,7 @@ const char * Driver::getModelName(uint8_t id) {
 
 // Print the status of the driver
 bool Driver::printStatus() {
-  PRINTLN("\nDriver Status:\n\r");
+  PRINTLN("\nDriver Status:");
   PRINTLN("Baud Rate                      : " + String(getBaudrate()) + " bps");
   PRINTLN("Protocol Version               : " + String(getProtocolVersion()));
   PRINTLN("Number of Sync Write Handlers  : " + String(getTheNumberOfSyncWriteHandler()));
