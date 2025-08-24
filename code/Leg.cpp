@@ -346,19 +346,19 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         return true;
 
     } else if (cmd == "lssp") {
-        uint16_t coxaPos = 512, femurPos = 512, tibiaPos = 512;
+        uint16_t coxaPos = COXA_DEFAULT, femurPos = FEMUR_DEFAULT, tibiaPos = TIBIA_DEFAULT;
         if (args.length() > 0) {
               int count = 0, arg1 = 0, arg2 = 0, arg3 = 0, arg4 = 0;
               count = sscanf(args.c_str(), "%d %d %d %d", &arg1, &arg2, &arg3, &arg4);
               switch(count) {
                 case 1:                 // only leg index is mentioned
-                  coxaPos = 512, femurPos = 512, tibiaPos = 512;
+                  coxaPos = COXA_DEFAULT, femurPos = FEMUR_DEFAULT, tibiaPos = TIBIA_DEFAULT;
                   break;
                 case 2:
-                  coxaPos = arg2, femurPos = 512, tibiaPos = 512;
+                  coxaPos = arg2, femurPos = FEMUR_DEFAULT, tibiaPos = TIBIA_DEFAULT;
                   break;
                 case 3:
-                  coxaPos = arg2, femurPos = arg3, tibiaPos = 512;
+                  coxaPos = arg2, femurPos = arg3, tibiaPos = TIBIA_DEFAULT;
                   break;
                 case 4:
                   coxaPos = arg2, femurPos = arg3, tibiaPos = arg4;
@@ -385,7 +385,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
 bool Leg::printConsoleHelp() {
     PRINTLN("Leg Commands:\n\r");
     PRINTLN("  ls  [n]            - Print leg status (default: 0)");
-    PRINTLN("  lss [n] [speed]    - Set leg speed (default: " + String((int)LEG_SPEED) + ")");
+    PRINTLN("  lss [n] [speed]    - Set leg speed (default: 0, " + String((int)LEG_SPEED) + ")");
     PRINTLN("");
     PRINTLN("  lpu [n]            - Move leg point up (default: 0)");
     PRINTLN("  lpd [n]            - Move leg point down (default: 0)");
@@ -394,7 +394,7 @@ bool Leg::printConsoleHelp() {
     PRINTLN("  lsu [n]            - Move leg to stand up position (default: 0)");
     PRINTLN("  lsd [n]            - Move leg to stand down position (default: 0)");
     PRINTLN("");
-    PRINTLN("  lssp [n][c][f][t]  - Set leg servo positions (default: 0)");
+    PRINTLN("  lssp [n][c][f][t]  - Set leg servo positions (default: 0, " + String(COXA_DEFAULT) + ", " + String(FEMUR_DEFAULT) + ", " + String(TIBIA_DEFAULT) + ")");
     PRINTLN("  lgsp [n]           - Get leg servo positions (default: 0)");
     PRINTLN("  lstlp [n][x][y][z] - Set leg tip local position (default: 0)");
     PRINTLN("  lgtlp [n]          - Get leg tip local position (default: 0)");

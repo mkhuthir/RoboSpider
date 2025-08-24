@@ -4,16 +4,27 @@
   #include "Servo.h"
   #include "Driver.h"
 
-  #define handler_index   0                   // Index for sync write handler
+  #define handler_index   0                 // Index for sync write handler
   
-  #define LEG_SERVOS      uint8_t(3)          // Number of servos per leg
-  #define HEXAPOD_LEGS    uint8_t(6)          // Maximum number of legs
-  #define LEG_SPEED       uint16_t(300)       // Default speed for leg movement
+  #define LEG_SERVOS        uint8_t(3)      // Number of servos per leg
+  #define HEXAPOD_LEGS      uint8_t(6)      // Maximum number of legs
+  #define LEG_SPEED         uint16_t(100)   // Default speed for leg movement
+  
+  #define COXA_LENGTH       float(52)       // Length of the coxa segment in mm
+  #define COXA_CW_LIMIT     uint16_t(225)   // Min position for COXA servo
+  #define COXA_CCW_LIMIT    uint16_t(798)   // Max position for COXA servo
+  #define COXA_DEFAULT      uint16_t(512)   // Default position for COXA servo
 
-  #define COXA_LENGTH     float(52)           // Length of the coxa segment in mm
-  #define FEMUR_LENGTH    float(82)           // Length of the femur segment in mm
-  #define TIBIA_LENGTH    float(142)          // Length of the tibia segment in mm
-  
+  #define FEMUR_LENGTH      float(82)       // Length of the femur segment in mm
+  #define FEMUR_CW_LIMIT    uint16_t(204)   // Min position for FEMUR servo
+  #define FEMUR_CCW_LIMIT   uint16_t(819)   // Max position for FEMUR servo
+  #define FEMUR_DEFAULT     uint16_t(358)   // Default position for FEMUR servo
+
+  #define TIBIA_LENGTH      float(142)      // Length of the tibia segment in mm
+  #define TIBIA_CW_LIMIT    uint16_t(30)    // Min position for TIBIA servo
+  #define TIBIA_CCW_LIMIT   uint16_t(993)   // Max position for TIBIA servo
+  #define TIBIA_DEFAULT     uint16_t(665)   // Default position for TIBIA servo
+
   class Leg {
     public:
       Leg();                                  // Constructor
