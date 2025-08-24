@@ -484,8 +484,8 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Firmware Ver        : " + String(firmware_version));
     PRINTLN("Baud Rate           : " + String(2000000/(baud_rate+1)) + " bps");
     PRINTLN("Return Delay        : " + String(return_delay_time) + " us");
-    PRINTLN("Angle Limits        : CW " + String(CW_angle) + " ~ CCW " + String(CCW_angle));
-    PRINTLN("Max Temperature     : " + String(max_temperature)+ " C");
+    PRINTLN("Angle Limits        : CW " + String(CW_angle) + "° ~ CCW " + String(CCW_angle) + "°");
+    PRINTLN("Max Temperature     : " + String(max_temperature)+ " °C");
     PRINTLN("Voltage Limits      : " + String((float)min_voltage/10) + " ~ " + String((float)max_voltage/10) + " V");
     PRINTLN("Max Torque          : " + String(max_torque));
     PRINTLN("Status Level        : " + String(status_return_level));
@@ -493,14 +493,14 @@ bool Servo::printStatus(uint8_t id) {
     PRINTLN("Shutdown Status     : " + String(shutdown));
     PRINTLN("Torque              : " + String(isTorqueOn(id) ? "Enabled" : "Disabled"));
     PRINTLN("LED                 : " + String(isLedOn(id) ? "ON" : "OFF"));
-    PRINTLN("Compliance Margin   : CW " + String(CW_margin) + " ~ CCW " + String(CCW_margin));
-    PRINTLN("Compliance Slope    : CW " + String(CW_slope) + " ~ CCW " + String(CCW_slope));
+    PRINTLN("Compliance Margin   : CW " + String(CW_margin) + "° ~ CCW " + String(CCW_margin) + "°");
+    PRINTLN("Compliance Slope    : CW " + String(CW_slope) + "° ~ CCW " + String(CCW_slope) + "°");
     PRINTLN("Torque Limit        : " + String(torque_limit));
     PRINTLN("Present Position    : " + String(position));
     PRINTLN("Present Speed       : " + String(speed));
     PRINTLN("Present Load        : " + String(load_dir==1 ? "CW " : "CCW ")+ String(load));
     PRINTLN("Present Voltage     : " + String((float)voltage/10) + " V");
-    PRINTLN("Present Temperature : " + String(temperature) + " C");
+    PRINTLN("Present Temperature : " + String(temperature) + " °C");
     PRINTLN("Moving              : " + String(isMoving(id) ? "YES" : "NO"));
     PRINTLN("EEPROM Locked       : " + String(isLock(id) ? "YES" : "NO"));
     PRINTLN("Punch               : " + String(punch));

@@ -8,19 +8,17 @@
 // Default constructor for Leg class
 Leg::Leg(){
   // Initialize leg IDs to zero
-  legIndex      = 0;
-  legServoIDs[Coxa]  = 0;
-  legServoIDs[Femur] = 0;
-  legServoIDs[Tibia] = 0;
-
-  legBaseX      = 0.0;
-  legBaseY      = 0.0;
-  legBaseZ      = 0.0;
-  legBaseRot    = 0.0;
-
-  driver        = nullptr;
-  servo         = nullptr;
-  speed         = LEG_SPEED;
+  legIndex            = 0;
+  legBaseX            = 0.0;
+  legBaseY            = 0.0;
+  legBaseZ            = 0.0;
+  legBaseR            = 0.0;
+  legServoIDs[Coxa]   = 0;
+  legServoIDs[Femur]  = 0;
+  legServoIDs[Tibia]  = 0;
+  driver              = nullptr;
+  servo               = nullptr;
+  speed               = LEG_SPEED;
 
 }
 
@@ -28,22 +26,20 @@ Leg::Leg(){
 bool Leg::init( uint8_t legIndex,
                 uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, 
                 float legBaseX, float legBaseY, float legBaseZ, 
-                float legBaseRot,
+                float legBaseR,
                 Driver* driver, Servo* servo) {
 
   this->legIndex      = legIndex;
   this->legBaseX      = legBaseX;
   this->legBaseY      = legBaseY;
   this->legBaseZ      = legBaseZ;
-  this->legBaseRot    = legBaseRot;
-
-  legServoIDs[Coxa]  = coxaID;   // Set coxa ID
-  legServoIDs[Femur] = femurID;  // Set femur ID
-  legServoIDs[Tibia] = tibiaID;  // Set tibia ID
-
-  this->driver = driver;    // Set the driver pointer
-  this->servo = servo;      // Set the servo pointer
-  this->speed = LEG_SPEED;  // Set default speed
+  this->legBaseR      = legBaseR;
+  legServoIDs[Coxa]   = coxaID;   // Set coxa ID
+  legServoIDs[Femur]  = femurID;  // Set femur ID
+  legServoIDs[Tibia]  = tibiaID;  // Set tibia ID
+  this->driver        = driver;    // Set the driver pointer
+  this->servo         = servo;      // Set the servo pointer
+  this->speed         = LEG_SPEED;  // Set default speed
 
   if (!servo->init(legServoIDs[Coxa] , LEG_SPEED, COXA_CW_LIMIT, COXA_CCW_LIMIT)) {   // Initialize coxa servo with velocity
     LOG_ERR("Failed to initialize coxa servo.");
@@ -135,34 +131,40 @@ uint16_t Leg::getSpeed() const {
   return speed;
 }
 
-// Get current coxa angle
-bool Leg::getCoxa(uint16_t* angle) {
-  if (!servo->getPresentPosition(legServoIDs[Coxa], (uint16_t*)angle)) {
+// Get the leg base position
+bool Leg::getBasePosition(float* base_x, float* base_y, float* base_z, float* base_r) {
+  *base_x = legBaseX;
+  *base_y = legBaseY;
+  *base_z = legBaseZ;
+  *base_r = legBaseR;
+  return true;
+}
+
+// Get the current positions of the leg joints
+bool Leg::getServoPositions(uint16_t* coxa, uint16_t* femur, uint16_t* tibia) {
+  if (!servo->getPresentPosition(legServoIDs[Coxa], coxa)) {
     LOG_ERR("Failed to get coxa position.");
     return false;
   }
-  return true;
-}
-
-// Get current femur angle
-bool Leg::getFemur(uint16_t* angle) {
-  if (!servo->getPresentPosition(legServoIDs[Femur], (uint16_t*)angle)) {
+  if (!servo->getPresentPosition(legServoIDs[Femur], femur)) {
     LOG_ERR("Failed to get femur position.");
     return false;
   }
-  return true;
-}
-
-// Get current tibia angle
-bool Leg::getTibia(uint16_t* angle) {
-  if (!servo->getPresentPosition(legServoIDs[Tibia], (uint16_t*)angle)) {
+  if (!servo->getPresentPosition(legServoIDs[Tibia], tibia)) {
     LOG_ERR("Failed to get tibia position.");
     return false;
   }
   return true;
 }
 
-
+// Get the leg tip position
+bool Leg::getTipPosition(float* tip_x, float* tip_y, float* tip_z) {
+  // TODO: Forward Kinematics to compute tip position from joint angles
+  *tip_x = 1.0;
+  *tip_y = 2.0;
+  *tip_z = 3.0;
+  return true;
+}
 
 // IK in local coordinates (relative to leg base frame)
 bool Leg::getIKLocal(float tip_x, float tip_y, float tip_z, int16_t* positions)
@@ -188,13 +190,10 @@ bool Leg::getIKLocal(float tip_x, float tip_y, float tip_z, int16_t* positions)
     float tibia_angle_deg = 180.0f - tibia_angle_rad * 180.0f / M_PI;
 
     // --- Servo mapping: 0-300 deg → 0-1023 ---
-    if (legBaseRot == -180) { // TODO:
-        positions[Coxa]  = static_cast<int16_t>(coxa_angle_deg * (1023.0f / 300.0f));
-    } else {
-        positions[Coxa]  = static_cast<int16_t>((300.0f - coxa_angle_deg) * (1023.0f / 300.0f));
-    }
-    positions[Femur] = static_cast<int16_t>(femur_angle_deg * (1023.0f / 300.0f));
-    positions[Tibia] = static_cast<int16_t>(tibia_angle_deg * (1023.0f / 300.0f));
+    float coxa_angle_deg_adjusted = coxa_angle_deg - (legBaseR * 180.0f / M_PI);        // Adjust coxa angle based on legBaseR (convert to degrees)
+    positions[Coxa]  = static_cast<int16_t>(coxa_angle_deg_adjusted * (1023.0f / 300.0f));
+    positions[Femur] = static_cast<int16_t>(femur_angle_deg         * (1023.0f / 300.0f));
+    positions[Tibia] = static_cast<int16_t>(tibia_angle_deg         * (1023.0f / 300.0f));
     return true;
 }
 
@@ -216,8 +215,8 @@ void Leg::transGlobalToLocal( float x_global, float y_global, float z_global,
   float z = z_global - legBaseZ;
 
   // Apply inverse yaw rotation only (around Z axis)
-  float cy = cos(-legBaseRot);
-  float sy = sin(-legBaseRot);
+  float cy = cos(-legBaseR);
+  float sy = sin(-legBaseR);
 
   x_local = cy * x - sy * y;
   y_local = sy * x + cy * y;
@@ -227,16 +226,31 @@ void Leg::transGlobalToLocal( float x_global, float y_global, float z_global,
 // Print current joint angles
 bool Leg::printStatus() {
   uint16_t coxaAngle = 0, femurAngle = 0, tibiaAngle = 0;
-  if (!getCoxa(&coxaAngle) || !getFemur(&femurAngle) || !getTibia(&tibiaAngle)) {
+  float legBaseX = 0, legBaseY = 0, legBaseZ = 0; float legBaseR = 0;
+  float tipX = 0, tipY = 0, tipZ = 0;
+
+  if (!getServoPositions(&coxaAngle, &femurAngle, &tibiaAngle)) {
     LOG_ERR("Failed to get joint angles.");
     return false;
   }
-  PRINT("Leg " + String((int)legIndex));
-  PRINT(": Servo IDs: " + String((int)legServoIDs[0]) + ", " + String((int)legServoIDs[1]) + ", " + String((int)legServoIDs[2]));
-  PRINT(" | Angles: Coxa: " + String((int)coxaAngle));
-  PRINT(", Femur: " + String((int)femurAngle));
-  PRINT(", Tibia: " + String((int)tibiaAngle));
-  PRINTLN(" | Speed: " + String((int)speed));
+
+  if (!getBasePosition(&legBaseX, &legBaseY, &legBaseZ, &legBaseR)) {
+    LOG_ERR("Failed to get leg base position.");
+    return false;
+  }
+
+  if (!getTipPosition(&tipX, &tipY, &tipZ)) {
+    LOG_ERR("Failed to get leg tip position.");
+    return false;
+  }
+
+  PRINTLN("Leg: " + String((int)legIndex));
+  PRINTLN("Base         : X: " + String((int)legBaseX) + "mm, Y: " + String((int)legBaseY) + "mm, Z: " + String((int)legBaseZ) + "mm, R: " + String((int)legBaseR) + "°");
+  PRINTLN("Servo IDs    : Coxa: " + String((int)legServoIDs[0]) + ", Femur: " + String((int)legServoIDs[1]) + ", Tibia: " + String((int)legServoIDs[2]));
+  PRINTLN("Servo Pos.   : Coxa: " + String((int)coxaAngle) + ", Femur: " + String((int)femurAngle) + ", Tibia: " + String((int)tibiaAngle));
+  PRINTLN("Speed        : " + String((int)speed));
+  PRINTLN("Tip Position : X: " + String((int)tipX) + "mm, Y: " + String((int)tipY) + "mm, Z: " + String((int)tipZ) + "mm");
+
 
   return true;
 }

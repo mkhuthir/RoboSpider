@@ -26,14 +26,13 @@ bool Hexapod::begin(Driver* driver , Servo* servo) {
   this->driver = driver;  // Set the driver pointer
   this->servo = servo;    // Set the servo pointer
   this->speed = HEXAPOD_SPEED;
-
-  //           i  S1  S2  S3  X  Y  Z  Rot
-  legs[0].init(0, 1,  2,  3,  0, 0, 0, 0, driver, servo); // Initialize each leg with servo IDs
-  legs[1].init(1, 4,  5,  6,  0, 0, 0, 0, driver, servo);
-  legs[2].init(2, 7,  8,  9,  0, 0, 0, 0, driver, servo);
-  legs[3].init(3, 10, 11, 12, 0, 0, 0, 0, driver, servo);
-  legs[4].init(4, 13, 14, 15, 0, 0, 0, 0, driver, servo);
-  legs[5].init(5, 16, 17, 18, 0, 0, 0, 0, driver, servo);
+  
+  legs[0].init(0, 1,  2,  3,  LEG_0_BASE_X, LEG_0_BASE_Y, LEG_0_BASE_Z, LEG_0_BASE_R, driver, servo); // Initialize each leg with servo IDs
+  legs[1].init(1, 4,  5,  6,  LEG_1_BASE_X, LEG_1_BASE_Y, LEG_1_BASE_Z, LEG_1_BASE_R, driver, servo);
+  legs[2].init(2, 7,  8,  9,  LEG_2_BASE_X, LEG_2_BASE_Y, LEG_2_BASE_Z, LEG_2_BASE_R, driver, servo);
+  legs[3].init(3, 10, 11, 12, LEG_3_BASE_X, LEG_3_BASE_Y, LEG_3_BASE_Z, LEG_3_BASE_R, driver, servo);
+  legs[4].init(4, 13, 14, 15, LEG_4_BASE_X, LEG_4_BASE_Y, LEG_4_BASE_Z, LEG_4_BASE_R, driver, servo);
+  legs[5].init(5, 16, 17, 18, LEG_5_BASE_X, LEG_5_BASE_Y, LEG_5_BASE_Z, LEG_5_BASE_R, driver, servo);
 
   if (!driver->addSyncWriteHandler(1, "Goal_Position")) {   // Add sync write handler
     LOG_ERR("Failed to add sync write handler for Goal_Position");

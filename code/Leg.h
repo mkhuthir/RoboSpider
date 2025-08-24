@@ -24,46 +24,49 @@
                     float   legBaseX,
                     float   legBaseY,
                     float   legBaseZ,
-                    float   legBaseRot,
+                    float   legBaseR,
                     Driver* driver,
                     Servo*  servo);
 
-      bool      update();                       // Update the leg state
+      bool      update();                         // Update the leg state
 
-      bool      move(int32_t *positions);       // Move the leg to the specified positions
-      bool      isMoving();                     // Check if any servo in the leg is currently moving 
+      bool      move(int32_t *positions);         // Move the leg to the specified positions
+      bool      isMoving();                       // Check if any servo in the leg is currently moving 
 
-      bool      movePointUp();                  // Move leg up
-      bool      movePointDown();                // Move leg down
-      bool      movePointOut();                 // Move leg out
-      bool      moveStandUp();                  // Move leg to stand up position
-      bool      moveStandDown();                // Move leg to stand down position
+      bool      movePointUp();                    // Move leg up
+      bool      movePointDown();                  // Move leg down
+      bool      movePointOut();                   // Move leg out
+      bool      moveStandUp();                    // Move leg to stand up position
+      bool      moveStandDown();                  // Move leg to stand down position
 
-      bool      setSpeed(uint16_t speed);       // Set the speed of the leg
-      uint16_t  getSpeed() const;                // Get the current speed of the leg
+      bool      setSpeed(uint16_t speed);         // Set the speed of the leg
+      uint16_t  getSpeed() const;                 // Get the current speed of the leg
 
-      bool      getCoxa(uint16_t* angle);       // Get current coxa angle
-      bool      getFemur(uint16_t* angle);      // Get current femur angle
-      bool      getTibia(uint16_t* angle);      // Get current tibia angle
+      bool      getServoPositions(uint16_t* coxa, uint16_t* femur, uint16_t* tibia);
+      bool      getBasePosition(float* base_x, float* base_y, float* base_z, float* base_r);
+      bool      getTipPosition(float* tip_x, float* tip_y, float* tip_z);
 
       bool      getIKLocal(float tip_x, float tip_y, float tip_z, int16_t* positions);
       bool      getIKGlobal(float tip_x_global, float tip_y_global, float tip_z_global, int16_t* positions);
 
-      bool      printStatus();                  // Print current joint angles to Serial
-      bool      runConsoleCommands(const String& cmd, const String& args, int legIndex);  // Process console commands for leg control
-      bool      printConsoleHelp();             // Print leg-specific help information
+      bool      printStatus();                    // Print current joint angles to Serial
+      bool      runConsoleCommands( const String& cmd, 
+                                    const String& args, 
+                                    int legIndex);// Process console commands for leg control
+      bool      printConsoleHelp();               // Print leg-specific help information
       
     private:
-      Driver*   driver;                           // Pointer to the driver instance
-      Servo*    servo;                            // Pointer to the servo instance
-      uint16_t  speed;                            // Speed of the leg
+      Driver*   driver        = nullptr;          // Pointer to the driver instance
+      Servo*    servo         = nullptr;          // Pointer to the servo instance
+      uint16_t  speed         = 0;                // Speed of the leg
 
-      uint8_t   legIndex;                         // Index of the leg (0-5)
-      uint8_t   legServoIDs[LEG_SERVOS]={0,0,0};  // Servo IDs for the leg joints
+      uint8_t   legIndex      = 0;                // Index of the leg (0-5)
       float     legBaseX      = 0.0;              // Base X position from body center
       float     legBaseY      = 0.0;              // Base Y position from body center
       float     legBaseZ      = 0.0;              // Base Z position from body center
-      float     legBaseRot    = 0.0;              // Base Rotation position from body center
+      float     legBaseR      = 0.0;              // Base Rotation position from body center
+
+      uint8_t   legServoIDs[LEG_SERVOS]={0,0,0};  // Servo IDs for the leg joints
 
       enum LegJoint { Coxa  = 0,                  // Enum for leg joints
                       Femur = 1, 
