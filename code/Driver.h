@@ -17,6 +17,10 @@
             
             float               getProtocolVersion(void);                                   // get the protocol version being used
             uint32_t            getBaudrate(void);                                          // get the current baudrate
+
+            uint8_t             getTheNumberOfSyncWriteHandler(void);                       // Get the number of sync write handlers
+            uint8_t             getTheNumberOfSyncReadHandler(void);                        // Get the number of sync read handlers
+            uint8_t             getTheNumberOfBulkReadParam(void);                          // Get the number of bulk read parameters
 //---------------------------------------------------------------------------------------------------------------------------------------------------
             bool                readRegister(uint8_t id, uint16_t address, uint16_t length, uint32_t *data);
             bool                writeRegister(uint8_t id, uint16_t address, uint16_t length, uint8_t* data);

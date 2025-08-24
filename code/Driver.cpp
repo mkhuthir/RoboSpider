@@ -16,7 +16,6 @@ bool Driver::begin(const char* device_name, uint32_t baudrate, float protocol_ve
 
 // Set the port handler with the device name
 bool Driver::setPortHandler(const char *device_name) {
-
     if (!dxl.setPortHandler(device_name, &log))
     {        
         LOG_ERR(log);
@@ -28,7 +27,6 @@ bool Driver::setPortHandler(const char *device_name) {
 
 // Set the baudrate for the port handler
 bool Driver::setBaudrate(uint32_t baud_rate) {
-
     if (!dxl.setBaudrate(baud_rate, &log))
     {        
         LOG_ERR(log);
@@ -48,6 +46,8 @@ bool Driver::setPacketHandler(float protocol_version) {
     return true;
 }
 
+//----------------------------------------------------------------------------
+
 // Get the protocol version
 float Driver::getProtocolVersion(void) {
     float protocol_version = dxl.getProtocolVersion();
@@ -56,21 +56,33 @@ float Driver::getProtocolVersion(void) {
         LOG_ERR("Failed to get protocol version!");
         return -1.0;
     }
-    LOG_INF("Protocol Version: " + String(protocol_version));
     return protocol_version;
 }
 
 // Get the baudrate
 uint32_t Driver::getBaudrate(void) {
-
     uint32_t baudrate = dxl.getBaudrate();
-
     if (baudrate == 0)
     {        
         LOG_ERR("Failed to get baudrate!");
         return 0;
     }
     return baudrate;
+}
+
+// Get the number of sync write handlers
+uint8_t Driver::getTheNumberOfSyncWriteHandler(void) {
+    return dxl.getTheNumberOfSyncWriteHandler();
+}
+
+// Get the number of sync read handlers
+uint8_t Driver::getTheNumberOfSyncReadHandler(void) {
+    return dxl.getTheNumberOfSyncReadHandler();
+}
+
+// Get the number of bulk read parameters
+uint8_t Driver::getTheNumberOfBulkReadParam(void) {
+    return dxl.getTheNumberOfBulkReadParam();
 }
 
 //-----------------------------------------------------------------------------
@@ -207,7 +219,12 @@ const char * Driver::getModelName(uint8_t id) {
 
 // Print the status of the driver
 bool Driver::printStatus() {
-  PRINTLN("\nDriver Status:");
+  PRINTLN("\nDriver Status:\n\r");
+  PRINTLN("Baud Rate                      : " + String(getBaudrate()) + " bps");
+  PRINTLN("Protocol Version               : " + String(getProtocolVersion()));
+  PRINTLN("Number of Sync Write Handlers  : " + String(getTheNumberOfSyncWriteHandler()));
+  PRINTLN("Number of Sync Read Handlers   : " + String(getTheNumberOfSyncReadHandler()));
+  PRINTLN("Number of Bulk Read Parameters : " + String(getTheNumberOfBulkReadParam()));
   return true;
 }
 
