@@ -67,6 +67,8 @@
                                     int legIndex);// Process console commands for leg control
       bool      printConsoleHelp();               // Print leg-specific help information
       
+
+
     private:
       Driver*   driver        = nullptr;          // Pointer to the driver instance
       Servo*    servo         = nullptr;          // Pointer to the servo instance
@@ -84,9 +86,13 @@
                       Femur = 1, 
                       Tibia = 2 };
 
-
+      // Inverse Kinematics
       bool      getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_t* positions);
       bool      getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z, uint16_t* positions);
+
+      // Forward Kinematics
+      bool      getFKLocal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_local_x, float* tip_local_y, float* tip_local_z);
+      bool      getFKGlobal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_global_x, float* tip_global_y, float* tip_global_z);
 
       void      globalToLocal( float global_x, float global_y, float global_z,
                                     float& local_x, float& local_y, float& local_z);

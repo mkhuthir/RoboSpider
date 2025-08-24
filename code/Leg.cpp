@@ -189,6 +189,49 @@ bool Leg::getTipLocalPosition(float* tip_local_x, float* tip_local_y, float* tip
   return true;
 }
 
+// Forward Kinematics
+bool Leg::getFKLocal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_local_x, float* tip_local_y, float* tip_local_z) {
+  // Convert servo positions to angles in degrees
+  float coxa_angle_deg  = coxa  * (300.0f / 1023.0f);
+  float femur_angle_deg = femur * (300.0f / 1023.0f);
+  float tibia_angle_deg = tibia * (300.0f / 1023.0f);
+
+  // Convert degrees to radians
+  float coxa_angle_rad  = coxa_angle_deg  * M_PI / 180.0f + legBaseR;
+  float femur_angle_rad = femur_angle_deg * M_PI / 180.0f;
+  float tibia_angle_rad = tibia_angle_deg * M_PI / 180.0f;
+
+  // Planar FK for femur and tibia
+  float planar_length = FEMUR_LENGTH * cos(femur_angle_rad) + TIBIA_LENGTH * cos(femur_angle_rad + tibia_angle_rad);
+  float z = FEMUR_LENGTH * sin(femur_angle_rad) + TIBIA_LENGTH * sin(femur_angle_rad + tibia_angle_rad);
+
+  // Tip position in leg base frame
+  *tip_local_x = COXA_LENGTH + planar_length * cos(coxa_angle_rad);
+  *tip_local_y = planar_length * sin(coxa_angle_rad);
+  *tip_local_z = z;
+
+  return true;
+}
+
+bool Leg::getFKGlobal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_global_x, float* tip_global_y, float* tip_global_z) {
+  float tip_local_x = 0.0f, tip_local_y = 0.0f, tip_local_z = 0.0f;
+  // Compute local tip position using FK
+  if (!getFKLocal(coxa, femur, tibia, &tip_local_x, &tip_local_y, &tip_local_z)) {
+    LOG_ERR("Failed to compute local FK.");
+    return false;
+  }
+
+  // Transform local tip position to global coordinates
+  // Apply yaw rotation (legBaseR) and add base position
+  float cy = cos(legBaseR);
+  float sy = sin(legBaseR);
+
+  *tip_global_x = legBaseX + cy * tip_local_x - sy * tip_local_y;
+  *tip_global_y = legBaseY + sy * tip_local_x + cy * tip_local_y;
+  *tip_global_z = legBaseZ + tip_local_z;
+
+  return true;
+}
 
 //---------------------------------------------------------------------------------------------
 
@@ -248,6 +291,8 @@ void Leg::globalToLocal( float global_x, float global_y, float global_z,
   local_y = sy * x + cy * y;
   local_z = z; // No change in Z for yaw-only rotation
 }
+
+//-------------------------------------------------------------------------------------
 
 // Print current joint angles
 bool Leg::printStatus() {
