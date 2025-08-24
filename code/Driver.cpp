@@ -205,13 +205,13 @@ const char * Driver::getModelName(uint8_t id) {
 
 //-----------------------------------------------------------------------------
 
-// Print the status of all legs
+// Print the status of the driver
 bool Driver::printStatus() {
   PRINTLN("\nDriver Status:");
   return true;
 }
 
-// Process console commands for hexapod control
+// Handle console commands specific to the driver
 bool Driver::runConsoleCommands(const String& cmd, const String& args) {
     if (cmd == "ds") {
         printStatus();
@@ -226,10 +226,10 @@ bool Driver::runConsoleCommands(const String& cmd, const String& args) {
     return false;
 }
 
-// Print hexapod-specific help information
+// Print driver-specific help information
 bool Driver::printConsoleHelp() {
     PRINTLN("Driver Commands:\n\r");
-    PRINTLN("  ds               - Print hexapod legs status");
+    PRINTLN("  ds               - Print driver status");
     PRINTLN("  d?               - Print this help information");
     PRINTLN("");
     return true;

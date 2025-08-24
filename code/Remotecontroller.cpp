@@ -87,13 +87,13 @@ bool Remotecontroller::update() {
 
     //-----------------------------------------------------------------------------
 
-    // Print the status of all legs
+    // Print the status of the remote controller
     bool Remotecontroller::printStatus() {
         PRINTLN("\nRemotecontroller Status:");
         return true;
     }
 
-    // Process console commands for hexapod control
+    // Handle console commands specific to the remote controller
     bool Remotecontroller::runConsoleCommands(const String& cmd, const String& args) {
         if (cmd == "rs") {
             printStatus();
@@ -108,7 +108,7 @@ bool Remotecontroller::update() {
         return false;
     }
 
-    // Print hexapod-specific help information
+    // Print remotecontroller-specific help information
     bool Remotecontroller::printConsoleHelp() {
         PRINTLN("Remotecontroller Commands:\n\r");
         PRINTLN("  rs               - Print remotecontroller status");

@@ -107,7 +107,7 @@ uint16_t Hexapod::getSpeed() const {
   return speed;
 }
 
-// Get
+//--------------------------------------------------------------------------------
 
 // Print the status of all legs
 bool Hexapod::printStatus() {
