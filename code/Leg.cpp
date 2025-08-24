@@ -153,6 +153,7 @@ bool Leg::setServoPositions(uint16_t coxa, uint16_t femur, uint16_t tibia) {
 
 // Get the current positions of the leg joints
 bool Leg::getServoPositions(uint16_t* coxa, uint16_t* femur, uint16_t* tibia) {
+  // TODO: use syncRead
   if (!servo->getPresentPosition(legServoIDs[Coxa], coxa)) {
     LOG_ERR("Failed to get coxa position.");
     return false;
@@ -192,14 +193,14 @@ bool Leg::getTipLocalPosition(float* tip_local_x, float* tip_local_y, float* tip
 //---------------------------------------------------------------------------------------------
 
 // IK in local coordinates (relative to leg base frame)
-bool Leg::getIKLocal(float tip_x, float tip_y, float tip_z, uint16_t* positions)
+bool Leg::getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_t* positions)
 {
     // 1. Coxa (rotation in XY plane)
-    float coxa_angle_rad = atan2(tip_y, tip_x);
+    float coxa_angle_rad = atan2(tip_local_y, tip_local_x);
     float coxa_angle_deg = coxa_angle_rad * 180.0f / M_PI;
 
-    float r = sqrt(tip_x * tip_x + tip_y * tip_y) - COXA_LENGTH;
-    float z = tip_z;
+    float r = sqrt(tip_local_x * tip_local_x + tip_local_y * tip_local_y) - COXA_LENGTH;
+    float z = tip_local_z;
     float leg_length = sqrt(r * r + z * z);
 
     if (leg_length > (FEMUR_LENGTH + TIBIA_LENGTH) || leg_length < fabs(FEMUR_LENGTH - TIBIA_LENGTH)) {
@@ -223,29 +224,29 @@ bool Leg::getIKLocal(float tip_x, float tip_y, float tip_z, uint16_t* positions)
 }
 
 // IK in global coordinates (relative to body center)
-bool Leg::getIKGlobal(float tip_x_global, float tip_y_global, float tip_z_global, uint16_t* positions)
+bool Leg::getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z, uint16_t* positions)
 {
-    float x_local, y_local, z_local;
-    transGlobalToLocal(tip_x_global, tip_y_global, tip_z_global, x_local, y_local, z_local);
-    return getIKLocal(x_local, y_local, z_local, positions);
+    float tip_local_x, tip_local_y, tip_local_z;
+    transGlobalToLocal(tip_global_x, tip_global_y, tip_global_z, tip_local_x, tip_local_y, tip_local_z);
+    return getIKLocal(tip_local_x, tip_local_y, tip_local_z, positions);
 }
 
 // Utility function to transform global (body) to local (leg base) coordinates
-void Leg::transGlobalToLocal( float x_global, float y_global, float z_global,
-                float& x_local, float& y_local, float& z_local)
+void Leg::transGlobalToLocal( float global_x, float global_y, float global_z,
+                float& local_x, float& local_y, float& local_z)
 {
   // Subtract base position
-  float x = x_global - legBaseX;
-  float y = y_global - legBaseY;
-  float z = z_global - legBaseZ;
+  float x = global_x - legBaseX;
+  float y = global_y - legBaseY;
+  float z = global_z - legBaseZ;
 
   // Apply inverse yaw rotation only (around Z axis)
   float cy = cos(-legBaseR);
   float sy = sin(-legBaseR);
 
-  x_local = cy * x - sy * y;
-  y_local = sy * x + cy * y;
-  z_local = z; // No change in Z for yaw-only rotation
+  local_x = cy * x - sy * y;
+  local_y = sy * x + cy * y;
+  local_z = z; // No change in Z for yaw-only rotation
 }
 
 // Print current joint angles
@@ -298,10 +299,20 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
 
     } else if (cmd == "lss") {
         int newSpeed = LEG_SPEED; // Default speed
+
         if (args.length() > 0) {
-            int spaceIdx = args.indexOf(' ');
-            if (spaceIdx >= 0) {
-              newSpeed = args.substring(spaceIdx + 1).toInt();
+            int count = 0, arg1 = 0, arg2 = 0;
+            count = sscanf(args.c_str(), "%d %d", &arg1, &arg2);
+            switch(count) {
+              case 1:                 // only leg index is mentioned
+                newSpeed = LEG_SPEED;
+                break;
+              case 2:
+                newSpeed = arg2;      // leg index and speed are mentioned
+                break;
+              default:
+                LOG_ERR("Invalid parameters");
+                break;
             }
         }
         setSpeed(newSpeed);
@@ -346,17 +357,22 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
 // Print leg-specific help information
 bool Leg::printConsoleHelp() {
     PRINTLN("Leg Commands:\n\r");
-    PRINTLN("  ls  [n]          - Print leg status (default: 0)");
-    PRINTLN("  lss [n] [speed]  - Set leg speed (default: " + String((int)LEG_SPEED) + ")");
+    PRINTLN("  ls  [n]            - Print leg status (default: 0)");
+    PRINTLN("  lss [n] [speed]    - Set leg speed (default: " + String((int)LEG_SPEED) + ")");
     PRINTLN("");
-    PRINTLN("  lpu [n]          - Move leg point up (default: 0)");
-    PRINTLN("  lpd [n]          - Move leg point down (default: 0)");
-    PRINTLN("  lpo [n]          - Move leg point out (default: 0)");
+    PRINTLN("  lpu [n]            - Move leg point up (default: 0)");
+    PRINTLN("  lpd [n]            - Move leg point down (default: 0)");
+    PRINTLN("  lpo [n]            - Move leg point out (default: 0)");
     PRINTLN("");
-    PRINTLN("  lsu [n]          - Move leg to stand up position (default: 0)");
-    PRINTLN("  lsd [n]          - Move leg to stand down position (default: 0)");
+    PRINTLN("  lsu [n]            - Move leg to stand up position (default: 0)");
+    PRINTLN("  lsd [n]            - Move leg to stand down position (default: 0)");
     PRINTLN("");
-    PRINTLN("  l?               - Show this help");
+    PRINTLN("  lssp [n][c][f][t]  - Set leg servo positions (default: 0)");
+    PRINTLN("  lgsp [n]           - Get leg servo positions (default: 0)");
+    PRINTLN("  lstlp [n][x][y][z] - Set leg tip local position (default: 0)");
+    PRINTLN("  lgtlp [n]          - Get leg tip local position (default: 0)");
+    PRINTLN("");
+    PRINTLN("  l?                 - Show this help");
     PRINTLN("");
     return true;
 }

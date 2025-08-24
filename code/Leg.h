@@ -74,11 +74,11 @@
                       Tibia = 2 };
 
 
-      bool      getIKLocal(float tip_x, float tip_y, float tip_z, uint16_t* positions);
-      bool      getIKGlobal(float tip_x_global, float tip_y_global, float tip_z_global, uint16_t* positions);
+      bool      getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_t* positions);
+      bool      getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z, uint16_t* positions);
 
-      void      transGlobalToLocal( float x_global, float y_global, float z_global,
-                                    float& x_local, float& y_local, float& z_local);
+      void      transGlobalToLocal( float global_x, float global_y, float global_z,
+                                    float& local_x, float& local_y, float& local_z);
   };
 
 #endif // LEG_H
