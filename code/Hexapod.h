@@ -9,7 +9,7 @@
   #define HEXAPOD_LEGS   uint8_t(6)                                         // Maximum number of legs
   #define LEG_SERVOS     uint8_t(3)                                         // Number of servos per leg
   #define HEXAPOD_SERVOS uint8_t(HEXAPOD_LEGS * LEG_SERVOS)                 // Maximum number of servos
-  #define HEXAPOD_SPEED  uint16_t(300)                                      // Default speed for hexapod
+  #define HEXAPOD_SPEED  uint16_t(100)                                      // Default speed for hexapod
 
   #define LEG_0_BASE_X   float(120.0)                                        // X position for leg 0 in mm from body center
   #define LEG_0_BASE_Y   float(-60.0)                                        // Y position for leg 0 in mm from body center

@@ -345,6 +345,33 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         LOG_INF("Leg " + String(legIndex) + " standing down");
         return true;
 
+    } else if (cmd == "lssp") {
+        uint16_t coxaPos = 512, femurPos = 512, tibiaPos = 512;
+        if (args.length() > 0) {
+              int count = 0, arg1 = 0, arg2 = 0, arg3 = 0, arg4 = 0;
+              count = sscanf(args.c_str(), "%d %d %d %d", &arg1, &arg2, &arg3, &arg4);
+              switch(count) {
+                case 1:                 // only leg index is mentioned
+                  coxaPos = 512, femurPos = 512, tibiaPos = 512;
+                  break;
+                case 2:
+                  coxaPos = arg2, femurPos = 512, tibiaPos = 512;
+                  break;
+                case 3:
+                  coxaPos = arg2, femurPos = arg3, tibiaPos = 512;
+                  break;
+                case 4:
+                  coxaPos = arg2, femurPos = arg3, tibiaPos = arg4;
+                  break;
+                default:
+                  LOG_ERR("Invalid parameters");
+                  break;
+              }
+        }
+        setServoPositions(coxaPos, femurPos, tibiaPos);
+        LOG_INF("Leg " + String(legIndex) + " servo positions set to: Coxa: " + String(coxaPos) + ", Femur: " + String(femurPos) + ", Tibia: " + String(tibiaPos));
+        return true;
+
     } else if (cmd == "l?") {
         printConsoleHelp();
         return true;
