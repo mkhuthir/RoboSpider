@@ -197,7 +197,7 @@ bool Leg::getTipLocalPosition(float* tip_local_x, float* tip_local_y, float* tip
 // Set the leg tip global position
 bool Leg::setTipGlobalPosition(float tip_global_x, float tip_global_y, float tip_global_z) {
   float tip_local_x, tip_local_y, tip_local_z;
-  globalToLocal(tip_global_x, tip_global_y, tip_global_z, tip_local_x, tip_local_y, tip_local_z);
+  globalToLocal(tip_global_x, tip_global_y, tip_global_z, &tip_local_x, &tip_local_y, &tip_local_z);
   return setTipLocalPosition(tip_local_x, tip_local_y, tip_local_z);
 }
 
@@ -208,7 +208,7 @@ bool Leg::getTipGlobalPosition(float* tip_global_x, float* tip_global_y, float* 
     LOG_ERR("Failed to get local tip position.");
     return false;
   }
-  localToGlobal(tip_local_x, tip_local_y, tip_local_z, *tip_global_x, *tip_global_y, *tip_global_z);
+  localToGlobal(tip_local_x, tip_local_y, tip_local_z, tip_global_x, tip_global_y, tip_global_z);
   return true;
 }
 
@@ -249,7 +249,7 @@ bool Leg::getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, ui
 bool Leg::getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z, uint16_t* positions)
 {
     float tip_local_x, tip_local_y, tip_local_z;
-    globalToLocal(tip_global_x, tip_global_y, tip_global_z, tip_local_x, tip_local_y, tip_local_z);
+    globalToLocal(tip_global_x, tip_global_y, tip_global_z, &tip_local_x, &tip_local_y, &tip_local_z);
     return getIKLocal(tip_local_x, tip_local_y, tip_local_z, positions);
 }
 
@@ -285,37 +285,24 @@ bool Leg::getFKGlobal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_
     LOG_ERR("Failed to compute local FK.");
     return false;
   }
-  localToGlobal(tip_local_x, tip_local_y, tip_local_z, *tip_global_x, *tip_global_y, *tip_global_z);
+  localToGlobal(tip_local_x, tip_local_y, tip_local_z, tip_global_x, tip_global_y, tip_global_z);
   return true;
 }
 
 // Utility function to transform global (body) to local (leg base) coordinates
-void Leg::globalToLocal( float global_x, float global_y, float global_z, float& local_x, float& local_y, float& local_z)
+void Leg::globalToLocal( float global_x, float global_y, float global_z, float* local_x, float* local_y, float* local_z)
 {
-  // Subtract base position
-  float x = global_x - legBaseX;
-  float y = global_y - legBaseY;
-  float z = global_z - legBaseZ;
-
-  // Apply inverse yaw rotation only (around Z axis)
-  float cy = cos(-legBaseR);
-  float sy = sin(-legBaseR);
-
-  local_x = cy * x - sy * y;
-  local_y = sy * x + cy * y;
-  local_z = z; // No change in Z for yaw-only rotation
+  *local_x = global_x - legBaseX;
+  *local_y = global_y - legBaseY;
+  *local_z = global_z - legBaseZ;
 }
 
 // Local to Global transformation
-void Leg::localToGlobal(float local_x, float local_y, float local_z, float& global_x, float& global_y, float& global_z)
+void Leg::localToGlobal(float local_x, float local_y, float local_z, float* global_x, float* global_y, float* global_z)
 {
-    // Apply yaw rotation only (around Z axis)
-    float cy = cos(legBaseR);
-    float sy = sin(legBaseR);
-
-    global_x = legBaseX + cy * local_x + sy * local_y;
-    global_y = legBaseY - sy * local_x + cy * local_y;
-    global_z = legBaseZ + local_z;
+  *global_x = legBaseX + local_x;
+  *global_y = legBaseY + local_y;
+  *global_z = legBaseZ + local_z;
 }
 
 //-------------------------------------------------------------------------------------
@@ -450,15 +437,45 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         return true;
 
     } else if (cmd == "lstlp") {
-        float tip_local_x = 0, tip_local_y = 0, tip_local_z = 0;
-        // TODO:
-        setTipLocalPosition(tip_local_x, tip_local_y, tip_local_z);
+        if (args.length() > 0) {
+            int count = 0, i = 0; float local_x = 0, local_y = 0, local_z = 0;
+            count = sscanf(args.c_str(), "%d %f %f %f", &i, &local_x, &local_y, &local_z);
+            if (count == 4) {
+                setTipLocalPosition(local_x, local_y, local_z);
+                LOG_INF("Leg " + String(legIndex) + " tip local position set to: X: " + String(local_x) + ", Y: " + String(local_y) + ", Z: " + String(local_z));
+            } else {
+                LOG_ERR("Invalid parameters for lstlp. Usage: lstlp n x y z");
+            }
+        } else {
+            LOG_ERR("Invalid parameters for lstlp. Usage: lstlp n x y z");
+        }
         return true;
 
     } else if (cmd == "lgtlp") {
         float tip_local_x = 0, tip_local_y = 0, tip_local_z = 0;
         getTipLocalPosition(&tip_local_x, &tip_local_y, &tip_local_z);
         LOG_INF("Leg " + String(legIndex) + " tip local position: X: " + String(tip_local_x) + ", Y: " + String(tip_local_y) + ", Z: " + String(tip_local_z));
+        return true;
+
+    } else if (cmd == "lstgp") {
+        if (args.length() > 0) {
+            int count = 0, i = 0; float global_x = 0, global_y = 0, global_z = 0;
+            count = sscanf(args.c_str(), "%d %f %f %f", &i, &global_x, &global_y, &global_z);
+            if (count == 4) {
+                setTipGlobalPosition(global_x, global_y, global_z);
+                LOG_INF("Leg " + String(legIndex) + " tip global position set to: X: " + String(global_x) + ", Y: " + String(global_y) + ", Z: " + String(global_z));
+            } else {
+                LOG_ERR("Invalid parameters for lstgp. Usage: lstgp n x y z");
+            }
+        } else {
+            LOG_ERR("Invalid parameters for lstgp. Usage: lstgp n x y z");
+        }
+        return true;
+
+    } else if (cmd == "lgtgp") {
+        float tip_global_x = 0, tip_global_y = 0, tip_global_z = 0;
+        getTipGlobalPosition(&tip_global_x, &tip_global_y, &tip_global_z);
+        LOG_INF("Leg " + String(legIndex) + " tip global position: X: " + String(tip_global_x) + ", Y: " + String(tip_global_y) + ", Z: " + String(tip_global_z));
         return true;
 
     } else if (cmd == "lgikl") {
@@ -520,6 +537,29 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
             LOG_ERR("Invalid parameters for lgfkg. Usage: lgfkg n c f t");
         }
         return true;
+    } else if (cmd == "lltg") {
+        int count = 0, i = 0; float local_x = 0, local_y = 0, local_z = 0;
+        float global_x = 0, global_y = 0, global_z = 0;
+        count = sscanf(args.c_str(), "%d %f %f %f", &i, &local_x, &local_y, &local_z);
+        if (count == 4) {
+            localToGlobal(local_x, local_y, local_z, &global_x, &global_y, &global_z);
+            LOG_INF("Leg " + String(legIndex) + " Local to Global: X: " + String(global_x) + ", Y: " + String(global_y) + ", Z: " + String(global_z));
+        } else {
+            LOG_ERR("Invalid parameters for lltg. Usage: lltg n x y z");
+        }
+        return true;
+        
+    } else if (cmd == "lgtl") {
+        int count = 0, i = 0; float global_x = 0, global_y = 0, global_z = 0;
+        float local_x = 0, local_y = 0, local_z = 0;
+        count = sscanf(args.c_str(), "%d %f %f %f", &i, &global_x, &global_y, &global_z);
+        if (count == 4) {
+            globalToLocal(global_x, global_y, global_z, &local_x, &local_y, &local_z);
+            LOG_INF("Leg " + String(legIndex) + " Global to Local: X: " + String(local_x) + ", Y: " + String(local_y) + ", Z: " + String(local_z));
+        } else {
+            LOG_ERR("Invalid parameters for lgtl. Usage: lgtl n x y z");
+        }
+        return true;
 
     } else if (cmd == "l?") {
         printConsoleHelp();
@@ -550,7 +590,7 @@ bool Leg::printConsoleHelp() {
     PRINTLN("  lgtlp [n]          - Get leg tip local position (default: 0)");
     PRINTLN("");
     PRINTLN("  lstgp n x y z      - Set leg tip global position");
-    PRINTLN("  lstgp [n]          - Get leg tip global position (default: 0)");
+    PRINTLN("  lgtgp [n]          - Get leg tip global position (default: 0)");
     PRINTLN("");
     PRINTLN("  lgikl n x y z      - Compute IK in local coords (relative to leg base)");
     PRINTLN("  lgikg n x y z      - Compute IK in global coords (relative to body center)");
