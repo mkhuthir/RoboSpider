@@ -8,6 +8,7 @@
   
   #define LEG_SERVOS        uint8_t(3)      // Number of servos per leg
   #define HEXAPOD_LEGS      uint8_t(6)      // Maximum number of legs
+  #define LEG_SPEED         uint8_t(100)    // Default leg speed
   
   #define COXA_LENGTH       float(52)       // Length of the coxa segment in mm
   #define COXA_CW_LIMIT     uint16_t(225)   // Min position for COXA servo
@@ -94,8 +95,8 @@
       bool      getFKLocal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_local_x, float* tip_local_y, float* tip_local_z);
       bool      getFKGlobal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_global_x, float* tip_global_y, float* tip_global_z);
 
-      void      globalToLocal( float global_x, float global_y, float global_z,
-                                    float& local_x, float& local_y, float& local_z);
+      void      globalToLocal( float global_x, float global_y, float global_z, float& local_x, float& local_y, float& local_z);
+      void      localToGlobal( float local_x, float local_y, float local_z, float& global_x, float& global_y, float& global_z); //TODO:
   };
 
 #endif // LEG_H

@@ -116,6 +116,9 @@ bool Leg::moveStandDown() {
 
 // Set the speed of the leg
 bool Leg::setSpeed(uint16_t speed) {
+  // TODO: use syncWrite for setting speed
+  if (speed < 0) speed = 0;
+  if (speed > 1023) speed = 1023;
   for (int i = 0; i < LEG_SERVOS; i++) {
     if (!servo->setGoalSpeed(legServoIDs[i], speed)) {
       LOG_ERR("Failed to set speed for leg servo.");
@@ -435,6 +438,66 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         LOG_INF("Leg " + String(legIndex) + " tip local position: X: " + String(tip_local_x) + ", Y: " + String(tip_local_y) + ", Z: " + String(tip_local_z));
         return true;
 
+    } else if (cmd == "lgikl") {
+        int count = 0, i = 0; float local_x = 0, local_y = 0, local_z = 0;
+        count = sscanf(args.c_str(), "%d %f %f %f", &i, &local_x, &local_y, &local_z);
+        if (count == 4) {
+            uint16_t positions[LEG_SERVOS];
+            if (getIKLocal(local_x, local_y, local_z, positions)) {
+                LOG_INF("Leg " + String(legIndex) + " IK Local Positions: Coxa: " + String(positions[Coxa]) + ", Femur: " + String(positions[Femur]) + ", Tibia: " + String(positions[Tibia]));
+            } else {
+                LOG_ERR("Failed to compute IK Local.");
+            }
+        } else {
+            LOG_ERR("Invalid parameters for lgikl. Usage: lgikl n x y z");
+        }
+        return true;
+
+    } else if (cmd == "lgikg") {
+        int count = 0, i = 0; float global_x = 0, global_y = 0, global_z = 0;
+        count = sscanf(args.c_str(), "%d %f %f %f", &i, &global_x, &global_y, &global_z);
+        if (count == 4) {
+            uint16_t positions[LEG_SERVOS];
+            if (getIKGlobal(global_x, global_y, global_z, positions)) {
+                LOG_INF("Leg " + String(legIndex) + " IK Global Positions: Coxa: " + String(positions[Coxa]) + ", Femur: " + String(positions[Femur]) + ", Tibia: " + String(positions[Tibia]));
+            } else {
+                LOG_ERR("Failed to compute IK Global.");
+            }
+        } else {
+            LOG_ERR("Invalid parameters for lgikg. Usage: lgikg n x y z");
+        }
+        return true;
+
+    } else if (cmd == "lgfkl") {
+        int count = 0, i = 0; uint16_t coxa = 0, femur = 0, tibia = 0;
+        float local_x = 0, local_y = 0, local_z = 0;
+        count = sscanf(args.c_str(), "%d %hu %hu %hu", &i, &coxa, &femur, &tibia);
+        if (count == 4) {
+            if (getFKLocal(coxa, femur, tibia, &local_x, &local_y, &local_z)) {
+                LOG_INF("Leg " + String(legIndex) + " FK Local Position: X: " + String(local_x) + ", Y: " + String(local_y) + ", Z: " + String(local_z));
+            } else {
+                LOG_ERR("Failed to compute FK Local.");
+            }
+        } else {
+            LOG_ERR("Invalid parameters for lgfkl. Usage: lgfkl n c f t");
+        }
+        return true;
+
+    } else if (cmd == "lgfkg") {
+        int count = 0, i = 0; uint16_t coxa = 0, femur = 0, tibia = 0;
+        float global_x = 0, global_y = 0, global_z = 0;
+        count = sscanf(args.c_str(), "%d %hu %hu %hu", &i, &coxa, &femur, &tibia);
+        if (count == 4) {
+            if (getFKGlobal(coxa, femur, tibia, &global_x, &global_y, &global_z)) {
+                LOG_INF("Leg " + String(legIndex) + " FK Global Position: X: " + String(global_x) + ", Y: " + String(global_y) + ", Z: " + String(global_z));
+            } else {
+                LOG_ERR("Failed to compute FK Global.");
+            }
+        } else {
+            LOG_ERR("Invalid parameters for lgfkg. Usage: lgfkg n c f t");
+        }
+        return true;
+
     } else if (cmd == "l?") {
         printConsoleHelp();
         return true;
@@ -461,6 +524,11 @@ bool Leg::printConsoleHelp() {
     PRINTLN("  lgsp [n]           - Get leg servo positions (default: 0)");
     PRINTLN("  lstlp [n][x][y][z] - Set leg tip local position (default: 0)");
     PRINTLN("  lgtlp [n]          - Get leg tip local position (default: 0)");
+    PRINTLN("");
+    PRINTLN("  lgikl n x y z      - Compute IK in local coords (relative to leg base)");
+    PRINTLN("  lgikg n x y z      - Compute IK in global coords (relative to body center)");
+    PRINTLN("  lgfkl n c f t      - Compute FK in local coords (relative to leg base)");
+    PRINTLN("  lgfkg n c f t      - Compute FK in global coords (relative to body center)");
     PRINTLN("");
     PRINTLN("  l?                 - Show this help");
     PRINTLN("");
