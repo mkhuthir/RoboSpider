@@ -172,8 +172,9 @@ bool Leg::getServoPositions(uint16_t* coxa, uint16_t* femur, uint16_t* tibia) {
   return true;
 }
 
+//---------------------------------------------------------------------------------------------
 
-// Set the leg tip position
+// Set the leg tip local position
 bool Leg::setTipLocalPosition(float tip_local_x, float tip_local_y, float tip_local_z) {
   uint16_t positions[LEG_SERVOS];
   if (!getIKLocal(tip_local_x, tip_local_y, tip_local_z, positions)) {
@@ -183,62 +184,37 @@ bool Leg::setTipLocalPosition(float tip_local_x, float tip_local_y, float tip_lo
   return setServoPositions(positions[Coxa], positions[Femur], positions[Tibia]);
 }
 
-// Get the leg tip position
+// Get the leg tip local position
 bool Leg::getTipLocalPosition(float* tip_local_x, float* tip_local_y, float* tip_local_z) {
-  // TODO: Forward Kinematics to compute tip position from joint angles
-  *tip_local_x = 1.0;
-  *tip_local_y = 2.0;
-  *tip_local_z = 3.0;
-  return true;
-}
-
-// Forward Kinematics
-bool Leg::getFKLocal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_local_x, float* tip_local_y, float* tip_local_z) {
-  // Convert servo positions to angles in degrees
-  float coxa_angle_deg  = coxa  * (300.0f / 1023.0f);
-  float femur_angle_deg = femur * (300.0f / 1023.0f);
-  float tibia_angle_deg = tibia * (300.0f / 1023.0f);
-
-  // Convert degrees to radians
-  float coxa_angle_rad  = coxa_angle_deg  * M_PI / 180.0f + legBaseR;
-  float femur_angle_rad = femur_angle_deg * M_PI / 180.0f;
-  float tibia_angle_rad = tibia_angle_deg * M_PI / 180.0f;
-
-  // Planar FK for femur and tibia
-  float planar_length = FEMUR_LENGTH * cos(femur_angle_rad) + TIBIA_LENGTH * cos(femur_angle_rad + tibia_angle_rad);
-  float z = FEMUR_LENGTH * sin(femur_angle_rad) + TIBIA_LENGTH * sin(femur_angle_rad + tibia_angle_rad);
-
-  // Tip position in leg base frame
-  *tip_local_x = COXA_LENGTH + planar_length * cos(coxa_angle_rad);
-  *tip_local_y = planar_length * sin(coxa_angle_rad);
-  *tip_local_z = z;
-
-  return true;
-}
-
-bool Leg::getFKGlobal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_global_x, float* tip_global_y, float* tip_global_z) {
-  float tip_local_x = 0.0f, tip_local_y = 0.0f, tip_local_z = 0.0f;
-  // Compute local tip position using FK
-  if (!getFKLocal(coxa, femur, tibia, &tip_local_x, &tip_local_y, &tip_local_z)) {
-    LOG_ERR("Failed to compute local FK.");
+  uint16_t coxa = 0, femur = 0, tibia = 0;
+  if (!getServoPositions(&coxa, &femur, &tibia)) {
+    LOG_ERR("Failed to get servo positions.");
     return false;
   }
+  return getFKLocal(coxa, femur, tibia, tip_local_x, tip_local_y, tip_local_z);
+}
 
-  // Transform local tip position to global coordinates
-  // Apply yaw rotation (legBaseR) and add base position
-  float cy = cos(legBaseR);
-  float sy = sin(legBaseR);
+// Set the leg tip global position
+bool Leg::setTipGlobalPosition(float tip_global_x, float tip_global_y, float tip_global_z) {
+  float tip_local_x, tip_local_y, tip_local_z;
+  globalToLocal(tip_global_x, tip_global_y, tip_global_z, tip_local_x, tip_local_y, tip_local_z);
+  return setTipLocalPosition(tip_local_x, tip_local_y, tip_local_z);
+}
 
-  *tip_global_x = legBaseX + cy * tip_local_x - sy * tip_local_y;
-  *tip_global_y = legBaseY + sy * tip_local_x + cy * tip_local_y;
-  *tip_global_z = legBaseZ + tip_local_z;
-
+// Get the leg tip global position
+bool Leg::getTipGlobalPosition(float* tip_global_x, float* tip_global_y, float* tip_global_z) {
+  float tip_local_x, tip_local_y, tip_local_z;
+  if (!getTipLocalPosition(&tip_local_x, &tip_local_y, &tip_local_z)) {
+    LOG_ERR("Failed to get local tip position.");
+    return false;
+  }
+  localToGlobal(tip_local_x, tip_local_y, tip_local_z, *tip_global_x, *tip_global_y, *tip_global_z);
   return true;
 }
 
 //---------------------------------------------------------------------------------------------
 
-// IK in local coordinates (relative to leg base frame)
+// Get inverse kinematics in local coordinates
 bool Leg::getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_t* positions)
 {
     // 1. Coxa (rotation in XY plane)
@@ -269,7 +245,7 @@ bool Leg::getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, ui
     return true;
 }
 
-// IK in global coordinates (relative to body center)
+// Get inverse kinematics in global coordinates
 bool Leg::getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z, uint16_t* positions)
 {
     float tip_local_x, tip_local_y, tip_local_z;
@@ -277,9 +253,44 @@ bool Leg::getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z
     return getIKLocal(tip_local_x, tip_local_y, tip_local_z, positions);
 }
 
+// Get forward kinematics in local coordinates
+bool Leg::getFKLocal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_local_x, float* tip_local_y, float* tip_local_z) {
+  // Convert servo positions to angles in degrees
+  float coxa_angle_deg  = coxa  * (300.0f / 1023.0f);
+  float femur_angle_deg = femur * (300.0f / 1023.0f);
+  float tibia_angle_deg = tibia * (300.0f / 1023.0f);
+
+  // Convert degrees to radians
+  float coxa_angle_rad  = coxa_angle_deg  * M_PI / 180.0f + legBaseR;
+  float femur_angle_rad = femur_angle_deg * M_PI / 180.0f;
+  float tibia_angle_rad = tibia_angle_deg * M_PI / 180.0f;
+
+  // Planar FK for femur and tibia
+  float planar_length = FEMUR_LENGTH * cos(femur_angle_rad) + TIBIA_LENGTH * cos(femur_angle_rad + tibia_angle_rad);
+  float z = FEMUR_LENGTH * sin(femur_angle_rad) + TIBIA_LENGTH * sin(femur_angle_rad + tibia_angle_rad);
+
+  // Tip position in leg base frame
+  *tip_local_x = COXA_LENGTH + planar_length * cos(coxa_angle_rad);
+  *tip_local_y = planar_length * sin(coxa_angle_rad);
+  *tip_local_z = z;
+
+  return true;
+}
+
+// Get forward kinematics in global coordinates
+bool Leg::getFKGlobal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_global_x, float* tip_global_y, float* tip_global_z) {
+  float tip_local_x = 0.0f, tip_local_y = 0.0f, tip_local_z = 0.0f;
+  // Compute local tip position using FK
+  if (!getFKLocal(coxa, femur, tibia, &tip_local_x, &tip_local_y, &tip_local_z)) {
+    LOG_ERR("Failed to compute local FK.");
+    return false;
+  }
+  localToGlobal(tip_local_x, tip_local_y, tip_local_z, *tip_global_x, *tip_global_y, *tip_global_z);
+  return true;
+}
+
 // Utility function to transform global (body) to local (leg base) coordinates
-void Leg::globalToLocal( float global_x, float global_y, float global_z,
-                float& local_x, float& local_y, float& local_z)
+void Leg::globalToLocal( float global_x, float global_y, float global_z, float& local_x, float& local_y, float& local_z)
 {
   // Subtract base position
   float x = global_x - legBaseX;
@@ -293,6 +304,18 @@ void Leg::globalToLocal( float global_x, float global_y, float global_z,
   local_x = cy * x - sy * y;
   local_y = sy * x + cy * y;
   local_z = z; // No change in Z for yaw-only rotation
+}
+
+// Local to Global transformation
+void Leg::localToGlobal(float local_x, float local_y, float local_z, float& global_x, float& global_y, float& global_z)
+{
+    // Apply yaw rotation only (around Z axis)
+    float cy = cos(legBaseR);
+    float sy = sin(legBaseR);
+
+    global_x = legBaseX + cy * local_x + sy * local_y;
+    global_y = legBaseY - sy * local_x + cy * local_y;
+    global_z = legBaseZ + local_z;
 }
 
 //-------------------------------------------------------------------------------------
@@ -522,13 +545,21 @@ bool Leg::printConsoleHelp() {
     PRINTLN("");
     PRINTLN("  lssp [n][c][f][t]  - Set leg servo positions (default: 0, " + String(COXA_DEFAULT) + ", " + String(FEMUR_DEFAULT) + ", " + String(TIBIA_DEFAULT) + ")");
     PRINTLN("  lgsp [n]           - Get leg servo positions (default: 0)");
-    PRINTLN("  lstlp [n][x][y][z] - Set leg tip local position (default: 0)");
+    PRINTLN("");
+    PRINTLN("  lstlp n x y z      - Set leg tip local position");
     PRINTLN("  lgtlp [n]          - Get leg tip local position (default: 0)");
+    PRINTLN("");
+    PRINTLN("  lstgp n x y z      - Set leg tip global position");
+    PRINTLN("  lstgp [n]          - Get leg tip global position (default: 0)");
     PRINTLN("");
     PRINTLN("  lgikl n x y z      - Compute IK in local coords (relative to leg base)");
     PRINTLN("  lgikg n x y z      - Compute IK in global coords (relative to body center)");
+    PRINTLN("");
     PRINTLN("  lgfkl n c f t      - Compute FK in local coords (relative to leg base)");
     PRINTLN("  lgfkg n c f t      - Compute FK in global coords (relative to body center)");
+    PRINTLN("");
+    PRINTLN("  lltg n x y z       - Compute global coordinates from local coordinates");
+    PRINTLN("  lgtl n x y z       - Compute local coordinates from global coordinates");
     PRINTLN("");
     PRINTLN("  l?                 - Show this help");
     PRINTLN("");

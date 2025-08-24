@@ -62,11 +62,12 @@
       bool      setTipLocalPosition(float tip_local_x, float tip_local_y, float tip_local_z);
       bool      getTipLocalPosition(float* tip_local_x, float* tip_local_y, float* tip_local_z);
 
-      bool      printStatus();                    // Print current joint angles to Serial
-      bool      runConsoleCommands( const String& cmd, 
-                                    const String& args, 
-                                    int legIndex);// Process console commands for leg control
-      bool      printConsoleHelp();               // Print leg-specific help information
+      bool      setTipGlobalPosition(float tip_global_x, float tip_global_y, float tip_global_z);
+      bool      getTipGlobalPosition(float* tip_global_x, float* tip_global_y, float* tip_global_z);
+
+      bool      printStatus();                                                            // Print current joint angles to Serial
+      bool      runConsoleCommands( const String& cmd, const String& args, int legIndex); // Process console commands for leg control
+      bool      printConsoleHelp();                                                       // Print leg-specific help information
       
 
 
@@ -95,8 +96,9 @@
       bool      getFKLocal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_local_x, float* tip_local_y, float* tip_local_z);
       bool      getFKGlobal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_global_x, float* tip_global_y, float* tip_global_z);
 
+      // Coordinate Transformations
       void      globalToLocal( float global_x, float global_y, float global_z, float& local_x, float& local_y, float& local_z);
-      void      localToGlobal( float local_x, float local_y, float local_z, float& global_x, float& global_y, float& global_z); //TODO:
+      void      localToGlobal( float local_x, float local_y, float local_z, float& global_x, float& global_y, float& global_z);
   };
 
 #endif // LEG_H
