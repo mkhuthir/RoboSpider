@@ -4,41 +4,42 @@
   #include "Leg.h"
   #include "Driver.h"
 
+  // Hexapod configuration constants
   #define handler_index  uint8_t(0)                                         // Index for sync write handler
   #define HEXAPOD_LEGS   uint8_t(6)                                         // Maximum number of legs
   #define LEG_SERVOS     uint8_t(3)                                         // Number of servos per leg
   #define HEXAPOD_SERVOS uint8_t(HEXAPOD_LEGS * LEG_SERVOS)                 // Maximum number of servos
   #define HEXAPOD_SPEED  uint16_t(300)                                      // Default speed for hexapod
 
-  #define LEG_0_X       float(0.0)                                         // X position for leg 0 in mm from body center
-  #define LEG_0_Y       float(0.0)                                         // Y position for leg 0 in mm from body center
-  #define LEG_0_Z       float(0.0)                                         // Z position for leg 0 in mm from body center
-  #define LEG_0_ROT     float(0.0)                                         // Rotation for leg 0 in radians
+  #define LEG_0_X       float(120.0)                                        // X position for leg 0 in mm from body center
+  #define LEG_0_Y       float(-60.0)                                        // Y position for leg 0 in mm from body center
+  #define LEG_0_Z       float(0.0)                                          // Z position for leg 0 in mm from body center
+  #define LEG_0_R       float(135.0 * M_PI / 180.0)                         // Rotation for leg 0 in radians
 
-  #define LEG_1_X       float(0.0)                                         // X position for leg 1 in mm from body center
-  #define LEG_1_Y       float(0.0)                                         // Y position for leg 1 in mm from body center
-  #define LEG_1_Z       float(0.0)                                         // Z position for leg 1 in mm from body center
-  #define LEG_1_ROT     float(0.0)                                         // Rotation for leg 1 in radians
+  #define LEG_1_X       float(120.0)                                        // X position for leg 1 in mm from body center
+  #define LEG_1_Y       float(60.0)                                         // Y position for leg 1 in mm from body center
+  #define LEG_1_Z       float(0.0)                                          // Z position for leg 1 in mm from body center
+  #define LEG_1_R       float(45.0 * M_PI / 180.0)                          // Rotation for leg 1 in radians
 
-  #define LEG_2_X       float(0.0)                                         // X position for leg 2 in mm from body center
-  #define LEG_2_Y       float(0.0)                                         // Y position for leg 2 in mm from body center
-  #define LEG_2_Z       float(0.0)                                         // Z position for leg 2 in mm from body center
-  #define LEG_2_ROT     float(0.0)                                         // Rotation for leg 2 in radians
+  #define LEG_2_X       float(0.0)                                          // X position for leg 2 in mm from body center
+  #define LEG_2_Y       float(-60.0)                                        // Y position for leg 2 in mm from body center
+  #define LEG_2_Z       float(0.0)                                          // Z position for leg 2 in mm from body center
+  #define LEG_2_R       float(180.0 * M_PI / 180.0)                         // Rotation for leg 2 in radians
 
-  #define LEG_3_X       float(0.0)                                         // X position for leg 3 in mm from body center
-  #define LEG_3_Y       float(0.0)                                         // Y position for leg 3 in mm from body center
-  #define LEG_3_Z       float(0.0)                                         // Z position for leg 3 in mm from body center
-  #define LEG_3_ROT     float(0.0)                                         // Rotation for leg 3 in radians
+  #define LEG_3_X       float(0.0)                                          // X position for leg 3 in mm from body center
+  #define LEG_3_Y       float(60.0)                                         // Y position for leg 3 in mm from body center
+  #define LEG_3_Z       float(0.0)                                          // Z position for leg 3 in mm from body center
+  #define LEG_3_R       float(0.0 * M_PI / 180.0)                           // Rotation for leg 3 in radians
 
-  #define LEG_4_X       float(0.0)                                         // X position for leg 4 in mm from body center
-  #define LEG_4_Y       float(0.0)                                         // Y position for leg 4 in mm from body center
-  #define LEG_4_Z       float(0.0)                                         // Z position for leg 4 in mm from body center
-  #define LEG_4_ROT     float(0.0)                                         // Rotation for leg 4 in radians
+  #define LEG_4_X       float(-120.0)                                       // X position for leg 4 in mm from body center
+  #define LEG_4_Y       float(-60.0)                                        // Y position for leg 4 in mm from body center
+  #define LEG_4_Z       float(0.0)                                          // Z position for leg 4 in mm from body center
+  #define LEG_4_R       float(225.0 * M_PI / 180.0)                         // Rotation for leg 4 in radians
 
-  #define LEG_5_X       float(0.0)                                         // X position for leg 5 in mm from body center
-  #define LEG_5_Y       float(0.0)                                         // Y position for leg 5 in mm from body center
-  #define LEG_5_Z       float(0.0)                                         // Z position for leg 5 in mm from body center
-  #define LEG_5_ROT     float(0.0)                                         // Rotation for leg 5 in radians
+  #define LEG_5_X       float(-120.0)                                       // X position for leg 5 in mm from body center
+  #define LEG_5_Y       float(60.0)                                         // Y position for leg 5 in mm from body center
+  #define LEG_5_Z       float(0.0)                                          // Z position for leg 5 in mm from body center
+  #define LEG_5_R       float(315.0 * M_PI / 180.0)                         // Rotation for leg 5 in radians
   
 
   class Hexapod {
