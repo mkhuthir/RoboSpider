@@ -24,9 +24,7 @@
                     float   legBaseX,
                     float   legBaseY,
                     float   legBaseZ,
-                    float   legBaseRoll,
-                    float   legBasePitch,
-                    float   legBaseYaw,
+                    float   legBaseRot,
                     Driver* driver,
                     Servo*  servo);
 
@@ -65,9 +63,7 @@
       float     legBaseX      = 0.0;              // Base X position from body center
       float     legBaseY      = 0.0;              // Base Y position from body center
       float     legBaseZ      = 0.0;              // Base Z position from body center
-      float     legBaseRoll   = 0.0;              // Base Roll position from body center
-      float     legBasePitch  = 0.0;              // Base Pitch position from body center
-      float     legBaseYaw    = 0.0;              // Base Yaw position from body center
+      float     legBaseRot    = 0.0;              // Base Rotation position from body center
 
       enum LegJoint { Coxa  = 0,                  // Enum for leg joints
                       Femur = 1, 

@@ -16,9 +16,7 @@ Leg::Leg(){
   legBaseX      = 0.0;
   legBaseY      = 0.0;
   legBaseZ      = 0.0;
-  legBaseRoll   = 0.0;
-  legBasePitch  = 0.0;
-  legBaseYaw    = 0.0;
+  legBaseRot    = 0.0;
 
   driver        = nullptr;
   servo         = nullptr;
@@ -30,16 +28,14 @@ Leg::Leg(){
 bool Leg::init( uint8_t legIndex,
                 uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, 
                 float legBaseX, float legBaseY, float legBaseZ, 
-                float legBaseRoll, float legBasePitch, float legBaseYaw, 
+                float legBaseRot,
                 Driver* driver, Servo* servo) {
 
   this->legIndex      = legIndex;
   this->legBaseX      = legBaseX;
   this->legBaseY      = legBaseY;
   this->legBaseZ      = legBaseZ;
-  this->legBaseRoll   = legBaseRoll;
-  this->legBasePitch  = legBasePitch;
-  this->legBaseYaw    = legBaseYaw;
+  this->legBaseRot    = legBaseRot;
 
   legServoIDs[Coxa]  = coxaID;   // Set coxa ID
   legServoIDs[Femur] = femurID;  // Set femur ID
@@ -192,7 +188,7 @@ bool Leg::getIKLocal(float tip_x, float tip_y, float tip_z, int16_t* positions)
     float tibia_angle_deg = 180.0f - tibia_angle_rad * 180.0f / M_PI;
 
     // --- Servo mapping: 0-300 deg → 0-1023 ---
-    if (legBaseYaw == -180) { // TODO:
+    if (legBaseRot == -180) { // TODO:
         positions[Coxa]  = static_cast<int16_t>(coxa_angle_deg * (1023.0f / 300.0f));
     } else {
         positions[Coxa]  = static_cast<int16_t>((300.0f - coxa_angle_deg) * (1023.0f / 300.0f));
@@ -212,28 +208,20 @@ bool Leg::getIKGlobal(float tip_x_global, float tip_y_global, float tip_z_global
 
 // Utility function to transform global (body) to local (leg base) coordinates
 void Leg::transGlobalToLocal( float x_global, float y_global, float z_global,
-                              float& x_local, float& y_local, float& z_local)
+                float& x_local, float& y_local, float& z_local)
 {
-    // Subtract base position
-    float x = x_global - legBaseX;
-    float y = y_global - legBaseY;
-    float z = z_global - legBaseZ;
+  // Subtract base position
+  float x = x_global - legBaseX;
+  float y = y_global - legBaseY;
+  float z = z_global - legBaseZ;
 
-    // Apply inverse rotation (roll, pitch, yaw)
-    // Rotation order: yaw (Z), pitch (Y), roll (X)
-    // Build rotation matrix from roll, pitch, yaw (intrinsic Tait-Bryan angles)
-    float cy = cos(-legBaseYaw)   , sy = sin(-legBaseYaw);
-    float cp = cos(-legBasePitch) , sp = sin(-legBasePitch);
-    float cr = cos(-legBaseRoll)  , sr = sin(-legBaseRoll);
+  // Apply inverse yaw rotation only (around Z axis)
+  float cy = cos(-legBaseRot);
+  float sy = sin(-legBaseRot);
 
-    // Rotation matrix: R = Rz(yaw) * Ry(pitch) * Rx(roll)
-    float x_rot = cy*cp*x + (cy*sp*sr - sy*cr)*y + (cy*sp*cr + sy*sr)*z;
-    float y_rot = sy*cp*x + (sy*sp*sr + cy*cr)*y + (sy*sp*cr - cy*sr)*z;
-    float z_rot = -sp*x    + cp*sr*y              + cp*cr*z;
-
-    x_local = x_rot;
-    y_local = y_rot;
-    z_local = z_rot;
+  x_local = cy * x - sy * y;
+  y_local = sy * x + cy * y;
+  z_local = z; // No change in Z for yaw-only rotation
 }
 
 // Print current joint angles
