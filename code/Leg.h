@@ -32,16 +32,16 @@
                     uint8_t coxaID,           
                     uint8_t femurID, 
                     uint8_t tibiaID,
-                    float   legBaseX,
-                    float   legBaseY,
-                    float   legBaseZ,
-                    float   legBaseR,
+                    float   baseX,
+                    float   baseY,
+                    float   baseZ,
+                    float   baseR,
                     uint8_t legSpeed,
                     Driver* driver,
                     Servo*  servo);
 
       bool      update();                         // Update the leg state
-
+// -----------------------------------------------------------------------------------------------
       bool      move(int32_t *positions);         // Move the leg to the specified positions
       bool      isMoving();                       // Check if any servo in the leg is currently moving 
 
@@ -53,7 +53,7 @@
 
       bool      setSpeed(uint16_t speed);         // Set the speed of the leg
       uint16_t  getSpeed() const;                 // Get the current speed of the leg
-
+// -----------------------------------------------------------------------------------------------
       bool      getBasePosition(float* base_x, float* base_y, float* base_z, float* base_r);
 
       bool      setServoPositions(uint16_t coxa, uint16_t femur, uint16_t tibia);
@@ -64,30 +64,28 @@
 
       bool      setTipGlobalPosition(float tip_global_x, float tip_global_y, float tip_global_z);
       bool      getTipGlobalPosition(float* tip_global_x, float* tip_global_y, float* tip_global_z);
-
+// -----------------------------------------------------------------------------------------------
       bool      printStatus();                                                            // Print current joint angles to Serial
       bool      runConsoleCommands( const String& cmd, const String& args, int legIndex); // Process console commands for leg control
       bool      printConsoleHelp();                                                       // Print leg-specific help information
-      
-
-
+// -----------------------------------------------------------------------------------------------      
     private:
-      Driver*   driver        = nullptr;          // Pointer to the driver instance
-      Servo*    servo         = nullptr;          // Pointer to the servo instance
-      uint16_t  speed         = 0;                // Speed of the leg
+      Driver*   driver  = nullptr;          // Pointer to the driver instance
+      Servo*    servo   = nullptr;          // Pointer to the servo instance
+      uint16_t  speed   = 0;                // Speed of the leg
 
-      uint8_t   legIndex      = 0;                // Index of the leg (0-5)
-      float     legBaseX      = 0.0;              // Base X position from body center
-      float     legBaseY      = 0.0;              // Base Y position from body center
-      float     legBaseZ      = 0.0;              // Base Z position from body center
-      float     legBaseR      = 0.0;              // Base Rotation position from body center
+      uint8_t   index   = 0;                // Index of the leg (0-5)
+      float     baseX   = 0.0;              // Base X position from body center
+      float     baseY   = 0.0;              // Base Y position from body center
+      float     baseZ   = 0.0;              // Base Z position from body center
+      float     baseR   = 0.0;              // Base Rotation position from body center
 
-      uint8_t   legServoIDs[LEG_SERVOS]={0,0,0};  // Servo IDs for the leg joints
+      uint8_t   servoIDs[LEG_SERVOS]={0,0,0};  // Servo IDs for the leg joints
 
       enum LegJoint { Coxa  = 0,                  // Enum for leg joints
                       Femur = 1, 
                       Tibia = 2 };
-
+// -----------------------------------------------------------------------------------------------
       // Inverse Kinematics
       bool      getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_t* positions);
       bool      getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z, uint16_t* positions);

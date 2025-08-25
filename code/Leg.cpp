@@ -8,53 +8,53 @@
 // Default constructor for Leg class
 Leg::Leg(){
   // Initialize leg IDs to zero
-  legIndex            = 0;
-  legBaseX            = 0.0;
-  legBaseY            = 0.0;
-  legBaseZ            = 0.0;
-  legBaseR            = 0.0;
-  legServoIDs[Coxa]   = 0;
-  legServoIDs[Femur]  = 0;
-  legServoIDs[Tibia]  = 0;
-  driver              = nullptr;
-  servo               = nullptr;
-  speed               = 0;
+  index            = 0;
+  baseX            = 0.0;
+  baseY            = 0.0;
+  baseZ            = 0.0;
+  baseR            = 0.0;
+  servoIDs[Coxa]   = 0;
+  servoIDs[Femur]  = 0;
+  servoIDs[Tibia]  = 0;
+  driver           = nullptr;
+  servo            = nullptr;
+  speed            = 0;
 
 }
 
 // Initialize the leg servos
-bool Leg::init( uint8_t legIndex,
+bool Leg::init( uint8_t index,
                 uint8_t coxaID, uint8_t femurID, uint8_t tibiaID, 
-                float legBaseX, float legBaseY, float legBaseZ, 
-                float legBaseR, uint8_t legSpeed,
+                float baseX, float baseY, float baseZ, 
+                float baseR, uint8_t speed,
                 Driver* driver, Servo* servo) {
 
-  this->legIndex      = legIndex;   // Set leg index
-  this->legBaseX      = legBaseX;   // Set leg base X position
-  this->legBaseY      = legBaseY;   // Set leg base Y position
-  this->legBaseZ      = legBaseZ;   // Set leg base height
-  this->legBaseR      = legBaseR;   // Set leg base rotation
-  legServoIDs[Coxa]   = coxaID;     // Set coxa ID
-  legServoIDs[Femur]  = femurID;    // Set femur ID
-  legServoIDs[Tibia]  = tibiaID;    // Set tibia ID
-  this->driver        = driver;     // Set the driver pointer
-  this->servo         = servo;      // Set the servo pointer
-  this->speed         = legSpeed;   // Set default speed
+  this->index      = index;      // Set leg index
+  this->baseX      = baseX;      // Set leg base X position
+  this->baseY      = baseY;      // Set leg base Y position
+  this->baseZ      = baseZ;      // Set leg base height
+  this->baseR      = baseR;      // Set leg base rotation
+  servoIDs[Coxa]   = coxaID;     // Set coxa ID
+  servoIDs[Femur]  = femurID;    // Set femur ID
+  servoIDs[Tibia]  = tibiaID;    // Set tibia ID
+  this->driver     = driver;     // Set the driver pointer
+  this->servo      = servo;      // Set the servo pointer
+  this->speed      = speed;      // Set default speed
 
-  if (!servo->init(legServoIDs[Coxa] , legSpeed, COXA_CW_LIMIT, COXA_CCW_LIMIT)) {   // Initialize coxa servo with velocity
+  if (!servo->init(servoIDs[Coxa] , speed, COXA_CW_LIMIT, COXA_CCW_LIMIT)) {   // Initialize coxa servo with velocity
     LOG_ERR("Failed to initialize coxa servo.");
     return false;
   }
-  if (!servo->init(legServoIDs[Femur], legSpeed, FEMUR_CW_LIMIT, FEMUR_CCW_LIMIT)) {   // Initialize femur servo with velocity
+  if (!servo->init(servoIDs[Femur], speed, FEMUR_CW_LIMIT, FEMUR_CCW_LIMIT)) {   // Initialize femur servo with velocity
     LOG_ERR("Failed to initialize femur servo.");
     return false;
   }
-  if (!servo->init(legServoIDs[Tibia], legSpeed, TIBIA_CW_LIMIT, TIBIA_CCW_LIMIT)) {   // Initialize tibia servo with velocity
+  if (!servo->init(servoIDs[Tibia], speed, TIBIA_CW_LIMIT, TIBIA_CCW_LIMIT)) {   // Initialize tibia servo with velocity
     LOG_ERR("Failed to initialize tibia servo.");
     return false;
   }
 
-  LOG_INF("Leg initialized successfully. (Servo IDs: " + String(legServoIDs[Coxa]) + ", " + String(legServoIDs[Femur]) + ", " + String(legServoIDs[Tibia]) + ")");
+  LOG_INF("Leg initialized successfully. (Servo IDs: " + String(servoIDs[Coxa]) + ", " + String(servoIDs[Femur]) + ", " + String(servoIDs[Tibia]) + ")");
   return true;
 
 }
@@ -63,7 +63,7 @@ bool Leg::init( uint8_t legIndex,
 bool Leg::update() {
   // Update each servo
   for (int i = 0; i < LEG_SERVOS; i++) {
-    servo->update(legServoIDs[i]);
+    servo->update(servoIDs[i]);
   }
   return true;
 }
@@ -71,7 +71,7 @@ bool Leg::update() {
 // Move the leg to the specified positions
 bool Leg::move(int32_t *positions) {
   const uint8_t num_positions   = 1;
-  if(!driver->syncWrite(handler_index, legServoIDs, LEG_SERVOS, positions, num_positions)) {
+  if(!driver->syncWrite(handler_index, servoIDs, LEG_SERVOS, positions, num_positions)) {
     LOG_ERR("Failed to move leg.");
     return false;
   }
@@ -82,7 +82,7 @@ bool Leg::move(int32_t *positions) {
 bool Leg::isMoving() {
   uint8_t moving = 0;
   for (int i = 0; i < LEG_SERVOS; ++i) {
-    if (servo->isMoving(legServoIDs[i])) {
+    if (servo->isMoving(servoIDs[i])) {
       return true;  // If any servo is moving, return true
     }
   }
@@ -120,7 +120,7 @@ bool Leg::setSpeed(uint16_t speed) {
   if (speed < 0) speed = 0;
   if (speed > 1023) speed = 1023;
   for (int i = 0; i < LEG_SERVOS; i++) {
-    if (!servo->setGoalSpeed(legServoIDs[i], speed)) {
+    if (!servo->setGoalSpeed(servoIDs[i], speed)) {
       LOG_ERR("Failed to set speed for leg servo.");
       return false;
     }
@@ -136,10 +136,10 @@ uint16_t Leg::getSpeed() const {
 
 // Get the leg base position
 bool Leg::getBasePosition(float* base_x, float* base_y, float* base_z, float* base_r) {
-  *base_x = legBaseX;
-  *base_y = legBaseY;
-  *base_z = legBaseZ;
-  *base_r = legBaseR;
+  *base_x = baseX;
+  *base_y = baseY;
+  *base_z = baseZ;
+  *base_r = baseR;
   return true;
 }
 
@@ -147,7 +147,7 @@ bool Leg::getBasePosition(float* base_x, float* base_y, float* base_z, float* ba
 bool Leg::setServoPositions(uint16_t coxa, uint16_t femur, uint16_t tibia) {
   int32_t positions[LEG_SERVOS] = { static_cast<int32_t>(coxa), static_cast<int32_t>(femur), static_cast<int32_t>(tibia) };
   const uint8_t num_positions = 1;
-  if (!driver->syncWrite(handler_index, legServoIDs, LEG_SERVOS, positions, num_positions)) {
+  if (!driver->syncWrite(handler_index, servoIDs, LEG_SERVOS, positions, num_positions)) {
     LOG_ERR("Failed to set servo positions via syncWrite.");
     return false;
   }
@@ -157,15 +157,15 @@ bool Leg::setServoPositions(uint16_t coxa, uint16_t femur, uint16_t tibia) {
 // Get the current positions of the leg joints
 bool Leg::getServoPositions(uint16_t* coxa, uint16_t* femur, uint16_t* tibia) {
   // TODO: use syncRead
-  if (!servo->getPresentPosition(legServoIDs[Coxa], coxa)) {
+  if (!servo->getPresentPosition(servoIDs[Coxa], coxa)) {
     LOG_ERR("Failed to get coxa position.");
     return false;
   }
-  if (!servo->getPresentPosition(legServoIDs[Femur], femur)) {
+  if (!servo->getPresentPosition(servoIDs[Femur], femur)) {
     LOG_ERR("Failed to get femur position.");
     return false;
   }
-  if (!servo->getPresentPosition(legServoIDs[Tibia], tibia)) {
+  if (!servo->getPresentPosition(servoIDs[Tibia], tibia)) {
     LOG_ERR("Failed to get tibia position.");
     return false;
   }
@@ -238,7 +238,7 @@ bool Leg::getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, ui
     float tibia_angle_deg = 180.0f - tibia_angle_rad * 180.0f / M_PI;
 
     // --- Servo mapping: 0-300 deg → 0-1023 ---
-    float coxa_angle_deg_adjusted = coxa_angle_deg - (legBaseR * 180.0f / M_PI);        // Adjust coxa angle based on legBaseR (convert to degrees)
+    float coxa_angle_deg_adjusted = coxa_angle_deg - (baseR * 180.0f / M_PI);        // Adjust coxa angle based on baseR (convert to degrees)
     positions[Coxa]  = static_cast<uint16_t>(coxa_angle_deg_adjusted * (1023.0f / 300.0f));
     positions[Femur] = static_cast<uint16_t>(femur_angle_deg         * (1023.0f / 300.0f));
     positions[Tibia] = static_cast<uint16_t>(tibia_angle_deg         * (1023.0f / 300.0f));
@@ -261,7 +261,7 @@ bool Leg::getFKLocal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_l
   float tibia_angle_deg = tibia * (300.0f / 1023.0f);
 
   // Convert degrees to radians
-  float coxa_angle_rad  = coxa_angle_deg  * M_PI / 180.0f + legBaseR;
+  float coxa_angle_rad  = coxa_angle_deg  * M_PI / 180.0f + baseR;
   float femur_angle_rad = femur_angle_deg * M_PI / 180.0f;
   float tibia_angle_rad = tibia_angle_deg * M_PI / 180.0f;
 
@@ -292,17 +292,17 @@ bool Leg::getFKGlobal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_
 // Utility function to transform global (body) to local (leg base) coordinates
 void Leg::global2Local( float global_x, float global_y, float global_z, float* local_x, float* local_y, float* local_z)
 {
-  *local_x = global_x - legBaseX;
-  *local_y = global_y - legBaseY;
-  *local_z = global_z - legBaseZ;
+  *local_x = global_x - baseX;
+  *local_y = global_y - baseY;
+  *local_z = global_z - baseZ;
 }
 
 // Local to Global transformation
 void Leg::local2Global(float local_x, float local_y, float local_z, float* global_x, float* global_y, float* global_z)
 {
-  *global_x = legBaseX + local_x;
-  *global_y = legBaseY + local_y;
-  *global_z = legBaseZ + local_z;
+  *global_x = baseX + local_x;
+  *global_y = baseY + local_y;
+  *global_z = baseZ + local_z;
 }
 
 //-------------------------------------------------------------------------------------
@@ -310,7 +310,7 @@ void Leg::local2Global(float local_x, float local_y, float local_z, float* globa
 // Print current joint angles
 bool Leg::printStatus() {
   uint16_t coxaAngle = 0, femurAngle = 0, tibiaAngle = 0;
-  float legBaseX = 0, legBaseY = 0, legBaseZ = 0; float legBaseR = 0;
+  float baseX = 0, baseY = 0, baseZ = 0; float baseR = 0;
   float tip_local_X = 0, tip_local_Y = 0, tip_local_Z = 0;
 
   if (!getServoPositions(&coxaAngle, &femurAngle, &tibiaAngle)) {
@@ -318,7 +318,7 @@ bool Leg::printStatus() {
     return false;
   }
 
-  if (!getBasePosition(&legBaseX, &legBaseY, &legBaseZ, &legBaseR)) {
+  if (!getBasePosition(&baseX, &baseY, &baseZ, &baseR)) {
     LOG_ERR("Failed to get leg base position.");
     return false;
   }
@@ -328,14 +328,14 @@ bool Leg::printStatus() {
     return false;
   }
 
-  PRINTLN("Leg: " + String((int)legIndex));
-  PRINTLN("Base         : X: " + String((float)legBaseX)
-                   + "mm, Y: " + String((float)legBaseY) 
-                   + "mm, Z: " + String((float)legBaseZ) 
-                   + "mm, R: " + String((float)legBaseR) + "rad");
-  PRINTLN("Servo IDs    : Coxa: " + String((int)legServoIDs[0]) 
-              + ", Femur: " + String((int)legServoIDs[1]) 
-              + ", Tibia: " + String((int)legServoIDs[2]));
+  PRINTLN("Leg: " + String((int)index));
+  PRINTLN("Base         : X: " + String((float)baseX)
+                   + "mm, Y: " + String((float)baseY) 
+                   + "mm, Z: " + String((float)baseZ) 
+                   + "mm, R: " + String((float)baseR) + "rad");
+  PRINTLN("Servo IDs    : Coxa: " + String((int)servoIDs[0]) 
+              + ", Femur: " + String((int)servoIDs[1]) 
+              + ", Tibia: " + String((int)servoIDs[2]));
   PRINTLN("Servo Pos.   : Coxa: " + String((int)coxaAngle) 
               + ", Femur: " + String((int)femurAngle) 
               + ", Tibia: " + String((int)tibiaAngle));
@@ -346,11 +346,8 @@ bool Leg::printStatus() {
   return true;
 }
 
-
-// -----------------------------------------------------------------------------------------------
-
 // Process console commands for leg control
-bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex) {
+bool Leg::runConsoleCommands(const String& cmd, const String& args, int index) {
     if (cmd == "ls") {
         printStatus();
         return true;
@@ -375,32 +372,32 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         }
         setSpeed(newSpeed);
         speed = newSpeed;
-        LOG_INF("Leg " + String(legIndex) + " speed: " + String((int)speed));
+        LOG_INF("Leg " + String(index) + " speed: " + String((int)speed));
         return true;
 
     } else if (cmd == "lpu") {
         movePointUp();
-        LOG_INF("Leg " + String(legIndex) + " point moving up");
+        LOG_INF("Leg " + String(index) + " point moving up");
         return true;
 
     } else if (cmd == "lpd") {
         movePointDown();
-        LOG_INF("Leg " + String(legIndex) + " point moving down");
+        LOG_INF("Leg " + String(index) + " point moving down");
         return true;
 
     } else if (cmd == "lpo") {
         movePointOut();
-        LOG_INF("Leg " + String(legIndex) + " point moving out");
+        LOG_INF("Leg " + String(index) + " point moving out");
         return true;
 
     } else if (cmd == "lsu") {
         moveStandUp();
-        LOG_INF("Leg " + String(legIndex) + " standing up");
+        LOG_INF("Leg " + String(index) + " standing up");
         return true;
 
     } else if (cmd == "lsd") {
         moveStandDown();
-        LOG_INF("Leg " + String(legIndex) + " standing down");
+        LOG_INF("Leg " + String(index) + " standing down");
         return true;
 
     } else if (cmd == "lssp") {
@@ -427,13 +424,13 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
               }
         }
         setServoPositions(coxaPos, femurPos, tibiaPos);
-        LOG_INF("Leg " + String(legIndex) + " servo positions set to: Coxa: " + String(coxaPos) + ", Femur: " + String(femurPos) + ", Tibia: " + String(tibiaPos));
+        LOG_INF("Leg " + String(index) + " servo positions set to: Coxa: " + String(coxaPos) + ", Femur: " + String(femurPos) + ", Tibia: " + String(tibiaPos));
         return true;
 
     } else if (cmd == "lgsp") {
         uint16_t coxaPos = 0, femurPos = 0, tibiaPos = 0;
         getServoPositions(&coxaPos, &femurPos, &tibiaPos);
-        LOG_INF("Leg " + String(legIndex) + " servo positions: Coxa: " + String(coxaPos) + ", Femur: " + String(femurPos) + ", Tibia: " + String(tibiaPos));
+        LOG_INF("Leg " + String(index) + " servo positions: Coxa: " + String(coxaPos) + ", Femur: " + String(femurPos) + ", Tibia: " + String(tibiaPos));
         return true;
 
     } else if (cmd == "lstlp") {
@@ -442,7 +439,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
             count = sscanf(args.c_str(), "%d %f %f %f", &i, &local_x, &local_y, &local_z);
             if (count == 4) {
                 setTipLocalPosition(local_x, local_y, local_z);
-                LOG_INF("Leg " + String(legIndex) + " tip local position set to: X: " + String(local_x) + ", Y: " + String(local_y) + ", Z: " + String(local_z));
+                LOG_INF("Leg " + String(index) + " tip local position set to: X: " + String(local_x) + ", Y: " + String(local_y) + ", Z: " + String(local_z));
             } else {
                 LOG_ERR("Invalid parameters for lstlp. Usage: lstlp n x y z");
             }
@@ -454,7 +451,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
     } else if (cmd == "lgtlp") {
         float tip_local_x = 0, tip_local_y = 0, tip_local_z = 0;
         getTipLocalPosition(&tip_local_x, &tip_local_y, &tip_local_z);
-        LOG_INF("Leg " + String(legIndex) + " tip local position: X: " + String(tip_local_x) + ", Y: " + String(tip_local_y) + ", Z: " + String(tip_local_z));
+        LOG_INF("Leg " + String(index) + " tip local position: X: " + String(tip_local_x) + ", Y: " + String(tip_local_y) + ", Z: " + String(tip_local_z));
         return true;
 
     } else if (cmd == "lstgp") {
@@ -463,7 +460,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
             count = sscanf(args.c_str(), "%d %f %f %f", &i, &global_x, &global_y, &global_z);
             if (count == 4) {
                 setTipGlobalPosition(global_x, global_y, global_z);
-                LOG_INF("Leg " + String(legIndex) + " tip global position set to: X: " + String(global_x) + ", Y: " + String(global_y) + ", Z: " + String(global_z));
+                LOG_INF("Leg " + String(index) + " tip global position set to: X: " + String(global_x) + ", Y: " + String(global_y) + ", Z: " + String(global_z));
             } else {
                 LOG_ERR("Invalid parameters for lstgp. Usage: lstgp n x y z");
             }
@@ -475,7 +472,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
     } else if (cmd == "lgtgp") {
         float tip_global_x = 0, tip_global_y = 0, tip_global_z = 0;
         getTipGlobalPosition(&tip_global_x, &tip_global_y, &tip_global_z);
-        LOG_INF("Leg " + String(legIndex) + " tip global position: X: " + String(tip_global_x) + ", Y: " + String(tip_global_y) + ", Z: " + String(tip_global_z));
+        LOG_INF("Leg " + String(index) + " tip global position: X: " + String(tip_global_x) + ", Y: " + String(tip_global_y) + ", Z: " + String(tip_global_z));
         return true;
 
     } else if (cmd == "lgikl") {
@@ -484,7 +481,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         if (count == 4) {
             uint16_t positions[LEG_SERVOS];
             if (getIKLocal(local_x, local_y, local_z, positions)) {
-                LOG_INF("Leg " + String(legIndex) + " IK Local Positions: Coxa: " + String(positions[Coxa]) + ", Femur: " + String(positions[Femur]) + ", Tibia: " + String(positions[Tibia]));
+                LOG_INF("Leg " + String(index) + " IK Local Positions: Coxa: " + String(positions[Coxa]) + ", Femur: " + String(positions[Femur]) + ", Tibia: " + String(positions[Tibia]));
             } else {
                 LOG_ERR("Failed to compute IK Local.");
             }
@@ -499,7 +496,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         if (count == 4) {
             uint16_t positions[LEG_SERVOS];
             if (getIKGlobal(global_x, global_y, global_z, positions)) {
-                LOG_INF("Leg " + String(legIndex) + " IK Global Positions: Coxa: " + String(positions[Coxa]) + ", Femur: " + String(positions[Femur]) + ", Tibia: " + String(positions[Tibia]));
+                LOG_INF("Leg " + String(index) + " IK Global Positions: Coxa: " + String(positions[Coxa]) + ", Femur: " + String(positions[Femur]) + ", Tibia: " + String(positions[Tibia]));
             } else {
                 LOG_ERR("Failed to compute IK Global.");
             }
@@ -514,7 +511,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         count = sscanf(args.c_str(), "%d %hu %hu %hu", &i, &coxa, &femur, &tibia);
         if (count == 4) {
             if (getFKLocal(coxa, femur, tibia, &local_x, &local_y, &local_z)) {
-                LOG_INF("Leg " + String(legIndex) + " FK Local Position: X: " + String(local_x) + ", Y: " + String(local_y) + ", Z: " + String(local_z));
+                LOG_INF("Leg " + String(index) + " FK Local Position: X: " + String(local_x) + ", Y: " + String(local_y) + ", Z: " + String(local_z));
             } else {
                 LOG_ERR("Failed to compute FK Local.");
             }
@@ -529,7 +526,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         count = sscanf(args.c_str(), "%d %hu %hu %hu", &i, &coxa, &femur, &tibia);
         if (count == 4) {
             if (getFKGlobal(coxa, femur, tibia, &global_x, &global_y, &global_z)) {
-                LOG_INF("Leg " + String(legIndex) + " FK Global Position: X: " + String(global_x) + ", Y: " + String(global_y) + ", Z: " + String(global_z));
+                LOG_INF("Leg " + String(index) + " FK Global Position: X: " + String(global_x) + ", Y: " + String(global_y) + ", Z: " + String(global_z));
             } else {
                 LOG_ERR("Failed to compute FK Global.");
             }
@@ -543,7 +540,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         count = sscanf(args.c_str(), "%d %f %f %f", &i, &local_x, &local_y, &local_z);
         if (count == 4) {
             local2Global(local_x, local_y, local_z, &global_x, &global_y, &global_z);
-            LOG_INF("Leg " + String(legIndex) + " Local to Global: X: " + String(global_x) + ", Y: " + String(global_y) + ", Z: " + String(global_z));
+            LOG_INF("Leg " + String(index) + " Local to Global: X: " + String(global_x) + ", Y: " + String(global_y) + ", Z: " + String(global_z));
         } else {
             LOG_ERR("Invalid parameters for lltg. Usage: lltg n x y z");
         }
@@ -555,7 +552,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int legIndex
         count = sscanf(args.c_str(), "%d %f %f %f", &i, &global_x, &global_y, &global_z);
         if (count == 4) {
             global2Local(global_x, global_y, global_z, &local_x, &local_y, &local_z);
-            LOG_INF("Leg " + String(legIndex) + " Global to Local: X: " + String(local_x) + ", Y: " + String(local_y) + ", Z: " + String(local_z));
+            LOG_INF("Leg " + String(index) + " Global to Local: X: " + String(local_x) + ", Y: " + String(local_y) + ", Z: " + String(local_z));
         } else {
             LOG_ERR("Invalid parameters for lgtl. Usage: lgtl n x y z");
         }
