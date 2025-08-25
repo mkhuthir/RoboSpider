@@ -6,7 +6,8 @@
 #define COXA_LENGTH       float(52)       // Length of the coxa segment in mm
 #define FEMUR_LENGTH      float(82)       // Length of the femur segment in mm
 #define TIBIA_LENGTH      float(142)      // Length of the tibia segment in mm
-
+#define FEMUR_FORWARD     float(180)      // Femur forward angle in degrees
+#define TIBIA_STRAIGHT    float(180)      // Tibia straight angle in degrees
 
 // -------------------- Servo mapping --------------------
 static constexpr float SERVO_MIN_DEG = 30.0f;    
@@ -49,12 +50,9 @@ static bool deg2Tick(float deg, uint16_t &tick) {
 // -------------------- IK Solver --------------------
 bool solveHexapodLegIK(float x, float y, float z, float coxaMountDeg, LegIKResult &out)
 {
-    // Mechanical reference: femur forward = 180°, tibia straight = 180°
-    const float femurZeroDeg = 180.0f;
-    const float tibiaZeroDeg = 180.0f;
 
     // 1) Coxa yaw
-    float theta0 = atan2f(y, x);
+    float coxaRad = atan2f(y, x);
 
     // 2) Planar reduction
     float r  = sqrtf(x*x + y*y);
@@ -74,29 +72,29 @@ bool solveHexapodLegIK(float x, float y, float z, float coxaMountDeg, LegIKResul
     if (D >  1.0f) D =  1.0f;
 
     float sin_knee = sqrtf(fmaxf(0.0f, 1.0f - D*D));
-    float theta2 = -atan2f(sin_knee, D);
-    float theta1 = atan2f(Zp, Xp) - atan2f(TIBIA_LENGTH*sinf(theta2), FEMUR_LENGTH + TIBIA_LENGTH*cosf(theta2));
+    float tibiaRad = -atan2f(sin_knee, D);
+    float femurRad = atan2f(Zp, Xp) - atan2f(TIBIA_LENGTH*sinf(tibiaRad), FEMUR_LENGTH + TIBIA_LENGTH*cosf(tibiaRad));
 
     // Servo absolute angles
-    float coxaServoDeg  = wrap360(rad2Deg(theta0) - coxaMountDeg);
-    float femurServoDeg = wrap360(rad2Deg(theta1) + femurZeroDeg);
-    float tibiaServoDeg = wrap360(rad2Deg(theta2) + tibiaZeroDeg);
+    float coxaDeg  = wrap360(rad2Deg(coxaRad)  - coxaMountDeg);
+    float femurDeg = wrap360(rad2Deg(femurRad) + FEMUR_FORWARD);
+    float tibiaDeg = wrap360(rad2Deg(tibiaRad) + TIBIA_STRAIGHT);
 
     // Convert to ticks
     uint16_t coxaTick, femurTick, tibiaTick;
-    if (!deg2Tick(coxaServoDeg,  coxaTick))  return false;
-    if (!deg2Tick(femurServoDeg, femurTick)) return false;
-    if (!deg2Tick(tibiaServoDeg, tibiaTick)) return false;
+    if (!deg2Tick(coxaDeg,  coxaTick))  return false;
+    if (!deg2Tick(femurDeg, femurTick)) return false;
+    if (!deg2Tick(tibiaDeg, tibiaTick)) return false;
 
     out.coxaTick    = coxaTick;
     out.femurTick   = femurTick;
     out.tibiaTick   = tibiaTick;
-    out.coxaRad     = theta0;
-    out.femurRad    = theta1;
-    out.tibiaRad    = theta2;
-    out.coxaDeg     = wrap360(rad2Deg(theta0) - coxaMountDeg);
-    out.femurDeg    = wrap360(rad2Deg(theta1) + femurZeroDeg);
-    out.tibiaDeg    = wrap360(rad2Deg(theta2) + tibiaZeroDeg);
+    out.coxaRad     = coxaRad;
+    out.femurRad    = femurRad;
+    out.tibiaRad    = tibiaRad;
+    out.coxaDeg     = coxaDeg;
+    out.femurDeg    = femurDeg;
+    out.tibiaDeg    = tibiaDeg;
     return true;
 }
 
@@ -113,7 +111,7 @@ int main(int argc, char** argv) {
         x = 0.0f;
         y = 276.0f;
         z = 0.0f;
-        coxaMountDeg = 0.0f;
+        coxaMountDeg = -90.0f;
     }
     
     LegIKResult result;
