@@ -9,11 +9,11 @@
 #define FEMUR_FORWARD     float(180)      // Femur forward angle in degrees
 #define TIBIA_STRAIGHT    float(180)      // Tibia straight angle in degrees
 
-// -------------------- Servo mapping --------------------
-static constexpr float SERVO_MIN_DEG = 30.0f;    
-static constexpr float SERVO_MAX_DEG = 330.0f;   
-static constexpr float SERVO_SPAN_DEG = (SERVO_MAX_DEG - SERVO_MIN_DEG); // 300 deg
-static constexpr float TICKS_MAX = 1023.0f;
+// AX-18A mapping
+#define SERVO_MIN_DEG    float(30)                          // start angle
+#define SERVO_MAX_DEG    float(330)                         // end angle
+#define SERVO_SPAN_DEG   (SERVO_MAX_DEG - SERVO_MIN_DEG)    // 300 degrees span (30-300 CCW)
+#define TICKS_MAX        uint16_t(1023)                     // max ticks 1023 = 300 degrees
 
 // -------------------- Result struct --------------------
 struct LegIKResult {
