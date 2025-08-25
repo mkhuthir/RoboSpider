@@ -97,8 +97,8 @@
       bool      getFKGlobal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_global_x, float* tip_global_y, float* tip_global_z);
 
       // Coordinate Transformations
-      void      globalToLocal( float global_x, float global_y, float global_z, float* local_x, float* local_y, float* local_z);
-      void      localToGlobal( float local_x, float local_y, float local_z, float* global_x, float* global_y, float* global_z);
+      void      global2Local( float global_x, float global_y, float global_z, float* local_x, float* local_y, float* local_z);
+      void      local2Global( float local_x, float local_y, float local_z, float* global_x, float* global_y, float* global_z);
   };
 
 #endif // LEG_H
