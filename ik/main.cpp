@@ -2,10 +2,11 @@
 #include <cmath>
 #include <cstdint>
 
-// -------------------- Link lengths in mm --------------------
-static constexpr float L1_COXA  = 52.0f;   // coxa offset
-static constexpr float L2_FEMUR = 82.0f;   // femur length
-static constexpr float L3_TIBIA = 142.0f;  // tibia length
+
+#define COXA_LENGTH       float(52)       // Length of the coxa segment in mm
+#define FEMUR_LENGTH      float(82)       // Length of the femur segment in mm
+#define TIBIA_LENGTH      float(142)      // Length of the tibia segment in mm
+
 
 // -------------------- Servo mapping --------------------
 static constexpr float SERVO_MIN_DEG = 30.0f;    
@@ -27,8 +28,8 @@ struct LegIKResult {
 };
 
 // -------------------- Helpers --------------------
-inline float rad2deg(float r){ return r * 180.0f / M_PI; }
-inline float deg2rad(float d){ return d * M_PI / 180.0f; }
+inline float rad2Deg(float r){ return r * 180.0f / M_PI; }
+inline float deg2Rad(float d){ return d * M_PI / 180.0f; }
 
 static float wrap360(float aDeg) {
     float a = fmodf(aDeg, 360.0f);
@@ -36,12 +37,12 @@ static float wrap360(float aDeg) {
     return a;
 }
 
-static bool angleToTick(float angleDeg, uint16_t &tickOut) {
-    if (angleDeg < SERVO_MIN_DEG || angleDeg > SERVO_MAX_DEG) return false;
-    float t = (angleDeg - SERVO_MIN_DEG) * (TICKS_MAX / SERVO_SPAN_DEG);
+static bool deg2Tick(float deg, uint16_t &tick) {
+    if (deg < SERVO_MIN_DEG || deg > SERVO_MAX_DEG) return false;
+    float t = (deg - SERVO_MIN_DEG) * (TICKS_MAX / SERVO_SPAN_DEG);
     if (t < 0) t = 0;
     if (t > TICKS_MAX) t = TICKS_MAX;
-    tickOut = static_cast<uint16_t>(lroundf(t));
+    tick = static_cast<uint16_t>(lroundf(t));
     return true;
 }
 
@@ -57,35 +58,35 @@ bool solveHexapodLegIK(float x, float y, float z, float coxaMountDeg, LegIKResul
 
     // 2) Planar reduction
     float r  = sqrtf(x*x + y*y);
-    float Xp = r - L1_COXA;
+    float Xp = r - COXA_LENGTH;
     float Zp = z;
 
     float d2 = Xp*Xp + Zp*Zp;
     float d  = sqrtf(d2);
-    float Lsum = L2_FEMUR + L3_TIBIA;
-    float Ldiff = fabsf(L2_FEMUR - L3_TIBIA);
+    float Lsum = FEMUR_LENGTH + TIBIA_LENGTH;
+    float Ldiff = fabsf(FEMUR_LENGTH - TIBIA_LENGTH);
     if (!(d >= Ldiff - 1e-5f && d <= Lsum + 1e-5f)) {
         return false;
     }
 
-    float D = (d2 - L2_FEMUR*L2_FEMUR - L3_TIBIA*L3_TIBIA) / (2.0f * L2_FEMUR * L3_TIBIA);
+    float D = (d2 - FEMUR_LENGTH*FEMUR_LENGTH - TIBIA_LENGTH*TIBIA_LENGTH) / (2.0f * FEMUR_LENGTH * TIBIA_LENGTH);
     if (D < -1.0f) D = -1.0f;
     if (D >  1.0f) D =  1.0f;
 
     float sin_knee = sqrtf(fmaxf(0.0f, 1.0f - D*D));
     float theta2 = -atan2f(sin_knee, D);
-    float theta1 = atan2f(Zp, Xp) - atan2f(L3_TIBIA*sinf(theta2), L2_FEMUR + L3_TIBIA*cosf(theta2));
+    float theta1 = atan2f(Zp, Xp) - atan2f(TIBIA_LENGTH*sinf(theta2), FEMUR_LENGTH + TIBIA_LENGTH*cosf(theta2));
 
     // Servo absolute angles
-    float coxaServoDeg  = wrap360(rad2deg(theta0) - coxaMountDeg);
-    float femurServoDeg = wrap360(rad2deg(theta1) + femurZeroDeg);
-    float tibiaServoDeg = wrap360(rad2deg(theta2) + tibiaZeroDeg);
+    float coxaServoDeg  = wrap360(rad2Deg(theta0) - coxaMountDeg);
+    float femurServoDeg = wrap360(rad2Deg(theta1) + femurZeroDeg);
+    float tibiaServoDeg = wrap360(rad2Deg(theta2) + tibiaZeroDeg);
 
     // Convert to ticks
     uint16_t coxaTick, femurTick, tibiaTick;
-    if (!angleToTick(coxaServoDeg,  coxaTick))  return false;
-    if (!angleToTick(femurServoDeg, femurTick)) return false;
-    if (!angleToTick(tibiaServoDeg, tibiaTick)) return false;
+    if (!deg2Tick(coxaServoDeg,  coxaTick))  return false;
+    if (!deg2Tick(femurServoDeg, femurTick)) return false;
+    if (!deg2Tick(tibiaServoDeg, tibiaTick)) return false;
 
     out.coxaTick    = coxaTick;
     out.femurTick   = femurTick;
@@ -93,24 +94,28 @@ bool solveHexapodLegIK(float x, float y, float z, float coxaMountDeg, LegIKResul
     out.coxaRad     = theta0;
     out.femurRad    = theta1;
     out.tibiaRad    = theta2;
-    out.coxaDeg     = wrap360(rad2deg(theta0) - coxaMountDeg);
-    out.femurDeg    = wrap360(rad2deg(theta1) + femurZeroDeg);
-    out.tibiaDeg    = wrap360(rad2deg(theta2) + tibiaZeroDeg);
+    out.coxaDeg     = wrap360(rad2Deg(theta0) - coxaMountDeg);
+    out.femurDeg    = wrap360(rad2Deg(theta1) + femurZeroDeg);
+    out.tibiaDeg    = wrap360(rad2Deg(theta2) + tibiaZeroDeg);
     return true;
 }
 
 // -------------------- Main CLI --------------------
 int main(int argc, char** argv) {
-    if (argc < 5) {
-        std::cerr << "Usage: " << argv[0] << " X Y Z CoxaMountDeg\n";
-        return 1;
+
+    float x, y, z, coxaMountDeg;
+    if (argc == 5) {
+        x = std::stof(argv[1]);
+        y = std::stof(argv[2]);
+        z = std::stof(argv[3]);
+        coxaMountDeg = std::stof(argv[4]);
+    } else {
+        x = 0.0f;
+        y = 276.0f;
+        z = 0.0f;
+        coxaMountDeg = 0.0f;
     }
-
-    float x = std::stof(argv[1]);
-    float y = std::stof(argv[2]);
-    float z = std::stof(argv[3]);
-    float coxaMountDeg = std::stof(argv[4]);
-
+    
     LegIKResult result;
     if (!solveHexapodLegIK(x, y, z, coxaMountDeg, result)) {
         std::cerr << "Target not reachable or out of servo range.\n";
