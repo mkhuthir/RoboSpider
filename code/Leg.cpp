@@ -217,31 +217,45 @@ bool Leg::getTipGlobalPosition(float* tip_global_x, float* tip_global_y, float* 
 // Get inverse kinematics in local coordinates
 bool Leg::getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_t* positions)
 {
-    // 1. Coxa (rotation in XY plane)
+    // 1. Coxa yaw (rotation in XY plane)
     float coxa_angle_rad = atan2f(tip_local_y, tip_local_x);
-    float coxa_angle_deg = coxa_angle_rad * 180.0f / M_PI;
 
-    float r = sqrtf(tip_local_x * tip_local_x + tip_local_y * tip_local_y) - COXA_LENGTH;
-    float z = tip_local_z;
-    float leg_length = sqrtf(r * r + z * z);
+    // 2) Planar reduction
+    float r  = sqrtf(powf(tip_local_x, 2) + powf(tip_local_y, 2));
+    float Xp = r - COXA_LENGTH;
+    float Zp = tip_local_z;
 
-    if (leg_length > (FEMUR_LENGTH + TIBIA_LENGTH) || leg_length < fabs(FEMUR_LENGTH - TIBIA_LENGTH)) {
+    float d2 = powf(Xp, 2) + powf(Zp, 2);
+    float d  = sqrtf(d2);
+    float lenSum = FEMUR_LENGTH + TIBIA_LENGTH;
+    float lenDiff = fabsf(FEMUR_LENGTH - TIBIA_LENGTH);
+    if (!(d >= lenDiff - 1e-5f && d <= lenSum + 1e-5f)) {
         return false;
     }
 
-    float a1 = atan2(z, r);
-    float a2 = acos((FEMUR_LENGTH*FEMUR_LENGTH + leg_length*leg_length - TIBIA_LENGTH*TIBIA_LENGTH) / (2 * FEMUR_LENGTH * leg_length));
-    float femur_angle_rad = a1 + a2;
-    float femur_angle_deg = femur_angle_rad * 180.0f / M_PI;
+    float D = (d2 - FEMUR_LENGTH*FEMUR_LENGTH - TIBIA_LENGTH*TIBIA_LENGTH) / (2.0f * FEMUR_LENGTH * TIBIA_LENGTH);
+    if (D < -1.0f) D = -1.0f;
+    if (D >  1.0f) D =  1.0f;
 
-    float tibia_angle_rad = acos((FEMUR_LENGTH*FEMUR_LENGTH + TIBIA_LENGTH*TIBIA_LENGTH - leg_length*leg_length) / (2 * FEMUR_LENGTH * TIBIA_LENGTH));
-    float tibia_angle_deg = 180.0f - tibia_angle_rad * 180.0f / M_PI;
+    float sin_knee = sqrtf(fmaxf(0.0f, 1.0f - D*D));
+    float tibia_angle_rad = -atan2f(sin_knee, D);
+    float femur_angle_rad = atan2f(Zp, Xp) - atan2f(TIBIA_LENGTH*sinf(tibia_angle_rad), FEMUR_LENGTH + TIBIA_LENGTH*cosf(tibia_angle_rad));
 
-    // --- Servo mapping: 0-300 deg → 0-1023 ---
-    float coxa_angle_deg_adjusted = coxa_angle_deg - (baseR * 180.0f / M_PI);        // Adjust coxa angle based on baseR (convert to degrees)
-    positions[Coxa]  = static_cast<uint16_t>(coxa_angle_deg_adjusted * (1023.0f / 300.0f));
-    positions[Femur] = static_cast<uint16_t>(femur_angle_deg         * (1023.0f / 300.0f));
-    positions[Tibia] = static_cast<uint16_t>(tibia_angle_deg         * (1023.0f / 300.0f));
+    // Servo absolute angles
+    float coxa_angle_deg  = wrap360(rad2Deg(coxa_angle_rad)  - baseR);
+    float femur_angle_deg = wrap360(rad2Deg(femur_angle_rad) + FEMUR_FORWARD);
+    float tibia_angle_deg = wrap360(rad2Deg(tibia_angle_rad) + TIBIA_STRAIGHT);
+
+    // Convert to ticks
+    uint16_t tibia_angle_tick, femur_angle_tick, coxa_angle_tick;
+    if (!deg2Tick(coxa_angle_deg,  coxa_angle_tick))  return false;
+    if (!deg2Tick(femur_angle_deg, femur_angle_tick)) return false;
+    if (!deg2Tick(tibia_angle_deg, tibia_angle_tick)) return false;
+
+    positions[Coxa] = coxa_angle_tick;
+    positions[Femur] = femur_angle_tick;
+    positions[Tibia] = tibia_angle_tick;
+
     return true;
 }
 
@@ -305,9 +319,38 @@ void Leg::local2Global(float local_x, float local_y, float local_z, float* globa
   *global_z = baseZ + local_z;
 }
 
+inline float Leg::rad2Deg(float r) {
+     return r * 180.0f / M_PI; 
+}
+
+inline float Leg::deg2Rad(float d) {
+    return d * M_PI / 180.0f;
+}
+
+float Leg::wrap360(float aDeg) {
+    float a = fmodf(aDeg, 360.0f);
+    if (a < 0) a += 360.0f;
+    return a;
+}
+
+bool Leg::deg2Tick(float deg, uint16_t &tick) {
+    if (deg < SERVO_MIN_DEG || deg > SERVO_MAX_DEG) return false;
+    float t = (deg - SERVO_MIN_DEG) * (SERVO_MAX_TICK / SERVO_SPAN_DEG);
+    if (t < SERVO_MIN_TICK) t = SERVO_MIN_TICK;
+    if (t > SERVO_MAX_TICK) t = SERVO_MAX_TICK;
+    tick = static_cast<uint16_t>(lroundf(t));
+    return true;
+}
+
+bool Leg::tick2Deg(uint16_t tick, float &deg) {
+    if (tick < SERVO_MIN_TICK || tick > SERVO_MAX_TICK) return false;
+    deg = SERVO_MIN_DEG + (static_cast<float>(tick) * SERVO_SPAN_DEG / SERVO_MAX_TICK);
+    return true;
+}
+
 //-------------------------------------------------------------------------------------
 
-// Print current joint angles
+// Print leg status
 bool Leg::printStatus() {
   uint16_t coxaAngle = 0, femurAngle = 0, tibiaAngle = 0;
   float baseX = 0, baseY = 0, baseZ = 0; float baseR = 0;
@@ -332,7 +375,7 @@ bool Leg::printStatus() {
   PRINTLN("Base         : X: " + String((float)baseX)
                    + "mm, Y: " + String((float)baseY) 
                    + "mm, Z: " + String((float)baseZ) 
-                   + "mm, R: " + String((float)baseR) + "rad");
+                   + "mm, R: " + String((float)baseR) + " deg");
   PRINTLN("Servo IDs    : Coxa: " + String((int)servoIDs[0]) 
               + ", Femur: " + String((int)servoIDs[1]) 
               + ", Tibia: " + String((int)servoIDs[2]));

@@ -19,11 +19,22 @@
   #define FEMUR_CW_LIMIT    uint16_t(204)   // Min position for FEMUR servo
   #define FEMUR_CCW_LIMIT   uint16_t(819)   // Max position for FEMUR servo
   #define FEMUR_DEFAULT     uint16_t(358)   // Default position for FEMUR servo
+  #define FEMUR_FORWARD     float(180)      // Femur forward angle in degrees
 
   #define TIBIA_LENGTH      float(142)      // Length of the tibia segment in mm
   #define TIBIA_CW_LIMIT    uint16_t(30)    // Min position for TIBIA servo
   #define TIBIA_CCW_LIMIT   uint16_t(993)   // Max position for TIBIA servo
   #define TIBIA_DEFAULT     uint16_t(665)   // Default position for TIBIA servo
+  #define TIBIA_STRAIGHT    float(180)      // Tibia straight angle in degrees
+
+
+  #define SERVO_MIN_DEG    float(30)                          // start angle
+  #define SERVO_MAX_DEG    float(330)                         // end angle
+  #define SERVO_SPAN_DEG   (SERVO_MAX_DEG - SERVO_MIN_DEG)    // 300 degrees span (30-300 CCW)
+  #define SERVO_MIN_TICK   uint16_t(0)                        // min ticks 0 = 30 degrees
+  #define SERVO_MAX_TICK   uint16_t(1023)                     // max ticks 1023 = 300 degrees
+
+
 
   class Leg {
     public:
@@ -97,6 +108,14 @@
       // Coordinate Transformations
       void      global2Local( float global_x, float global_y, float global_z, float* local_x, float* local_y, float* local_z);
       void      local2Global( float local_x, float local_y, float local_z, float* global_x, float* global_y, float* global_z);
+// -----------------------------------------------------------------------------------------------
+      // Utility Functions
+      inline float rad2Deg(float r);
+      inline float deg2Rad(float d);
+      float wrap360(float aDeg);
+      bool deg2Tick(float deg, uint16_t &tick);
+      bool tick2Deg(uint16_t tick, float &deg);
+
   };
 
 #endif // LEG_H

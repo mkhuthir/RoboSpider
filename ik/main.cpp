@@ -13,24 +13,19 @@
 #define SERVO_MIN_DEG    float(30)                          // start angle
 #define SERVO_MAX_DEG    float(330)                         // end angle
 #define SERVO_SPAN_DEG   (SERVO_MAX_DEG - SERVO_MIN_DEG)    // 300 degrees span (30-300 CCW)
-#define TICKS_MAX        uint16_t(1023)                     // max ticks 1023 = 300 degrees
+#define SERVO_MIN_TICK   uint16_t(0)                        // min ticks 0 = 30 degrees
+#define SERVO_MAX_TICK   uint16_t(1023)                     // max ticks 1023 = 300 degrees
 
-// -------------------- Result struct --------------------
-struct LegIKResult {
-    uint16_t    coxaTick;
-    uint16_t    femurTick;
-    uint16_t    tibiaTick;
-    float       coxaRad;
-    float       femurRad;
-    float       tibiaRad;
-    uint16_t    coxaDeg;
-    uint16_t    femurDeg;
-    uint16_t    tibiaDeg;
-};
+#define baseR            float(-90.0)                       // Coxa mount angle in degrees
 
 // -------------------- Helpers --------------------
-inline float rad2Deg(float r){ return r * 180.0f / M_PI; }
-inline float deg2Rad(float d){ return d * M_PI / 180.0f; }
+inline float rad2Deg(float r) {
+     return r * 180.0f / M_PI; 
+}
+
+inline float deg2Rad(float d) {
+    return d * M_PI / 180.0f;
+}
 
 static float wrap360(float aDeg) {
     float a = fmodf(aDeg, 360.0f);
@@ -40,30 +35,30 @@ static float wrap360(float aDeg) {
 
 static bool deg2Tick(float deg, uint16_t &tick) {
     if (deg < SERVO_MIN_DEG || deg > SERVO_MAX_DEG) return false;
-    float t = (deg - SERVO_MIN_DEG) * (TICKS_MAX / SERVO_SPAN_DEG);
-    if (t < 0) t = 0;
-    if (t > TICKS_MAX) t = TICKS_MAX;
+    float t = (deg - SERVO_MIN_DEG) * (SERVO_MAX_TICK / SERVO_SPAN_DEG);
+    if (t < SERVO_MIN_TICK) t = SERVO_MIN_TICK;
+    if (t > SERVO_MAX_TICK) t = SERVO_MAX_TICK;
     tick = static_cast<uint16_t>(lroundf(t));
     return true;
 }
 
 // -------------------- IK Solver --------------------
-bool solveHexapodLegIK(float x, float y, float z, float coxaMountDeg, LegIKResult &out)
+bool getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_t* positions)
 {
 
-    // 1) Coxa yaw
-    float coxaRad = atan2f(y, x);
+    // 1. Coxa yaw (rotation in XY plane)
+    float coxa_angle_rad = atan2f(tip_local_y, tip_local_x);
 
     // 2) Planar reduction
-    float r  = sqrtf(x*x + y*y);
+    float r  = sqrtf(powf(tip_local_x, 2) + powf(tip_local_y, 2));
     float Xp = r - COXA_LENGTH;
-    float Zp = z;
+    float Zp = tip_local_z;
 
-    float d2 = Xp*Xp + Zp*Zp;
+    float d2 = powf(Xp, 2) + powf(Zp, 2);
     float d  = sqrtf(d2);
-    float Lsum = FEMUR_LENGTH + TIBIA_LENGTH;
-    float Ldiff = fabsf(FEMUR_LENGTH - TIBIA_LENGTH);
-    if (!(d >= Ldiff - 1e-5f && d <= Lsum + 1e-5f)) {
+    float lenSum = FEMUR_LENGTH + TIBIA_LENGTH;
+    float lenDiff = fabsf(FEMUR_LENGTH - TIBIA_LENGTH);
+    if (!(d >= lenDiff - 1e-5f && d <= lenSum + 1e-5f)) {
         return false;
     }
 
@@ -72,64 +67,50 @@ bool solveHexapodLegIK(float x, float y, float z, float coxaMountDeg, LegIKResul
     if (D >  1.0f) D =  1.0f;
 
     float sin_knee = sqrtf(fmaxf(0.0f, 1.0f - D*D));
-    float tibiaRad = -atan2f(sin_knee, D);
-    float femurRad = atan2f(Zp, Xp) - atan2f(TIBIA_LENGTH*sinf(tibiaRad), FEMUR_LENGTH + TIBIA_LENGTH*cosf(tibiaRad));
+    float tibia_angle_rad = -atan2f(sin_knee, D);
+    float femur_angle_rad = atan2f(Zp, Xp) - atan2f(TIBIA_LENGTH*sinf(tibia_angle_rad), FEMUR_LENGTH + TIBIA_LENGTH*cosf(tibia_angle_rad));
 
     // Servo absolute angles
-    float coxaDeg  = wrap360(rad2Deg(coxaRad)  - coxaMountDeg);
-    float femurDeg = wrap360(rad2Deg(femurRad) + FEMUR_FORWARD);
-    float tibiaDeg = wrap360(rad2Deg(tibiaRad) + TIBIA_STRAIGHT);
+    float coxa_angle_deg  = wrap360(rad2Deg(coxa_angle_rad)  - baseR);
+    float femur_angle_deg = wrap360(rad2Deg(femur_angle_rad) + FEMUR_FORWARD);
+    float tibia_angle_deg = wrap360(rad2Deg(tibia_angle_rad) + TIBIA_STRAIGHT);
 
     // Convert to ticks
-    uint16_t coxaTick, femurTick, tibiaTick;
-    if (!deg2Tick(coxaDeg,  coxaTick))  return false;
-    if (!deg2Tick(femurDeg, femurTick)) return false;
-    if (!deg2Tick(tibiaDeg, tibiaTick)) return false;
+    uint16_t tibia_angle_tick, femur_angle_tick, coxa_angle_tick;
+    if (!deg2Tick(coxa_angle_deg,  coxa_angle_tick))  return false;
+    if (!deg2Tick(femur_angle_deg, femur_angle_tick)) return false;
+    if (!deg2Tick(tibia_angle_deg, tibia_angle_tick)) return false;
 
-    out.coxaTick    = coxaTick;
-    out.femurTick   = femurTick;
-    out.tibiaTick   = tibiaTick;
-    out.coxaRad     = coxaRad;
-    out.femurRad    = femurRad;
-    out.tibiaRad    = tibiaRad;
-    out.coxaDeg     = coxaDeg;
-    out.femurDeg    = femurDeg;
-    out.tibiaDeg    = tibiaDeg;
+    positions[0] = coxa_angle_tick;
+    positions[1] = femur_angle_tick;
+    positions[2] = tibia_angle_tick;
+
     return true;
 }
 
 // -------------------- Main CLI --------------------
 int main(int argc, char** argv) {
 
-    float x, y, z, coxaMountDeg;
-    if (argc == 5) {
+    float x, y, z;
+    if (argc == 4) {
         x = std::stof(argv[1]);
         y = std::stof(argv[2]);
         z = std::stof(argv[3]);
-        coxaMountDeg = std::stof(argv[4]);
     } else {
         x = 0.0f;
         y = 276.0f;
         z = 0.0f;
-        coxaMountDeg = -90.0f;
     }
-    
-    LegIKResult result;
-    if (!solveHexapodLegIK(x, y, z, coxaMountDeg, result)) {
+
+    uint16_t result[3];
+    if (!getIKLocal(x, y, z, result)) {
         std::cerr << "Target not reachable or out of servo range.\n";
         return 2;
     }
 
     std::cout << "IK Solution:\n";
-    std::cout << "  Coxa:  ticks=" << result.coxaTick
-              << " angle(rad)=" << result.coxaRad 
-              << " angle(deg)=" << result.coxaDeg << "\n";
-    std::cout << "  Femur: ticks=" << result.femurTick
-              << " angle(rad)=" << result.femurRad
-              << " angle(deg)=" << result.femurDeg << "\n";
-    std::cout << "  Tibia: ticks=" << result.tibiaTick
-              << " angle(rad)=" << result.tibiaRad
-              << " angle(deg)=" << result.tibiaDeg << "\n";
-
+    std::cout << " Coxa:  ticks=" << result[0] << "\n";
+    std::cout << " Femur: ticks=" << result[1] << "\n";
+    std::cout << " Tibia: ticks=" << result[2] << "\n";
     return 0;
 }
