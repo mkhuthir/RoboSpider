@@ -217,10 +217,10 @@ bool Leg::getTipGlobalPosition(float* tip_global_x, float* tip_global_y, float* 
 // Get inverse kinematics in local coordinates
 bool Leg::getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_t* positions)
 {
-    // 1. Coxa yaw (rotation in XY plane)
+    // Coxa yaw (rotation in XY plane)
     float coxa_angle_rad = atan2f(tip_local_y, tip_local_x);
 
-    // 2) Planar reduction
+    // Planar reduction
     float r  = sqrtf(powf(tip_local_x, 2) + powf(tip_local_y, 2));
     float Xp = r - COXA_LENGTH;
     float Zp = tip_local_z;
@@ -229,15 +229,16 @@ bool Leg::getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, ui
     float d  = sqrtf(d2);
     float lenSum = FEMUR_LENGTH + TIBIA_LENGTH;
     float lenDiff = fabsf(FEMUR_LENGTH - TIBIA_LENGTH);
-    if (!(d >= lenDiff - 1e-5f && d <= lenSum + 1e-5f)) {
-        return false;
-    }
 
-    float D = (d2 - FEMUR_LENGTH*FEMUR_LENGTH - TIBIA_LENGTH*TIBIA_LENGTH) / (2.0f * FEMUR_LENGTH * TIBIA_LENGTH);
+    // Check if the point is reachable
+    if (!(d >= lenDiff - 1e-5f && d <= lenSum + 1e-5f)) return false;
+
+    float D = (d2 - powf(FEMUR_LENGTH, 2) - powf(TIBIA_LENGTH, 2)) / (2.0f * FEMUR_LENGTH * TIBIA_LENGTH);
+    // Clamp D to the range [-1, 1]
     if (D < -1.0f) D = -1.0f;
     if (D >  1.0f) D =  1.0f;
 
-    float sin_knee = sqrtf(fmaxf(0.0f, 1.0f - D*D));
+    float sin_knee = sqrtf(fmaxf(0.0f, 1.0f - powf(D, 2)));
     float tibia_angle_rad = -atan2f(sin_knee, D);
     float femur_angle_rad = atan2f(Zp, Xp) - atan2f(TIBIA_LENGTH*sinf(tibia_angle_rad), FEMUR_LENGTH + TIBIA_LENGTH*cosf(tibia_angle_rad));
 
