@@ -24,17 +24,17 @@
   #define LEG_2_BASE_X   float(0.0)                                         // X position for leg 2 in mm from body center
   #define LEG_2_BASE_Y   float(-60.0)                                       // Y position for leg 2 in mm from body center
   #define LEG_2_BASE_Z   float(0.0)                                         // Z position for leg 2 in mm from body center
-  #define LEG_2_BASE_R   float(90.0)                                       // Rotation for leg 2 in radians
+  #define LEG_2_BASE_R   float(90.0)                                        // Rotation for leg 2 in radians
 
   #define LEG_3_BASE_X   float(0.0)                                         // X position for leg 3 in mm from body center
   #define LEG_3_BASE_Y   float(60.0)                                        // Y position for leg 3 in mm from body center
   #define LEG_3_BASE_Z   float(0.0)                                         // Z position for leg 3 in mm from body center
-  #define LEG_3_BASE_R   float(-90.0)                                      // Rotation for leg 3 in radians
+  #define LEG_3_BASE_R   float(-90.0)                                       // Rotation for leg 3 in radians
 
   #define LEG_4_BASE_X   float(-120.0)                                      // X position for leg 4 in mm from body center
   #define LEG_4_BASE_Y   float(-60.0)                                       // Y position for leg 4 in mm from body center
   #define LEG_4_BASE_Z   float(0.0)                                         // Z position for leg 4 in mm from body center
-  #define LEG_4_BASE_R   float(135.0)                                            // Rotation for leg 4 in radians
+  #define LEG_4_BASE_R   float(135.0)                                       // Rotation for leg 4 in radians
 
   #define LEG_5_BASE_X   float(-120.0)                                      // X position for leg 5 in mm from body center
   #define LEG_5_BASE_Y   float(60.0)                                        // Y position for leg 5 in mm from body center
