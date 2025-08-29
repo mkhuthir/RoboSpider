@@ -25,6 +25,7 @@ YouTube Video:
 
 This project is a firmware for a hexapod robot ("SpiderBot") using Dynamixel AX-18A servos. The code is designed for Arduino-compatible microcontrollers and provides modular control for legs, a sensor turret, and optional AX-S1 sensor modules.
 
+![body_top_plate](./img/body_top_plate.png)<br>
 ![leg dimentions](./img/leg.png)<br>
 
 ## Features
