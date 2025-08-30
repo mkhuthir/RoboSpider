@@ -477,7 +477,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int index) {
         LOG_INF("Leg " + String(index) + " servo positions: Coxa: " + String(coxaPos) + ", Femur: " + String(femurPos) + ", Tibia: " + String(tibiaPos));
         return true;
 
-    } else if (cmd == "lstlp") {
+    } else if (cmd == "lstpl") {
         if (args.length() > 0) {
             int count = 0, i = 0; float local_x = 0, local_y = 0, local_z = 0;
             count = sscanf(args.c_str(), "%d %f %f %f", &i, &local_x, &local_y, &local_z);
@@ -492,13 +492,13 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int index) {
         }
         return true;
 
-    } else if (cmd == "lgtlp") {
+    } else if (cmd == "lgtpl") {
         float tip_local_x = 0, tip_local_y = 0, tip_local_z = 0;
         getTipLocalPosition(&tip_local_x, &tip_local_y, &tip_local_z);
         LOG_INF("Leg " + String(index) + " tip local position: X: " + String(tip_local_x) + ", Y: " + String(tip_local_y) + ", Z: " + String(tip_local_z));
         return true;
 
-    } else if (cmd == "lstgp") {
+    } else if (cmd == "lstpg") {
         if (args.length() > 0) {
             int count = 0, i = 0; float global_x = 0, global_y = 0, global_z = 0;
             count = sscanf(args.c_str(), "%d %f %f %f", &i, &global_x, &global_y, &global_z);
@@ -513,7 +513,7 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int index) {
         }
         return true;
 
-    } else if (cmd == "lgtgp") {
+    } else if (cmd == "lgtpg") {
         float tip_global_x = 0, tip_global_y = 0, tip_global_z = 0;
         getTipGlobalPosition(&tip_global_x, &tip_global_y, &tip_global_z);
         LOG_INF("Leg " + String(index) + " tip global position: X: " + String(tip_global_x) + ", Y: " + String(tip_global_y) + ", Z: " + String(tip_global_z));
@@ -627,11 +627,11 @@ bool Leg::printConsoleHelp() {
     PRINTLN("  lssp [n][c][f][t]  - Set leg servo positions (default: 0, " + String(COXA_DEFAULT) + ", " + String(FEMUR_DEFAULT) + ", " + String(TIBIA_DEFAULT) + ")");
     PRINTLN("  lgsp [n]           - Get leg servo positions (default: 0)");
     PRINTLN("");
-    PRINTLN("  lstlp n x y z      - Set leg tip local position");
-    PRINTLN("  lgtlp [n]          - Get leg tip local position (default: 0)");
+    PRINTLN("  lstpl n x y z      - Set leg tip local position");
+    PRINTLN("  lgtpl [n]          - Get leg tip local position (default: 0)");
     PRINTLN("");
-    PRINTLN("  lstgp n x y z      - Set leg tip global position");
-    PRINTLN("  lgtgp [n]          - Get leg tip global position (default: 0)");
+    PRINTLN("  lstpg n x y z      - Set leg tip global position");
+    PRINTLN("  lgtpg [n]          - Get leg tip global position (default: 0)");
     PRINTLN("");
     PRINTLN("  lgikl n x y z      - Compute IK in local coords (relative to leg base)");
     PRINTLN("  lgikg n x y z      - Compute IK in global coords (relative to body center)");
