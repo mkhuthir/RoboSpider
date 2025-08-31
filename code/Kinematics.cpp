@@ -2,6 +2,7 @@
 
 namespace IK {
 
+
     float wrap360(float deg) {
         return fmodf(deg + 360.0f, 360.0f);
     }
@@ -33,6 +34,8 @@ namespace IK {
         *global_z = baseZ + local_z;
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+    // Local Inverse Kinematics
     bool getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, float baseR, uint16_t* positions) {
         // Coxa yaw (rotation in XY plane)
         float coxa_angle_rad = atan2f(tip_local_y, tip_local_x);
@@ -76,12 +79,14 @@ namespace IK {
         return true;
     }
 
+    // Global Inverse Kinematics
     bool getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z, float baseX, float baseY, float baseZ, float baseR, uint16_t* positions) {
         float tip_local_x, tip_local_y, tip_local_z;
         global2Local(tip_global_x, tip_global_y, tip_global_z, baseX, baseY, baseZ, &tip_local_x, &tip_local_y, &tip_local_z);
         return getIKLocal(tip_local_x, tip_local_y, tip_local_z, baseR, positions);
     }
 
+    // Local Forward Kinematics
     bool getFKLocal(uint16_t coxa, uint16_t femur, uint16_t tibia, float baseR, float* tip_local_x, float* tip_local_y, float* tip_local_z) {
         // Convert servo positions to angles in degrees
         float coxa_angle_deg  = coxa  * (300.0f / 1023.0f);
