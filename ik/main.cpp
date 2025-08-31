@@ -32,7 +32,7 @@ float wrap360(float aDeg) {      // convert degree range from (-180 to 180) to (
 }
 
 bool deg2Tick(float deg, uint16_t &tick) {
-    if (deg < SERVO_MIN_DEG || deg > SERVO_MAX_DEG) return false;
+    if (deg < SERVO_MIN_DEG || deg > SERVO_MAX_DEG) return false;           
     float t = (deg - SERVO_MIN_DEG) * (SERVO_MAX_TICK / SERVO_SPAN_DEG);
     if (t < SERVO_MIN_TICK) t = SERVO_MIN_TICK;
     if (t > SERVO_MAX_TICK) t = SERVO_MAX_TICK;
