@@ -2,7 +2,7 @@
 
 namespace IK {
 
-
+    // Wrap degrees from [180, -180] to [0, 360]
     float wrap360(float deg) {
         return fmodf(deg + 360.0f, 360.0f);
     }
