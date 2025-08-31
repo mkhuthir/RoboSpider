@@ -9,17 +9,17 @@
 // Default constructor for Leg class
 Leg::Leg(){
   // Initialize leg IDs to zero
-  index            = 0;
-  baseX            = 0.0;
-  baseY            = 0.0;
-  baseZ            = 0.0;
-  baseR            = 0.0;
-  servoIDs[Coxa]   = 0;
-  servoIDs[Femur]  = 0;
-  servoIDs[Tibia]  = 0;
-  driver           = nullptr;
-  servo            = nullptr;
-  speed            = 0;
+  index            = 0;       // Leg index (0-5)
+  baseX            = 0.0;     // Base X position in reference to body center
+  baseY            = 0.0;     // Base Y position in reference to body center
+  baseZ            = 0.0;     // Base Z position in reference to body center
+  baseR            = 0.0;     // Base rotation in reference to body center
+  servoIDs[Coxa]   = 0;       // Coxa servo ID
+  servoIDs[Femur]  = 0;       // Femur servo ID
+  servoIDs[Tibia]  = 0;       // Tibia servo ID
+  driver           = nullptr; // Driver pointer
+  servo            = nullptr; // Servo pointer
+  speed            = 0;       // Leg speed
 
 }
 
