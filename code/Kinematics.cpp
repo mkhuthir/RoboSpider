@@ -1,6 +1,4 @@
 #include "Kinematics.h"
-#include "Leg.h" // For constants like COXA_LENGTH, FEMUR_LENGTH, etc.
-
 
 namespace IK {
 

@@ -10,33 +10,17 @@
   #define HEXAPOD_LEGS      uint8_t(6)      // Maximum number of legs
   #define LEG_SPEED         uint8_t(100)    // Default leg speed
   
-  #define COXA_LENGTH       float(52)       // Length of the coxa segment in mm
   #define COXA_CW_LIMIT     uint16_t(225)   // Min position for COXA servo in ticks
   #define COXA_CCW_LIMIT    uint16_t(798)   // Max position for COXA servo in ticks
   #define COXA_DEFAULT      uint16_t(512)   // Default position for COXA servo in ticks
 
-  #define FEMUR_LENGTH      float(82)       // Length of the femur segment in mm
   #define FEMUR_CW_LIMIT    uint16_t(204)   // Min position for FEMUR servo in ticks
   #define FEMUR_CCW_LIMIT   uint16_t(819)   // Max position for FEMUR servo in ticks
   #define FEMUR_DEFAULT     uint16_t(358)   // Default position for FEMUR servo in ticks
-  #define FEMUR_H_POS       float(180)      // Femur at horizontal angle in degrees
-  #define FEMUR_UP_DIR      float(1.0)      // Femur up direction CCW = 1.0 CW = -1.0
   
-  #define TIBIA_LENGTH      float(142)      // Length of the tibia segment in mm
   #define TIBIA_CW_LIMIT    uint16_t(30)    // Min position for TIBIA servo in ticks
   #define TIBIA_CCW_LIMIT   uint16_t(993)   // Max position for TIBIA servo in ticks
   #define TIBIA_DEFAULT     uint16_t(665)   // Default position for TIBIA servo in ticks
-  #define TIBIA_H_POS       float(180)      // Tibia at horizontal angle in degrees
-  #define TIBIA_UP_DIR      float(-1.0)     // Tibia up direction CCW = 1.0 CW = -1.0
-
-
-  #define SERVO_MIN_DEG    float(30)                          // start angle
-  #define SERVO_MAX_DEG    float(330)                         // end angle
-  #define SERVO_SPAN_DEG   (SERVO_MAX_DEG - SERVO_MIN_DEG)    // 300 degrees span (30-300 CCW)
-  #define SERVO_MIN_TICK   uint16_t(0)                        // min ticks 0 = 30 degrees
-  #define SERVO_MAX_TICK   uint16_t(1023)                     // max ticks 1023 = 300 degrees
-
-
 
   class Leg {
     public:

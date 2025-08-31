@@ -471,7 +471,6 @@ bool Leg::runConsoleCommands(const String& cmd, const String& args, int index) {
         return true;
 
     }
-
     return false;
 }
 
