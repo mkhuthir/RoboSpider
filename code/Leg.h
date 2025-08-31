@@ -98,26 +98,6 @@
       enum LegJoint { Coxa  = 0,                  // Enum for leg joints
                       Femur = 1, 
                       Tibia = 2 };
-// -----------------------------------------------------------------------------------------------
-      // Inverse Kinematics
-      bool      getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_t* positions);
-      bool      getIKGlobal(float tip_global_x, float tip_global_y, float tip_global_z, uint16_t* positions);
-
-      // Forward Kinematics
-      bool      getFKLocal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_local_x, float* tip_local_y, float* tip_local_z);
-      bool      getFKGlobal(uint16_t coxa, uint16_t femur, uint16_t tibia, float* tip_global_x, float* tip_global_y, float* tip_global_z);
-
-      // Coordinate Transformations
-      void      global2Local( float global_x, float global_y, float global_z, float* local_x, float* local_y, float* local_z);
-      void      local2Global( float local_x, float local_y, float local_z, float* global_x, float* global_y, float* global_z);
-// -----------------------------------------------------------------------------------------------
-      // Utility Functions
-      inline float      rad2Deg(float rad);                       // Convert radians [-M_PI, M_PI] to degrees [-180, 180]
-      inline float      deg2Rad(float deg);                       // Convert degrees [-180, 180] to radians [-M_PI, M_PI]
-      float             wrap360(float deg);                       // Wrap degrees [180, -180] to [0, 360)
-      bool              deg2Tick(float deg, uint16_t &tick);      // Convert degrees [30,330] to servo ticks [0,1023]
-      bool              tick2Deg(uint16_t tick, float &deg);      // Convert servo ticks [0,1023] to degrees [30,330]
-
   };
 
 #endif // LEG_H
