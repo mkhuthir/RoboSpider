@@ -45,6 +45,7 @@ namespace IK {
         float coxa_angle_deg  = wrap360(rad2Deg(coxa_angle_rad)  - baseR);
         if (!deg2Tick(coxa_angle_deg,  positions[0])) return false;
 
+        /*
         // Planar reduction
         float r  = sqrtf(powf(tip_local_x, 2) + powf(tip_local_y, 2));
         float Xp = r - COXA_LENGTH;
@@ -72,6 +73,10 @@ namespace IK {
         
         if (!deg2Tick(femur_angle_deg, positions[1])) return false;
         if (!deg2Tick(tibia_angle_deg, positions[2])) return false;
+        */
+
+        positions[1] = 512;
+        positions[2] = 512;
 
         return true;
     }

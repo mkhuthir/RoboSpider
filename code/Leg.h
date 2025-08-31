@@ -10,8 +10,8 @@
   #define HEXAPOD_LEGS      uint8_t(6)      // Maximum number of legs
   #define LEG_SPEED         uint8_t(100)    // Default leg speed
   
-  #define COXA_CW_LIMIT     uint16_t(0 /*225*/)   // Min position for COXA servo in ticks
-  #define COXA_CCW_LIMIT    uint16_t(1023 /*798*/)   // Max position for COXA servo in ticks
+  #define COXA_CW_LIMIT     uint16_t(225)   // Min position for COXA servo in ticks
+  #define COXA_CCW_LIMIT    uint16_t(798)   // Max position for COXA servo in ticks
   #define COXA_DEFAULT      uint16_t(512)   // Default position for COXA servo in ticks
 
   #define FEMUR_CW_LIMIT    uint16_t(204)   // Min position for FEMUR servo in ticks
