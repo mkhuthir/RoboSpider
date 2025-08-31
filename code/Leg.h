@@ -112,11 +112,11 @@
       void      local2Global( float local_x, float local_y, float local_z, float* global_x, float* global_y, float* global_z);
 // -----------------------------------------------------------------------------------------------
       // Utility Functions
-      inline float rad2Deg(float r);
-      inline float deg2Rad(float d);
-      float wrap360(float aDeg);
-      bool deg2Tick(float deg, uint16_t &tick);
-      bool tick2Deg(uint16_t tick, float &deg);
+      inline float      rad2Deg(float rad);                       // Convert radians [-M_PI, M_PI] to degrees [-180, 180]
+      inline float      deg2Rad(float deg);                       // Convert degrees [-180, 180] to radians [-M_PI, M_PI]
+      float             wrap360(float deg);                       // Wrap degrees [180, -180] to [0, 360)
+      bool              deg2Tick(float deg, uint16_t &tick);      // Convert degrees [30,330] to servo ticks [0,1023]
+      bool              tick2Deg(uint16_t tick, float &deg);      // Convert servo ticks [0,1023] to degrees [30,330]
 
   };
 

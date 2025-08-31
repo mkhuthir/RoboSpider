@@ -19,21 +19,19 @@
 #define baseR            float(-90.0)                       // Coxa mount angle in degrees
 
 // -------------------- Helpers --------------------
-inline float rad2Deg(float r) {
+inline float rad2Deg(float r) {         // convert radians to degrees
      return r * 180.0f / M_PI; 
 }
 
-inline float deg2Rad(float d) {
+inline float deg2Rad(float d) {         // convert degrees to radians
     return d * M_PI / 180.0f;
 }
 
-static float wrap360(float aDeg) {
-    float a = fmodf(aDeg, 360.0f);
-    if (a < 0) a += 360.0f;
-    return a;
+float wrap360(float aDeg) {      // convert degree range from (-180 to 180) to (0 to 360)
+    return fmodf(aDeg+360.0f, 360.0f);
 }
 
-static bool deg2Tick(float deg, uint16_t &tick) {
+bool deg2Tick(float deg, uint16_t &tick) {
     if (deg < SERVO_MIN_DEG || deg > SERVO_MAX_DEG) return false;
     float t = (deg - SERVO_MIN_DEG) * (SERVO_MAX_TICK / SERVO_SPAN_DEG);
     if (t < SERVO_MIN_TICK) t = SERVO_MIN_TICK;
@@ -47,7 +45,7 @@ bool getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, uint16_
 {
 
     // 1. Coxa yaw (rotation in XY plane)
-    float coxa_angle_rad = atan2f(tip_local_y, tip_local_x);
+    float coxa_angle_rad = atan2f(tip_local_x, tip_local_y);
 
     // 2) Planar reduction
     float r  = sqrtf(powf(tip_local_x, 2) + powf(tip_local_y, 2));

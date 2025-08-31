@@ -327,10 +327,8 @@ inline float Leg::deg2Rad(float d) {
     return d * M_PI / 180.0f;
 }
 
-float Leg::wrap360(float aDeg) {
-    float a = fmodf(aDeg, 360.0f);
-    if (a < 0) a += 360.0f;
-    return a;
+float Leg::wrap360(float deg) {
+    return fmodf(deg + 360.0f, 360.0f);
 }
 
 bool Leg::deg2Tick(float deg, uint16_t &tick) {
