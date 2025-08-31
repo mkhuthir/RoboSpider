@@ -1,4 +1,6 @@
 #include "Kinematics.h"
+#include "Console.h"
+#include "Debug.h"
 
 namespace IK {
 
@@ -37,8 +39,11 @@ namespace IK {
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------
     // Local Inverse Kinematics
     bool getIKLocal(float tip_local_x, float tip_local_y, float tip_local_z, float baseR, uint16_t* positions) {
+
         // Coxa yaw (rotation in XY plane)
-        float coxa_angle_rad = atan2f(tip_local_y, tip_local_x);
+        float coxa_angle_rad = atan2f(tip_local_x, tip_local_y);
+        float coxa_angle_deg  = wrap360(rad2Deg(coxa_angle_rad)  - baseR);
+        if (!deg2Tick(coxa_angle_deg,  positions[0])) return false;
 
         // Planar reduction
         float r  = sqrtf(powf(tip_local_x, 2) + powf(tip_local_y, 2));
@@ -64,17 +69,9 @@ namespace IK {
 
         float femur_angle_deg = wrap360((FEMUR_UP_DIR) * rad2Deg(femur_angle_rad) + FEMUR_H_POS);
         float tibia_angle_deg = wrap360((-TIBIA_UP_DIR) * rad2Deg(tibia_angle_rad) + TIBIA_H_POS);
-        float coxa_angle_deg  = wrap360(rad2Deg(coxa_angle_rad)  - baseR);
-
-        // Convert to ticks
-        uint16_t tibia_angle_tick, femur_angle_tick, coxa_angle_tick;
-        if (!deg2Tick(coxa_angle_deg,  coxa_angle_tick))  return false;
-        if (!deg2Tick(femur_angle_deg, femur_angle_tick)) return false;
-        if (!deg2Tick(tibia_angle_deg, tibia_angle_tick)) return false;
-
-        positions[0] = coxa_angle_tick;
-        positions[1] = femur_angle_tick;
-        positions[2] = tibia_angle_tick;
+        
+        if (!deg2Tick(femur_angle_deg, positions[1])) return false;
+        if (!deg2Tick(tibia_angle_deg, positions[2])) return false;
 
         return true;
     }
