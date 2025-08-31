@@ -90,15 +90,10 @@ namespace IK {
 
     // Local Forward Kinematics
     bool getFKLocal(uint16_t coxa, uint16_t femur, uint16_t tibia, float baseR, float* tip_local_x, float* tip_local_y, float* tip_local_z) {
-        // Convert servo positions to angles in degrees
-        float coxa_angle_deg  = coxa  * (300.0f / 1023.0f);
-        float femur_angle_deg = femur * (300.0f / 1023.0f);
-        float tibia_angle_deg = tibia * (300.0f / 1023.0f);
 
-        // Convert degrees to radians
-        float coxa_angle_rad  = coxa_angle_deg  * M_PI / 180.0f + baseR;
-        float femur_angle_rad = femur_angle_deg * M_PI / 180.0f;
-        float tibia_angle_rad = tibia_angle_deg * M_PI / 180.0f;
+        float coxa_angle_rad  = deg2Rad(ticks2deg(coxa));
+        float femur_angle_rad = deg2Rad(ticks2deg(femur));
+        float tibia_angle_rad = deg2Rad(ticks2deg(tibia));
 
         // Planar FK for femur and tibia
         float planar_length = FEMUR_LENGTH * cos(femur_angle_rad) + TIBIA_LENGTH * cos(femur_angle_rad + tibia_angle_rad);
